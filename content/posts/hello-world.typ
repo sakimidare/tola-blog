@@ -7,8 +7,6 @@
   tags: ("Demo",),
   category: "Tests",
   image: none,
-  words: 152,
-  minutes: 1,
   draft: false,
 )
 

@@ -7,8 +7,6 @@
   tags: ("Manual", "转载"),
   category: "Articles",
   image: none,
-  words: 18492,
-  minutes: 62,
   draft: false,
 )
 

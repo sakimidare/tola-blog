@@ -7,8 +7,6 @@
   tags: ("Programming", "C"),
   category: "Journals",
   image: none,
-  words: 1491,
-  minutes: 5,
   draft: false,
 )
 

@@ -7,8 +7,6 @@
   tags: (),
   category: none,
   image: none,
-  words: 1890,
-  minutes: 6,
   draft: false,
 )
 

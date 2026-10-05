@@ -119,6 +119,8 @@ pnpm check   # tsc --noEmit + tola validate（链接与资源）
 正文……
 ```
 
+字数与阅读时长由构建期脚本自动统计（`scripts/build-stats.mjs` → `templates/stats.json`），无需在元数据里手写；如需覆盖可显式传 `words` / `minutes`。
+
 代码块使用 Typst 原生围栏（自动语法高亮）：
 
 ````markdown

@@ -7,8 +7,6 @@
   tags: ("C", "Programming", "CSAPP"),
   category: "Write Up",
   image: none,
-  words: 4513,
-  minutes: 15,
   draft: false,
 )
 

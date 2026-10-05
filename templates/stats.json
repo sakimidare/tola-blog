@@ -1,0 +1,54 @@
+{
+  "/": {
+    "w": 79,
+    "m": 1
+  },
+  "/404/": {
+    "w": 242,
+    "m": 1
+  },
+  "/about/": {
+    "w": 988,
+    "m": 3
+  },
+  "/archive/": {
+    "w": 34,
+    "m": 1
+  },
+  "/friends/": {
+    "w": 113,
+    "m": 1
+  },
+  "/posts/a-problem-during-c-programming/": {
+    "w": 1477,
+    "m": 5
+  },
+  "/posts/assassinate-shadow/": {
+    "w": 823,
+    "m": 3
+  },
+  "/posts/bomb-lab/": {
+    "w": 4505,
+    "m": 15
+  },
+  "/posts/hello-world/": {
+    "w": 152,
+    "m": 1
+  },
+  "/posts/how-to-ask-questions-the-smart-way/": {
+    "w": 17806,
+    "m": 59
+  },
+  "/posts/how-to-become-a-hacker/": {
+    "w": 14544,
+    "m": 48
+  },
+  "/posts/how-to-program-awesomely/": {
+    "w": 1885,
+    "m": 6
+  },
+  "/posts/niri-manual/": {
+    "w": 1685,
+    "m": 6
+  }
+}

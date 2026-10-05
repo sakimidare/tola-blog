@@ -3,6 +3,9 @@
 #import "@tola/site:0.0.0": info
 #import "@tola/pages:0.0.0": pages
 
+#let stats-data = json("stats.json")
+#let stats-of(permalink) = if permalink == none { (:) } else { stats-data.at(permalink, default: (:)) }
+
 #let icon(name, class: "icon") = html.elem("iconify-icon", attrs: (icon: name, class: class, "aria-hidden": "true"))
 
 #let _posts() = pages().filter(p => p.permalink.starts-with("/posts/") and p.at("date", default: none) != none).sorted(key: p => str(p.date)).rev()

@@ -379,8 +379,6 @@ function render(frontmatter, body) {
     `  tags: (${tagList}),`,
     frontmatter.category ? `  category: "${escapeString(frontmatter.category)}",` : `  category: none,`,
     frontmatter.image ? `  image: "${escapeString(frontmatter.image)}",` : `  image: none,`,
-    `  words: ${stats.words},`,
-    `  minutes: ${stats.minutes},`,
     `  draft: ${frontmatter.draft === true || frontmatter.draft === "true" ? "true" : "false"},`,
     ")",
     "",

@@ -7,8 +7,6 @@
   tags: ("Manual",),
   category: none,
   image: none,
-  words: 1767,
-  minutes: 6,
   draft: false,
 )
 

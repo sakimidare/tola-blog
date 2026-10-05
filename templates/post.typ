@@ -1,5 +1,5 @@
 // Post page and post card.
-#import "/templates/layout.typ": fuwari-base, icon, _posts, _date, _tag-url, _category-url
+#import "/templates/layout.typ": fuwari-base, icon, _posts, _date, _tag-url, _category-url, stats-of
 #import "@tola/site:0.0.0": info
 #import "@tola/current:0.0.0": current-permalink, prev, next
 
@@ -24,6 +24,9 @@
 }
 
 #let post(title: none, summary: none, date: none, update: none, tags: (), category: none, image: none, draft: false, words: none, minutes: none, body) = {
+  let stat = stats-of(current-permalink)
+  let words = if words != none { words } else { stat.at("w", default: none) }
+  let minutes = if minutes != none { minutes } else { stat.at("m", default: none) }
   let all-posts = _posts()
   let previous = prev(all-posts)
   let following = next(all-posts)
@@ -82,8 +85,9 @@
   let tags = item.at("tags", default: ())
   let category = item.at("category", default: none)
   let image = item.at("image", default: none)
-  let words = item.at("words", default: none)
-  let minutes = item.at("minutes", default: none)
+  let stat = stats-of(href)
+  let words = item.at("words", default: stat.at("w", default: none))
+  let minutes = item.at("minutes", default: stat.at("m", default: none))
   if target() == "html" {
     html.elem("article", attrs: (class: "post-card card-base onload-animation"))[
       #html.elem("div", attrs: (class: "post-card-body"))[
