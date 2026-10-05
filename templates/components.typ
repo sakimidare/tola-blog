@@ -166,15 +166,28 @@
   () => html.elem("pre", attrs: (class: "mermaid"), source),
 )
 
-#let centered-box(class, body) = html-or(
-  block(width: 100%, align(center, body)),
-  () => html.elem("div", attrs: (class: class), body),
-)
+#let centered-box(class, body, font: none) = context {
+  if target() == "html" {
+    html.elem("div", attrs: (class: class), body)
+  } else {
+    block(width: 100%, align(center, if font == none { body } else { text(font: font, body) }))
+  }
+}
 
-#let poem(lang: none, body) = centered-box(if lang == none { "poem" } else { "poem poem_" + lang }, body)
-#let lyrics(body) = html-or(block(width: 100%, inset: (x: 1.5em), body), () => html.elem("div", attrs: (class: "ci"), body))
-#let spell(body) = centered-box("spellcard", body)
-#let waka(body) = centered-box("waka", body)
+#let poem(lang: none, body) = centered-box(
+  if lang == none { "poem" } else { "poem poem_" + lang },
+  body,
+  font: if lang == "ong" { ("Old English Onglisch", "Source Serif 4") } else { ("KaiTi", "Source Han Serif JP", "Noto Serif SC") },
+)
+#let lyrics(body) = context {
+  if target() == "html" {
+    html.elem("div", attrs: (class: "ci"), body)
+  } else {
+    block(width: 100%, inset: (x: 1.5em), text(font: ("KaiTi", "Source Han Serif JP", "Noto Serif SC"), body))
+  }
+}
+#let spell(body) = centered-box("spellcard", body, font: ("KaiTi", "Source Han Serif JP", "Noto Serif SC"))
+#let waka(body) = centered-box("waka", body, font: ("DFKai-SB", "KaiTi", "Source Han Serif JP", "Noto Serif SC"))
 
 // Renders as the site's hyperlink card (avatar + title + description), which is
 // what the archive site's client-side card fixup turned these into.

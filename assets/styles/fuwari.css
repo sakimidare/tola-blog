@@ -479,10 +479,10 @@ html.is-animating .transition-swup-fade { opacity: 0; transform: translateY(1rem
 .markdown-content .ff-ong { font-family: "Old English Onglisch", serif; }
 .markdown-content .ff-cjk_old { font-family: "Source Han Serif Old", "Source Han Serif SC", serif; font-synthesis: weight; }
 .markdown-content .ff-dfkai { font-family: "DFKai-SB", KaiTi, "Source Han Serif SC", "Source Han Serif JP", serif; }
-.markdown-content .ff-en { font-family: "Times New Roman", serif; }
+.markdown-content .ff-en { font-family: "Source Serif 4", "Times New Roman", serif; }
 .markdown-content .ff-rom { font-family: "HighTowerText", serif; font-synthesis: weight; }
 .markdown-content .ff-kai { font-family: KaiTi, "Source Han Serif SC", "Source Han Serif JP", serif; }
-.markdown-content .ff-min { font-family: "MS Mincho", "Source Han Serif JP", serif; }
+.markdown-content .ff-min { font-family: "Source Han Serif JP", "MS Mincho", serif; }
 
 /* Ruby: smaller reading text, exclude annotations from text selection. */
 ruby rt, ruby rp { font-size: .5em; user-select: none; -webkit-user-select: none; }
