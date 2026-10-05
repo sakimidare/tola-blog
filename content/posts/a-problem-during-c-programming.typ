@@ -1,4 +1,4 @@
-#import "/templates/fuwari.typ": post, admonition, code-block, quote-block, github-card, link-card, content-image, hr-line
+#import "/templates/fuwari.typ": post, admonition, code-block, github-card, link-card, content-image, hr-line
 
 #show: post.with(
   title: "写 C 时遇到的一个小问题",
@@ -222,7 +222,7 @@
 
 = 如何规避风险？
 
-#quote-block[
+#quote[
 _`-O0`了吗？`-fsanitize=address`了吗？快加上！_
 
 

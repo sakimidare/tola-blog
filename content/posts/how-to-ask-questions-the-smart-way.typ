@@ -1,4 +1,4 @@
-#import "/templates/fuwari.typ": post, admonition, code-block, quote-block, github-card, link-card, content-image, hr-line
+#import "/templates/fuwari.typ": post, admonition, code-block, github-card, link-card, content-image, hr-line
 
 #show: post.with(
   title: "提问的智慧",
@@ -196,19 +196,19 @@ Stack Exchange 已经成长到#link("https://stackexchange.com/sites")[超过一
 
 一个好标题范例是`目标 —— 差异`式的描述，许多技术支持组织就是这样做的。在`目标`部分指出是哪一个或哪一组东西有问题，在`差异`部分则描述与期望的行为不一致的地方。
 
-#quote-block[
+#quote[
 蠢问题：救命啊！我的笔记本电脑不能正常显示了！
 
 
 ]
 
-#quote-block[
+#quote[
 聪明问题：X.org 6.8.1 的鼠标指针会变形，某牌显卡 MV1005 芯片组。
 
 
 ]
 
-#quote-block[
+#quote[
 更聪明问题：X.org 6.8.1 的鼠标指针，在某牌显卡 MV1005 芯片组环境下 - 会变形。
 
 
@@ -249,7 +249,7 @@ Stack Exchange 已经成长到#link("https://stackexchange.com/sites")[超过一
 如果英文是你的外语（Second language），提示潜在回复者你有潜在的语言困难是很好的：
 \[译注：以下附上原文以供使用\]
 
-#quote-block[
+#quote[
 English is not my native language; please excuse typing errors.
 
 
@@ -257,7 +257,7 @@ English is not my native language; please excuse typing errors.
 
 - 英文不是我的母语，请原谅我的错字或语法。
 
-#quote-block[
+#quote[
 If you speak \$LANGUAGE, please email/PM me;
 I may need assistance translating my question.
 
@@ -267,7 +267,7 @@ I may need assistance translating my question.
 - 如果你说*某语言*，请向我发电邮/私信；
 - 我需要有人协助我翻译我的问题。
 
-#quote-block[
+#quote[
 I am familiar with the technical terms,
 but some slang expressions and idioms are difficult for me.
 
@@ -276,7 +276,7 @@ but some slang expressions and idioms are difficult for me.
 
 - 我对技术名词很熟悉，但对于俗语或是特别用法不甚了解。
 
-#quote-block[
+#quote[
 I've posted my question in \$LANGUAGE and English.
 I'll be glad to translate responses, if you only use one or the other.
 
@@ -355,7 +355,7 @@ I'll be glad to translate responses, if you only use one or the other.
 
 *蠢问题*
 
-#quote-block[
+#quote[
 我在编译内核时接连遇到 SIG11 错误，
 我怀疑某条飞线搭在主板的走线上了，这种情况应该怎样检查最好？
 
@@ -364,7 +364,7 @@ I'll be glad to translate responses, if you only use one or the other.
 
 *聪明问题*
 
-#quote-block[
+#quote[
 我的组装电脑是 FIC-PA2007 主机板搭载 AMD K6/233 CPU（威盛 Apollo VP2 芯片组），
 256MB Corsair PC133 SDRAM 内存，在编译内核时，从开机 20 分钟以后就频频产生 SIG11 错误，
 但是在头 20 分钟内从没发生过相同的问题。重新启动也没有用，但是关机一晚上就又能工作 20 分钟。
@@ -393,7 +393,7 @@ I'll be glad to translate responses, if you only use one or the other.
 
 *蠢问题*
 
-#quote-block[
+#quote[
 我怎样才能从某绘图程序的颜色选择器中取得十六进制的 RGB 值？
 
 
@@ -401,7 +401,7 @@ I'll be glad to translate responses, if you only use one or the other.
 
 *聪明问题*
 
-#quote-block[
+#quote[
 我正试着用替换一幅图片的色码（color table）成自己选定的色码，我现在知道的唯一方法是编辑每个色码区块（table slot），
 但却无法从某绘图程序的颜色选择器取得十六进制的 RGB 值。
 
@@ -593,7 +593,7 @@ Jeff Bigler 的观察总结和这个相关也值得一读 (*#link("http://www.mi
 
 \<a id="q1" tabindex="-1" style="width:0; height:0; overflow:hidden; display:block;"\>\</a\>
 
-#quote-block[
+#quote[
 问题：我能在哪找到 X 程序或 X 资源？
 
 
@@ -603,7 +603,7 @@ Jeff Bigler 的观察总结和这个相关也值得一读 (*#link("http://www.mi
 
 \<a id="q2" tabindex="-1" style="width:0; height:0; overflow:hidden; display:block;"\>\</a\>
 
-#quote-block[
+#quote[
 问题：我怎样用 X 做 Y？
 
 
@@ -613,7 +613,7 @@ Jeff Bigler 的观察总结和这个相关也值得一读 (*#link("http://www.mi
 
 \<a id="q3" tabindex="-1" style="width:0; height:0; overflow:hidden; display:block;"\>\</a\>
 
-#quote-block[
+#quote[
 问题：如何设定我的 shell 提示？？
 
 
@@ -623,7 +623,7 @@ Jeff Bigler 的观察总结和这个相关也值得一读 (*#link("http://www.mi
 
 \<a id="q4" tabindex="-1" style="width:0; height:0; overflow:hidden; display:block;"\>\</a\>
 
-#quote-block[
+#quote[
 问题：我可以用 Bass-o-matic 文件转换工具将 AcmeCorp 文件转换为 TeX 格式吗？
 
 
@@ -633,7 +633,7 @@ Jeff Bigler 的观察总结和这个相关也值得一读 (*#link("http://www.mi
 
 \<a id="q5" tabindex="-1" style="width:0; height:0; overflow:hidden; display:block;"\>\</a\>
 
-#quote-block[
+#quote[
 问题：我的{程序/设定/SQL 语句}没有用
 
 
@@ -647,7 +647,7 @@ Jeff Bigler 的观察总结和这个相关也值得一读 (*#link("http://www.mi
 
 \<a id="q6" tabindex="-1" style="width:0; height:0; overflow:hidden; display:block;"\>\</a\>
 
-#quote-block[
+#quote[
 问题：我的 Windows 电脑有问题，你能帮我吗？
 
 
@@ -659,7 +659,7 @@ Jeff Bigler 的观察总结和这个相关也值得一读 (*#link("http://www.mi
 
 \<a id="q7" tabindex="-1" style="width:0; height:0; overflow:hidden; display:block;"\>\</a\>
 
-#quote-block[
+#quote[
 问题：我的程序不会动了，我认为系统工具 X 有问题
 
 
@@ -669,7 +669,7 @@ Jeff Bigler 的观察总结和这个相关也值得一读 (*#link("http://www.mi
 
 \<a id="q8" tabindex="-1" style="width:0; height:0; overflow:hidden; display:block;"\>\</a\>
 
-#quote-block[
+#quote[
 问题：我在安装 Linux（或者 X ）时有问题，你能帮我吗？
 
 
@@ -681,7 +681,7 @@ Jeff Bigler 的观察总结和这个相关也值得一读 (*#link("http://www.mi
 
 \<a id="q9" tabindex="-1" style="width:0; height:0; overflow:hidden; display:block;"\>\</a\>
 
-#quote-block[
+#quote[
 问题：我怎么才能破解 root 帐号/窃取 OP 特权/读别人的邮件呢？
 
 
@@ -696,7 +696,7 @@ Jeff Bigler 的观察总结和这个相关也值得一读 (*#link("http://www.mi
 
 *蠢问题*：
 
-#quote-block[
+#quote[
 我可以在哪儿找到关于 Foonly Flurbamatic 的资料？
 
 
@@ -706,7 +706,7 @@ Jeff Bigler 的观察总结和这个相关也值得一读 (*#link("http://www.mi
 
 *聪明问题*：
 
-#quote-block[
+#quote[
 我用 Google 搜索过 "Foonly Flurbamatic 2600"，但是没找到有用的结果。谁知道上哪儿去找对这种设备编程的资料？
 
 
@@ -716,7 +716,7 @@ Jeff Bigler 的观察总结和这个相关也值得一读 (*#link("http://www.mi
 
 *蠢问题*：
 
-#quote-block[
+#quote[
 我从 foo 项目找来的源码没法编译。它怎么这么烂？
 
 
@@ -726,7 +726,7 @@ Jeff Bigler 的观察总结和这个相关也值得一读 (*#link("http://www.mi
 
 *聪明问题*：
 
-#quote-block[
+#quote[
 foo 项目代码在 Nulix 6.2 版下无法编译通过。我读过了 FAQ，但里面没有提到跟 Nulix 有关的问题。这是我编译过程的记录，我有什么做的不对的地方吗？
 
 
@@ -736,7 +736,7 @@ foo 项目代码在 Nulix 6.2 版下无法编译通过。我读过了 FAQ，但�
 
 *蠢问题*：
 
-#quote-block[
+#quote[
 我的主机板有问题了，谁来帮我？
 
 
@@ -746,7 +746,7 @@ foo 项目代码在 Nulix 6.2 版下无法编译通过。我读过了 FAQ，但�
 
 *聪明问题*：
 
-#quote-block[
+#quote[
 我在 S2464 主机板上试过了 X 、 Y 和 Z ，但没什么作用，我又试了 A 、 B 和 C 。请注意当我尝试 C 时的奇怪现象。显然 florbish 正在 grommicking，但结果出人意料。通常在 Athlon MP 主机板上引起 grommicking 的原因是什么？有谁知道接下来我该做些什么测试才能找出问题？
 
 

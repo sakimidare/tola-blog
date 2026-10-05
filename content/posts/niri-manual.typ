@@ -1,4 +1,4 @@
-#import "/templates/fuwari.typ": post, admonition, code-block, quote-block, github-card, link-card, content-image, hr-line
+#import "/templates/fuwari.typ": post, admonition, code-block, github-card, link-card, content-image, hr-line
 
 #show: post.with(
   title: "Niri 安装与配置",

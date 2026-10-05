@@ -1,4 +1,4 @@
-#import "/templates/fuwari.typ": post, admonition, code-block, quote-block, github-card, link-card, content-image, hr-line
+#import "/templates/fuwari.typ": post, admonition, code-block, github-card, link-card, content-image, hr-line
 
 #show: post.with(
   title: "如何漂亮地写代码",
@@ -30,7 +30,7 @@
 
 阅读这个句子，我们发现这就是一句语法通顺的英文：
 
-#quote-block[
+#quote[
 *Select* the value of `name` *from* each row in the table `users` *where* that row's `age` is *greater than or equal to* `18`.
 
 
@@ -42,7 +42,7 @@
 
 而是像向一位绝顶聪明的助手“许愿”：
 
-#quote-block[
+#quote[
 把 `users` 这张表里面 `age` 大于等于 18 的行挑出来，取出 `name` 给我。
 
 
