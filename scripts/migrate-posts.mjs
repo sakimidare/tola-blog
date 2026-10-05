@@ -306,7 +306,7 @@ function renderTokens(tokens, env, imageBase) {
         out += `#code-block(${args.join(", ")})` + "\n\n";
         break;
       }
-      case "blockquote_open": out += "#quote[\n"; break;
+      case "blockquote_open": out += "#quote-block[\n"; break;
       case "blockquote_close": out += "\n]\n\n"; break;
       case "bullet_list_open": listStack.push("- "); listDepth++; break;
       case "bullet_list_close": listStack.pop(); listDepth--; out += "\n"; break;
@@ -353,7 +353,7 @@ function render(frontmatter, body) {
   const tagList = tagItems.length === 1 ? `${tagItems[0]},` : tagItems.join(", ");
   const summary = frontmatter.description ?? "";
   const lines = [
-    `#import "/templates/fuwari.typ": post, admonition, code-block, github-card, link-card, content-image, hr-line`,
+    `#import "/templates/fuwari.typ": post, admonition, code-block, quote-block, github-card, link-card, content-image, hr-line`,
     "",
     "#show: post.with(",
     `  title: "${escapeString(frontmatter.title ?? slug)}",`,

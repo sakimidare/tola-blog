@@ -1,4 +1,4 @@
-#import "/templates/fuwari.typ": post, admonition, code-block, github-card, link-card, content-image, hr-line
+#import "/templates/fuwari.typ": post, admonition, code-block, quote-block, github-card, link-card, content-image, hr-line
 
 #show: post.with(
   title: "Bomb Lab Writeup",
@@ -14,7 +14,7 @@
 
 = 前言
 
-#quote[
+#quote-block[
 邪恶的*邪恶博士*在我们的班级机器上放置了大量的“二进制炸弹”。二进制炸弹是由一系列阶段组成的程序。每个阶段都要求你在 stdin 上键入一个特定的字符串。如果你输入了正确的字符串，那么这个阶段就被*拆除*，炸弹进入下一个阶段。否则炸弹会*爆炸*，并打印出 “BOOM!!!”，然后终止。当每一个阶段都被拆除时，炸弹才算拆除。
 
 有太多炸弹要我们处理，所以我们给每个学生一个炸弹来拆除。这是你的任务，你别无选择，只能接受，就是在截止时间前拆除你的炸弹。祝你好运，欢迎加入拆弹小组！
@@ -330,7 +330,7 @@
 
 （激情拷打 Gemini）
 
-#quote[
+#quote-block[
 你看到的 402470 是 跳转表（Jump Table） 的基地址。
 
 这正是 C 语言中 switch-case 语句编译后的典型模样。因为 switch 的分支太多，编译器为了效率，不会写一堆 if-else，而是直接在内存里建了一张“地址表”，根据你输入的数字直接查表跳转。
@@ -475,7 +475,7 @@ gdb 显示的地址为大端序，实际上 .rodata 以小端序存放地址。
 
 在 Stack OverFlow 上的帖子 #link("https://stackoverflow.com/questions/10325713/why-does-this-memory-address-fs0x28-fs0x28-have-a-random-value")[Why does this memory address %fs:0x28 ( fs\[0x28\] ) have a random value?] 中，有一位答主解释了这行代码的作用：
 
-#quote[
+#quote-block[
 Both the `FS` and `GS` registers can be used as base-pointer addresses in order to access special operating system data-structures. So what you're seeing is a value loaded at an offset from the value held in the `FS` register, and not bit manipulation of the contents of the `FS` register.
 
 Specifically what's taking place, is that `FS:0x28` on Linux is storing a special sentinel stack-guard value, and the code is performing a stack-guard check. For instance, if you look further in your code, you'll see that the value at `FS:0x28` is stored on the stack, and then the contents of the stack are recalled and an `XOR` is performed with the original value at `FS:0x28`. If the two values are equal, which means that the zero-bit has been set because `XOR`'ing two of the same values results in a zero-value, then we jump to the `test` routine, otherwise we jump to a special function that indicates that the stack was somehow corrupted, and the sentinel value stored on the stack was changed.
@@ -489,7 +489,7 @@ If using GCC, this can be disabled with:
 
 中文翻译如下：
 
-#quote[
+#quote-block[
 `FS` 和 `GS` 寄存器都可以作为基址指针（Base-pointer addresses），用于访问操作系统特殊的内部数据结构。因此，你所看到的实际上是从 `FS` 寄存器保存的基地址加上一个偏移量后加载的数据，而不是对 `FS` 寄存器本身的内容进行位运算。
 
 具体来说，在 Linux 系统上，`FS:0x28` 的位置存储了一个特殊的哨兵值，称为 栈保护值（Stack-guard value / Canary），这段代码正在进行栈保护检查。例如，如果你查看代码的后续部分，会发现程序先将 `FS:0x28` 处的值存入栈中；函数结束前，再将栈中的值取出，与 `FS:0x28` 原有的值进行 `XOR`（异或）运算。
@@ -591,7 +591,7 @@ If using GCC, this can be disabled with:
 
 ]
 
-#quote[
+#quote-block[
 你的直觉非常敏锐。没错，这里确实是一个嵌套循环（Nested Loop）。
 
 其核心逻辑是：验证你输入的 6 个数字是否互不相同（即没有重复值）。

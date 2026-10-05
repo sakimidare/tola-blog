@@ -221,10 +221,7 @@
           #html.elem("div", attrs: (id: "main-grid", class: "main-grid"))[
             #_sidebar()
             #html.elem("main", attrs: (id: "swup-container", class: "main-column transition-swup-fade"))[
-              #html.elem("div", attrs: (id: "content-wrapper", class: "content-wrapper onload-animation"), {
-                show quote: it => html.elem("blockquote", it.body)
-                body
-              })
+              #html.elem("div", attrs: (id: "content-wrapper", class: "content-wrapper onload-animation"), body)
               #_footer()
             ]
           ]
@@ -390,6 +387,10 @@
       #body
     ]
   }
+}
+
+#let quote-block(body) = context {
+  if target() != "html" { quote(body) } else { html.elem("blockquote", body) }
 }
 
 #let content-image(src, alt: "") = context {

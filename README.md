@@ -114,9 +114,7 @@ pnpm check   # tsc --noEmit + tola validate（链接与资源）
 正文……
 ```
 
-可用组件：`code-block`、`admonition`、`github-card`、`link-card`、`content-image`、`hr-line`。
-
-引用使用 Typst 内置语法 `#quote[...]`，由模板的 `show quote` 规则渲染为 `<blockquote>`，无需额外函数。
+可用组件：`code-block`、`admonition`、`quote-block`、`github-card`、`link-card`、`content-image`、`hr-line`。
 
 ## 从 Fuwari 迁移
 
