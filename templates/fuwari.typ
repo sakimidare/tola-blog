@@ -132,9 +132,9 @@
   ]
 }
 
-#let pdf-fonts = ("Source Han Serif", "Noto Serif CJK SC")
-#let pdf-heading-fonts = ("Noto Sans CJK SC",)
-#let pdf-mono-fonts = ("JetBrains Mono", "Noto Sans Mono CJK SC")
+#let pdf-fonts = ("Source Han Serif", "Noto Serif SC", "Noto Serif CJK SC")
+#let pdf-heading-fonts = ("Source Han Serif", "Noto Serif SC", "Noto Serif CJK SC")
+#let pdf-mono-fonts = ("JetBrains Mono", "Noto Sans Mono CJK SC", "Noto Serif SC")
 
 #let _join-strings(list) = list.fold("", (acc, item) => acc + (if acc == "" { "" } else { ", " }) + str(item))
 

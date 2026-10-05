@@ -10,6 +10,8 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const contentDir = join(root, "content");
 const outDir = join(root, "public");
 const pkgPath = join(root, ".tola", "packages");
+const fontDir = join(root, "assets", "fonts");
+const fontArgs = existsSync(fontDir) ? ["--font-path", fontDir] : [];
 
 function walk(dir) {
   const files = [];
@@ -33,7 +35,7 @@ for (const file of files) {
   const out = join(outDir, rel + ".pdf");
   mkdirSync(dirname(out), { recursive: true });
   try {
-    execFileSync("typst", ["compile", "--package-path", pkgPath, "--root", root, file, out], { stdio: "pipe" });
+    execFileSync("typst", ["compile", "--package-path", pkgPath, "--root", root, ...fontArgs, file, out], { stdio: "pipe" });
     ok += 1;
   } catch (error) {
     const message = error.stderr?.toString().trim().split("\n").slice(0, 3).join(" ") ?? String(error);

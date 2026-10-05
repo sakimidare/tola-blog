@@ -82,11 +82,12 @@ pnpm build
 依次执行：
 
 1. `build:client` — esbuild 打包 `assets/scripts/fuwari.ts` → `fuwari.js`
-2. `build:site` — `tola build --clean` 生成 HTML、RSS、Sitemap
-3. `build:404` — 复制 `404/index.html` → `404.html`
-4. `build:sitemap` — 移除 404、补全 `lastmod`、生成 `sitemap-index.xml`
-5. `build:search` — Pagefind 建立全文索引
-6. `build:pdf` — 用 Typst 为每页生成 PDF
+2. `build:dino` — esbuild 打包 404 的 T-Rex 游戏 → `dino.js`
+3. `build:site` — `tola build --clean` 生成 HTML、RSS、Sitemap
+4. `build:404` — 复制 `404/index.html` → `404.html`
+5. `build:sitemap` — 移除 404、补全 `lastmod`、生成 `sitemap-index.xml`
+6. `build:search` — Pagefind 建立全文索引
+7. `build:pdf` — 用 Typst 为每页生成 PDF（若存在 `assets/fonts/` 则以其作为字体路径）
 
 校验：
 
@@ -114,7 +115,7 @@ pnpm check   # tsc --noEmit + tola validate（链接与资源）
 正文……
 ```
 
-代码块优先使用 Typst 原生围栏：
+代码块使用 Typst 原生围栏（自动语法高亮）：
 
 ````markdown
 ```c
@@ -122,13 +123,7 @@ int main(void) { return 0; }
 ```
 ````
 
-需要标题或行号时再用 `#code-block`：
-
-```typst
-#code-block("...", lang: "c", title: "main.c", line-numbers: true, start: 1)
-```
-
-其他可用组件：`admonition`、`quote-block`、`github-card`、`link-card`、`content-image`、`hr-line`。
+其他可用组件：`admonition`、`quote-block`、`github-card`、`link-card`、`content-image`、`hr-line`、`anchor`。
 
 ## 从 Fuwari 迁移
 
@@ -138,7 +133,7 @@ int main(void) { return 0; }
 node scripts/migrate-posts.mjs
 ```
 
-覆盖标题、段落、强调、删除线、链接、图片、列表、引用、表格、代码块（含 `title` / 行号）、数学公式、Admonition、GitHub / 链接卡片，并复制文章本地图片。
+覆盖标题、段落、强调、删除线、链接、图片、列表、引用、表格、代码块（原生围栏）、数学公式、Admonition、GitHub / 链接卡片、站内锚点，并复制文章本地图片。
 
 ## 部署
 
@@ -150,7 +145,7 @@ node scripts/migrate-posts.mjs
 
 ### Vercel
 
-仓库已包含 `vercel.json`，构建时会用 `scripts/vercel-setup.sh` 下载 Tola（`x86_64-linux-static`）与 Typst（`x86_64-unknown-linux-musl`）到 `./bin` 并加入 `PATH`：
+**`scripts/vercel-setup.sh`** 会把 Tola、Typst 以及 PDF 所需的中文字体（思源宋体 Noto Serif SC、JetBrains Mono）下载到 `./bin` 与 `assets/fonts`。
 
 ```json
 {

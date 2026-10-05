@@ -267,10 +267,11 @@ html.is-home .sidebar-sticky { top: calc(1rem - (var(--banner-home) - var(--bann
 .markdown-content blockquote { position: relative; margin: 1rem 0; padding-left: 1.25rem; color: var(--text-50); }
 .markdown-content blockquote::before { position: absolute; top: 0; bottom: 0; left: 0; width: .25rem; border-radius: 999px; background: var(--btn-regular-bg); content: ""; }
 .markdown-content li::marker { color: var(--primary); }
-.markdown-content img { border-radius: .75rem; cursor: zoom-in; }
+.markdown-content img { display: block; margin: 1.5rem auto; border-radius: .75rem; cursor: zoom-in; }
 .markdown-content div[role="math"], .markdown-content div.tola-block-math { display: flex; justify-content: center; width: 100%; margin: 1em 0; overflow-x: auto; overflow-y: hidden; }
 .markdown-content div[role="math"] > svg, .markdown-content div.tola-block-math > svg { max-width: 100%; height: auto; }
 .markdown-content span[role="math"], .markdown-content span.tola-inline-math { display: inline; }
+.markdown-content p:has(> a[id]:only-child) { display: contents; }
 .markdown-content table { width: 100%; border-collapse: collapse; }
 .markdown-content th, .markdown-content td { padding: .6rem .75rem; border: 1px solid var(--line-divider); }
 .post-license { position: relative; overflow: hidden; margin-top: 2rem; padding: 1.25rem 1.5rem; border-radius: .75rem; background: color-mix(in oklch, var(--btn-regular-bg) 75%, transparent); }
