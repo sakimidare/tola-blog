@@ -364,33 +364,12 @@
   }
 }
 
-#let code-block(code, lang: "plain", title: none, line-numbers: false, start: 1) = context {
-  if target() != "html" {
-    raw(code, lang: lang, block: true)
-  } else {
-    let body = if line-numbers {
-      let lines = code.split("\n")
-      if lines.len() > 0 and lines.last() == "" { lines = lines.slice(0, lines.len() - 1) }
-      html.elem("pre", attrs: (class: "line-numbers"))[
-        #for (index, line) in lines.enumerate() {
-          html.elem("span", attrs: (class: "code-line"))[
-            #html.elem("span", attrs: (class: "code-line-no"), str(start + index))
-            #raw(if line == "" { " " } else { line }, lang: lang)
-          ]
-        }
-      ]
-    } else {
-      raw(code, lang: lang, block: true)
-    }
-    html.elem("div", attrs: (class: "code-block"))[
-      #if title != none and title != "" { html.elem("div", attrs: (class: "code-block-head"), title) }
-      #body
-    ]
-  }
-}
-
 #let quote-block(body) = context {
   if target() != "html" { quote(body) } else { html.elem("blockquote", body) }
+}
+
+#let anchor(id) = context {
+  if target() == "html" { html.elem("a", attrs: (id: id)) } else { [] }
 }
 
 #let content-image(src, alt: "") = context {

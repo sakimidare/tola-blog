@@ -1,4 +1,4 @@
-#import "/templates/fuwari.typ": post, admonition, code-block, quote-block, github-card, link-card, content-image, hr-line
+#import "/templates/fuwari.typ": post, admonition, quote-block, github-card, link-card, content-image, hr-line, anchor
 
 #show: post.with(
   title: "Niri 安装与配置",
@@ -18,7 +18,6 @@
 
 Niri 和 我们熟悉的 Windows 桌面或 KDE Plasma 不同。他是一个水平式排列的窗口管理器。每当新打开一个窗口，便会显示在当前窗口的右侧（而非像 Windows 那样堆叠）。在 Niri 中，没有开始按钮、没有最小化、没有最大化，有的只是随心所欲用快捷键和触摸板切换窗口的流畅操作和炫酷动画！
 
-
 = 成品图
 
 话不多说，赶快端上成品图：
@@ -29,12 +28,10 @@ Niri 和 我们熟悉的 Windows 桌面或 KDE Plasma 不同。他是一个水�
 
 通知栏的图标暂时没有配置，不过问题不大。想拥有这个炫酷 WM (Window Manager) 吗？跟我一步一步配置，你也可以做到！
 
-
 = 安装步骤
 
 #admonition(kind: "note", title: none)[
 下面的安装步骤假定你已经安装好了 Arch Linux。如果并非如此，请参阅其他安装 Arch Linux 的教程。我推荐阅读 #link("https://wiki.archlinuxcn.org/wiki/%E5%AE%89%E8%A3%85%E6%8C%87%E5%8D%97")[Archwiki]。
-
 
 ]
 
@@ -45,7 +42,6 @@ Niri 和 我们熟悉的 Windows 桌面或 KDE Plasma 不同。他是一个水�
 + 阅读过#link("https://www.sakimidare.top/posts/how-to-ask-questions-the-smart-way/")[提问的智慧]；
 + 有初步的 Linux 知识；
 
-
 ]
 
 开始之前，放几个链接：
@@ -54,7 +50,6 @@ Niri 和 我们熟悉的 Windows 桌面或 KDE Plasma 不同。他是一个水�
 
 #github-card("YaLTeR/niri")
 
-
 == 安装 Niri 软件包
 
 #admonition(kind: "warning", title: none)[
@@ -62,14 +57,13 @@ Niri 并不像 KDE Plasma 和 Xfce 一样附带了一系列 GUI 程序可以开�
 
 另外，如上文所述，本文假定你是一个 Linux 用户。所以你的电脑上理应有 `git` `yay` `gcc` `clang` `rust`  `make` `python`等最基本的软件包。Niri 使用 Rust 编写，所以你得安装 `rust` 软件包来执行 `make` 操作。如有这些软件包缺失，请自行安装。
 
-
 ]
 
 你可以用这两条命令：
 
 ```sh
 sudo pacman -S niri xdg-desktop-portal-gtk xdg-desktop-portal-gnome alacritty swaybg swayidle hyprlock xwayland-satellite dolphin sddm brightnessctl wireplumber grim flameshot breeze wshowkeys-git fcitx5 fcitx5-qt fcitx5-chinese-addons blueman noto-fonts libnotify pipewire pipewire-pulse
-yay -S noctalia-shell vicinae ttf-jetbrains-mono misans 
+yay -S noctalia-shell vicinae ttf-jetbrains-mono misans
 
 ```
 
@@ -79,9 +73,7 @@ Noctalia Shell 是一个使用 Material Design 的用户界面。它可以接管
 
 Vicinae 是一个 App 启动器，可以把它理解为 Windows 上的开始菜单。在我的配置中，所有不在快捷键配置里的程序都需要从这里启动。
 
-
 == 配置
-
 
 == SDDM
 
@@ -93,7 +85,6 @@ sudo systemctl enable sddm.service
 
 这样在系统开机时会自动运行 SDDM，以便启动 Niri 会话。
 
-
 == 编辑 niri.service 的 wants
 
 ```sh
@@ -104,7 +95,6 @@ systemctl --user add-wants niri swayidle
 
 #admonition(kind: "note", title: none)[
 不需要照着官方文档加上 `waybar` 和 `mako`！我的配置没装这两个软件包，Shell 和通知全由 Noctalia Shell 接管！
-
 
 ]
 
@@ -124,7 +114,6 @@ Restart=on-failure
 
 这个配置是为了无操作 600 秒后用 `hyprlock` 锁屏，601 秒后关闭显示器。
 如果有睡眠、休眠等需求，请查阅 Swaylock 官方文档。
-
 
 == 修改 Niri 配置文件
 
@@ -198,7 +187,7 @@ binds {
     Alt+Tab { spawn "niri-switch"; }
     // Mod-Shift-/显示重要的热键列表(通常与 Mod-? 相同)。
     Mod+Shift+Slash { show-hotkey-overlay; }
-    Mod+D hotkey-overlay-title="Open the File Manager" { spawn "/usr/bin/dolphin"; } 
+    Mod+D hotkey-overlay-title="Open the File Manager" { spawn "/usr/bin/dolphin"; }
     // Mod+L hotkey-overlay-title="Lock the Screen: swaylock" { spawn "/usr/bin/swaylock" "-f" "-i" "$HOME/.dotfiles/sway/.config/sway/lock.png"; }
     Mod+L hotkey-overlay-title="Lock the Screen: hyprlock" { spawn "/usr/bin/hyprlock"; }
     Mod+Return hotkey-overlay-title="Open a Terminal" { spawn "/usr/bin/alacritty"; }
@@ -466,7 +455,7 @@ window-rule {
     // default-window-height { proportion 0.9; }
     // default-floating-position x=100 y=200 relative-to="bottom-left"
     // default-column-width { proportion 0.7556; }
-    geometry-corner-radius 20 
+    geometry-corner-radius 20
     clip-to-geometry true
     border {
         // off
@@ -587,7 +576,6 @@ animations {
     }
 }
 
-
 ```
 
 这里面热键配置部分的 `Mod` 在 SDDM 启动的 Niri 下全部代指 Super 键（也就是印刷着 Windows 徽标的那个键）。
@@ -652,9 +640,7 @@ spawn-sh-at-startup "swaybg -i /path/to/your/wallpaper.png -m fill"
 #admonition(kind: "note", title: none)[
 本配置使用 `swaybg` 接管壁纸，所以无需在 Noctalia Shell 里面设置壁纸。
 
-
 ]
-
 
 == 修改 Hyprlock 配置文件
 
@@ -783,7 +769,6 @@ input-field {
   halign = center
   valign = center
 
-
 ```
 
 请在
@@ -897,7 +882,6 @@ $textAlpha = cdd6f4
 
 若觉得和壁纸不搭，可以直接替换成喜欢的 RGB 色值。
 
-
 == 配置 Alacritty
 
 ```sh
@@ -945,7 +929,6 @@ style = "Medium"
 
 ```
 
-
 == 配置 SDDM 自动登录
 
 上面 Niri 配置中我们写到了
@@ -966,18 +949,15 @@ Session=niri
 
 请将 `#your_username` 改成你的用户名。
 
-
 == 重启，拥抱 Niri!
 
 不出意外的话，重启之后，输入密码，你就能看到 Noctalia Shell 的欢迎界面了！
 
 拥抱 Niri 吧！拥抱一个比 KDE Plasma 占用少得多且美观的 WM ！
 
-
 = 疑难解答
 
 由于我是中途从 KDE 转向了 Niri 而非全新安装，所以这篇教程很有可能有软件包依赖以及其他大大小小的问题。如果遇到了问题，欢迎在评论区提出！
-
 
 == 为什么我的输入法在 QQ 里面坏掉了？
 
@@ -989,11 +969,9 @@ Session=niri
 --wayland-text-input-version=3
 ```
 
-
 == 为什么右上角的应用图标这么丑？
 
 我不到啊我也很难受！我会想办法的（跪）
-
 
 == 为什么有些 GTK 软件是亮色的？这与我的主题不搭！
 
@@ -1001,11 +979,9 @@ Session=niri
 dconf write /org/gnome/desktop/interface/color-scheme '"prefer-dark"'
 ```
 
-
 == ... ？
 
 留言吧求求了！！
-
 
 = 最后
 

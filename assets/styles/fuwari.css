@@ -255,13 +255,6 @@ html.is-home .sidebar-sticky { top: calc(1rem - (var(--banner-home) - var(--bann
 .markdown-content p a:not(.card-github):not(.card-hyperlink):hover, .markdown-content li a:not(.card-github):not(.card-hyperlink):hover, .markdown-content blockquote a:not(.card-github):not(.card-hyperlink):hover, .markdown-content td a:hover { background: var(--link-hover); text-decoration-color: transparent; }
 .markdown-content code { padding: .15rem .4rem; border-radius: .4rem; color: var(--inline-code-color); background: var(--inline-code-bg); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: .9em; }
 .markdown-content pre { position: relative; overflow-x: auto; margin: 1.25rem 0; padding: 1rem; border-radius: .75rem; color: var(--text-75); background: transparent; }
-.code-block { margin: 1.25rem 0; border-radius: .75rem; overflow: hidden; background: transparent; }
-.code-block pre { margin: 0; border-radius: 0; background: transparent; }
-.code-block-head { padding: .5rem .9rem; border-bottom: 1px solid var(--line-divider); color: var(--text-50); font-size: .78rem; font-family: "JetBrains Mono", ui-monospace, monospace; }
-.code-block .code-line { display: block; }
-.code-block .code-line-no { display: inline-block; width: 2.25rem; padding-right: 1rem; color: var(--text-30); text-align: right; user-select: none; }
-.code-block code { background: transparent; }
-:root.dark .code-block code { filter: brightness(1.5) saturate(1.05); }
 .copy-btn { position: absolute; top: .6rem; right: .6rem; padding: .3rem .65rem; border: 0; border-radius: .5rem; color: var(--text-50); background: color-mix(in oklch, var(--card-bg) 82%, transparent); font-size: .75rem; cursor: pointer; opacity: 0; transition: opacity 200ms ease, color 200ms ease, background-color 200ms ease; }
 .markdown-content pre:hover .copy-btn, .copy-btn:focus-visible { opacity: 1; }
 .copy-btn:hover { color: var(--primary); background: var(--card-bg); }

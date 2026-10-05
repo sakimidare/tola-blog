@@ -1,4 +1,4 @@
-#import "/templates/fuwari.typ": post, admonition, code-block, quote-block, github-card, link-card, content-image, hr-line
+#import "/templates/fuwari.typ": post, admonition, quote-block, github-card, link-card, content-image, hr-line, anchor
 
 #show: post.with(
   title: "如何漂亮地写代码",
@@ -14,11 +14,9 @@
 
 有人说，AI 时代，没人自己写代码。如果有人说自己必须古法写代码才能解决问题，那么一定是他的模型用得不够好。他肯定是少装了什么 Skill 或者没给 A\\ 充钱。不错，我承认现在没几个人写代码；但是拿着 Vibe Coding 出来的 AI Slop 往别人的项目乱发 PR，或者往小红书上抱怨自己的“产品”无人问津，就是“程序员”自己的问题了。我们需要学习如何漂亮地写代码，至少掌握鉴赏漂亮代码的能力。
 
-
 = 让编程语言有自然语言般的表现力
 
 编程语言是一种语言。不论是自然语言还是形式语言，都有优美和糟糕之分。我们会对优美的文章大加赞叹，而排斥粗鄙之语。我们会对严谨的数学推理和优美的数学工具感兴趣，而对诡辩不感兴趣甚至感到恶心。编程语言也是如此。我们喜爱易读、如自然语言般流畅的代码风格，而拒绝 Review 那些耦合、晦涩、`i++ + ++i`的屎山。
-
 
 == 给计算机安排工作——声明式编程
 
@@ -35,7 +33,6 @@ SELECT name FROM users WHERE age >= 18;
 #quote-block[
 *Select* the value of `name` *from* each row in the table `users` *where* that row's `age` is *greater than or equal to* `18`.
 
-
 ]
 
 我们没有像监工一样，命令计算机：
@@ -43,7 +40,7 @@ SELECT name FROM users WHERE age >= 18;
 ```
 for row <- users {
     if row.age >= 18 {
-        tell me row.name 
+        tell me row.name
     }
 }
 ```
@@ -52,7 +49,6 @@ for row <- users {
 
 #quote-block[
 把 `users` 这张表里面 `age` 大于等于 18 的行挑出来，取出 `name` 给我。
-
 
 ]
 
@@ -93,7 +89,7 @@ typedef struct {
 int cmp(const void *a, const void *b) {
     unsigned int score_a = ((const Student *)a)->score;
     unsigned int score_b = ((const Student *)b)->score;
-    
+
     if (score_a < score_b) return -1;
     if (score_a > score_b) return 1;
     return 0;
@@ -132,11 +128,11 @@ std::vector filter_and_sort(const std::vector& src) {
         if (student.score < PASS) continue;
         des.push_back(student);
     }
-    
+
     std::ranges::sort(des, [](const auto &a, const auto &b) {
-        return a.score < b.score; 
+        return a.score < b.score;
     });
-    
+
     return des;
 }
 ```
@@ -188,7 +184,6 @@ fn filter_and_sort(src: Vec<Student>) -> Vec<Student> {
 ```
 
 我们发现，比起用复杂的流程叙述一个算法，让语言自己描述自己的功能更有可读性。
-
 
 == 大胆抽象，交给编译器优化
 
@@ -342,7 +337,6 @@ fn compute(input: &i32, output: &mut i32);
 
 这样的签名时，编译器立即能够知道，`input` 和 `output` 不可能指向同一块内存。指向同一块内存的两个可变借用只可能在 unsafe 代码中出现，编译器能够大大方方优化，不必顾及先前提到的 memory aliasing 问题。
 
-
 == 设计好接口，让你的代码变成文章
 
 我们假设
@@ -398,7 +392,6 @@ pub const fn and_then<U, F>(self, op: F) -> Result<U, E>
 
 `and_then` 让 Ok(t) 传给闭包运行，Err(e) 直接保持原样，短路透传，正好符合 `and_then` 函数名语义。其他语言有 `>>=`、`flatMap`、`bind` 等叫法，个人感觉都没有 `and_then` 清晰。漂亮的代码靠清晰的语义取胜，而非靠所谓炫技语法糖。
 
-
 == 代码不言自明——少写注释
 
 很多人会把注释的覆盖率当作评判一个项目的代码质量的标准。且看下面一段代码：
@@ -413,13 +406,11 @@ int sum(int* array, size_t size) {
 
 ```c
 /** @param array 是一段
- ** 
- ** 
+ **
+ **
  */
 ```
 
-
 == 不要打断读者的心流状态——少用无意义的中间变量
-
 
 = 留下代码六尺巷

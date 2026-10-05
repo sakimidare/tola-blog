@@ -1,4 +1,4 @@
-#import "/templates/fuwari.typ": post, admonition, code-block, quote-block, github-card, link-card, content-image, hr-line
+#import "/templates/fuwari.typ": post, admonition, quote-block, github-card, link-card, content-image, hr-line, anchor
 
 #show: post.with(
   title: "写 C 时遇到的一个小问题",
@@ -14,7 +14,24 @@
 
 = 起因
 
-#code-block("#include <stdio.h>\n\nint main(void)\n{\n    int sum = 0, i = 0;\n    char input[5];\n\n    while (1) {\n        sum = 0;\n        scanf(\"%s\", input);\n        for (i = 0; input[i] != '\\0'; i++)\n            sum = sum*10 + input[i] - '0';\n        printf(\"input=%d\\n\", sum);\n    }\n    return 0;\n}", lang: "c", title: "main.c")
+```c
+#include <stdio.h>
+
+int main(void)
+{
+    int sum = 0, i = 0;
+    char input[5];
+
+    while (1) {
+        sum = 0;
+        scanf("%s", input);
+        for (i = 0; input[i] != '\0'; i++)
+            sum = sum*10 + input[i] - '0';
+        printf("input=%d\n", sum);
+    }
+    return 0;
+}
+```
 
 在浏览#link("https://akaedu.github.io/book/ch10s03.html")[Linux C编程一站式学习 第十章 gdb 3. 观察点] 时遇到了上述代码。这段代码目的很简单：把从输入设备输入的整数字符串转换为整数并输出。原文采用了以下调试步骤发现了问题：
 
@@ -30,13 +47,23 @@ input=123407
 
 原文的解释是：在内存中，局部变量`i`紧跟在`input[4]`后，所以`input[5]`指的就是局部变量`i`。而从键盘输入了`12345`，分别给`input`的各个元素赋值，便成了：
 
-#code-block("input[0] = '1';\ninput[1] = '2';\ninput[2] = '3';\ninput[3] = '4';\ninput[4] = '5';\ni = '\\0';\n", lang: "c", line-numbers: true)
+```c
+input[0] = '1';
+input[1] = '2';
+input[2] = '3';
+input[3] = '4';
+input[4] = '5';
+i = '\0';
+
+```
 
 这里的 `i` 被赋值为 `'\0'`，因为键盘读取了一行字符串，而字符串以`'\0'`结尾。C 语言的`scanf()`函数不会读取空白字符，所以末尾不包含`\n`。
 
 注意到：
 
-#code-block("for (i = 0; input[i] != '\\0'; i++)", lang: "c", line-numbers: true, start: 11)
+```c
+for (i = 0; input[i] != '\0'; i++)
+```
 
 `for`循环的控制条件是`input[i] != '\0'`，而这个数组并不包含`'\0'`，因此出现了访问越界的情况。
 
@@ -56,7 +83,6 @@ $3 = 12345
 `i`后面一个地址位置的值是`0x00`，因此最后一次循环执行了 `12345*10 + 0x05 - '\0'`，得到了 `123407` 。
 
 然而，事情真的有这么简单吗？
-
 
 = 发现问题
 
@@ -78,7 +104,7 @@ input=1919810
 
 ```sh
 $ gcc main.c -g -o main
-$ ./main 
+$ ./main
 ```
 
 行吧，我也这么办。
@@ -123,7 +149,6 @@ input=114467
 
 这些看似微不足道的怠惰悄悄构成了思维上的不完备，让我们不习惯于全面地研究问题。长年累月下去，只会追悔莫及。
 
-
 = 为什么会这样？
 
 好了好了扯远啦，我们来看看为什么这两种编译器编译出来的程序有不同的行为。
@@ -134,7 +159,6 @@ input=114467
 + 编译 (Compilation)
 + 汇编 (Assembling)
 + 链接 (Linking)
-
 
 == 0. 预处理
 
@@ -177,12 +201,10 @@ int main(void)
 
 先把这两个文件放在一边，我们继续。
 
-
 == 1. 编译
 
 #admonition(kind: "note", title: none)[
 此处的汇编语言是 x86-64 GNU 汇编语言，Windows 无法直接运行。
-
 
 ]
 
@@ -197,22 +219,195 @@ $ clang -S clang.i -o clang.s
 
 把这两个文件都贴出来：
 
-#code-block("\t.file\t\"main.c\"\n\t.text\n\t.section\t.rodata\n.LC0:\n\t.string\t\"%s\"\n.LC1:\n\t.string\t\"input=%d\\n\"\n\t.text\n\t.globl\tmain\n\t.type\tmain, @function\nmain:\n.LFB0:\n\t.cfi_startproc\n\tpushq\t%rbp\n\t.cfi_def_cfa_offset 16\n\t.cfi_offset 6, -16\n\tmovq\t%rsp, %rbp\n\t.cfi_def_cfa_register 6\n\tsubq\t$32, %rsp\n\tmovq\t%fs:40, %rax\n\tmovq\t%rax, -8(%rbp)\n\txorl\t%eax, %eax\n\tmovl\t$0, -24(%rbp)\n\tmovl\t$0, -20(%rbp)\n.L4:\n\tmovl\t$0, -24(%rbp)\n\tleaq\t-13(%rbp), %rax\n\tleaq\t.LC0(%rip), %rdx\n\tmovq\t%rax, %rsi\n\tmovq\t%rdx, %rdi\n\tmovl\t$0, %eax\n\tcall\t__isoc23_scanf@PLT\n\tmovl\t$0, -20(%rbp)\n\tjmp\t.L2\n.L3:\n\tmovl\t-24(%rbp), %edx\n\tmovl\t%edx, %eax\n\tsall\t$2, %eax\n\taddl\t%edx, %eax\n\taddl\t%eax, %eax\n\tmovl\t%eax, %edx\n\tmovl\t-20(%rbp), %eax\n\tcltq\n\tmovzbl\t-13(%rbp,%rax), %eax\n\tmovsbl\t%al, %eax\n\taddl\t%edx, %eax\n\tsubl\t$48, %eax\n\tmovl\t%eax, -24(%rbp)\n\taddl\t$1, -20(%rbp)\n.L2:\n\tmovl\t-20(%rbp), %eax\n\tcltq\n\tmovzbl\t-13(%rbp,%rax), %eax\n\ttestb\t%al, %al\n\tjne\t.L3\n\tmovl\t-24(%rbp), %eax\n\tleaq\t.LC1(%rip), %rdx\n\tmovl\t%eax, %esi\n\tmovq\t%rdx, %rdi\n\tmovl\t$0, %eax\n\tcall\tprintf@PLT\n\tjmp\t.L4\n\t.cfi_endproc\n.LFE0:\n\t.size\tmain, .-main\n\t.ident\t\"GCC: (GNU) 15.2.1 20250813\"\n\t.section\t.note.GNU-stack,\"\",@progbits", lang: "asm", title: "gcc.s")
+```asm
+	.file	"main.c"
+	.text
+	.section	.rodata
+.LC0:
+	.string	"%s"
+.LC1:
+	.string	"input=%d\n"
+	.text
+	.globl	main
+	.type	main, @function
+main:
+.LFB0:
+	.cfi_startproc
+	pushq	%rbp
+	.cfi_def_cfa_offset 16
+	.cfi_offset 6, -16
+	movq	%rsp, %rbp
+	.cfi_def_cfa_register 6
+	subq	$32, %rsp
+	movq	%fs:40, %rax
+	movq	%rax, -8(%rbp)
+	xorl	%eax, %eax
+	movl	$0, -24(%rbp)
+	movl	$0, -20(%rbp)
+.L4:
+	movl	$0, -24(%rbp)
+	leaq	-13(%rbp), %rax
+	leaq	.LC0(%rip), %rdx
+	movq	%rax, %rsi
+	movq	%rdx, %rdi
+	movl	$0, %eax
+	call	__isoc23_scanf@PLT
+	movl	$0, -20(%rbp)
+	jmp	.L2
+.L3:
+	movl	-24(%rbp), %edx
+	movl	%edx, %eax
+	sall	$2, %eax
+	addl	%edx, %eax
+	addl	%eax, %eax
+	movl	%eax, %edx
+	movl	-20(%rbp), %eax
+	cltq
+	movzbl	-13(%rbp,%rax), %eax
+	movsbl	%al, %eax
+	addl	%edx, %eax
+	subl	$48, %eax
+	movl	%eax, -24(%rbp)
+	addl	$1, -20(%rbp)
+.L2:
+	movl	-20(%rbp), %eax
+	cltq
+	movzbl	-13(%rbp,%rax), %eax
+	testb	%al, %al
+	jne	.L3
+	movl	-24(%rbp), %eax
+	leaq	.LC1(%rip), %rdx
+	movl	%eax, %esi
+	movq	%rdx, %rdi
+	movl	$0, %eax
+	call	printf@PLT
+	jmp	.L4
+	.cfi_endproc
+.LFE0:
+	.size	main, .-main
+	.ident	"GCC: (GNU) 15.2.1 20250813"
+	.section	.note.GNU-stack,"",@progbits
+```
 
-#code-block("\t.file\t\"main.c\"\n\t.text\n\t.globl\tmain                            # -- Begin function main\n\t.p2align\t4\n\t.type\tmain,@function\nmain:                                   # @main\n\t.cfi_startproc\n# %bb.0:\n\tpushq\t%rbp\n\t.cfi_def_cfa_offset 16\n\t.cfi_offset %rbp, -16\n\tmovq\t%rsp, %rbp\n\t.cfi_def_cfa_register %rbp\n\tsubq\t$32, %rsp\n\tmovl\t$0, -4(%rbp)\n\tmovl\t$0, -8(%rbp)\n\tmovl\t$0, -12(%rbp)\n.LBB0_1:                                # =>This Loop Header: Depth=1\n                                        #     Child Loop BB0_2 Depth 2\n\tmovl\t$0, -8(%rbp)\n\tleaq\t-17(%rbp), %rsi\n\tleaq\t.L.str(%rip), %rdi\n\tmovb\t$0, %al\n\tcallq\t__isoc99_scanf@PLT\n\tmovl\t$0, -12(%rbp)\n.LBB0_2:                                #   Parent Loop BB0_1 Depth=1\n                                        # =>  This Inner Loop Header: Depth=2\n\tmovslq\t-12(%rbp), %rax\n\tmovsbl\t-17(%rbp,%rax), %eax\n\tcmpl\t$0, %eax\n\tje\t.LBB0_5\n# %bb.3:                                #   in Loop: Header=BB0_2 Depth=2\n\timull\t$10, -8(%rbp), %eax\n\tmovslq\t-12(%rbp), %rcx\n\tmovsbl\t-17(%rbp,%rcx), %ecx\n\taddl\t%ecx, %eax\n\tsubl\t$48, %eax\n\tmovl\t%eax, -8(%rbp)\n# %bb.4:                                #   in Loop: Header=BB0_2 Depth=2\n\tmovl\t-12(%rbp), %eax\n\taddl\t$1, %eax\n\tmovl\t%eax, -12(%rbp)\n\tjmp\t.LBB0_2\n.LBB0_5:                                #   in Loop: Header=BB0_1 Depth=1\n\tmovl\t-8(%rbp), %esi\n\tleaq\t.L.str.1(%rip), %rdi\n\tmovb\t$0, %al\n\tcallq\tprintf@PLT\n\tjmp\t.LBB0_1\n.Lfunc_end0:\n\t.size\tmain, .Lfunc_end0-main\n\t.cfi_endproc\n                                        # -- End function\n\t.type\t.L.str,@object                  # @.str\n\t.section\t.rodata.str1.1,\"aMS\",@progbits,1\n.L.str:\n\t.asciz\t\"%s\"\n\t.size\t.L.str, 3\n\n\t.type\t.L.str.1,@object                # @.str.1\n.L.str.1:\n\t.asciz\t\"input=%d\\n\"\n\t.size\t.L.str.1, 10\n\n\t.ident\t\"clang version 20.1.8\"\n\t.section\t\".note.GNU-stack\",\"\",@progbits\n\t.addrsig\n\t.addrsig_sym __isoc99_scanf\n\t.addrsig_sym printf", lang: "asm", title: "clang.s")
+```asm
+	.file	"main.c"
+	.text
+	.globl	main                            # -- Begin function main
+	.p2align	4
+	.type	main,@function
+main:                                   # @main
+	.cfi_startproc
+# %bb.0:
+	pushq	%rbp
+	.cfi_def_cfa_offset 16
+	.cfi_offset %rbp, -16
+	movq	%rsp, %rbp
+	.cfi_def_cfa_register %rbp
+	subq	$32, %rsp
+	movl	$0, -4(%rbp)
+	movl	$0, -8(%rbp)
+	movl	$0, -12(%rbp)
+.LBB0_1:                                # =>This Loop Header: Depth=1
+                                        #     Child Loop BB0_2 Depth 2
+	movl	$0, -8(%rbp)
+	leaq	-17(%rbp), %rsi
+	leaq	.L.str(%rip), %rdi
+	movb	$0, %al
+	callq	__isoc99_scanf@PLT
+	movl	$0, -12(%rbp)
+.LBB0_2:                                #   Parent Loop BB0_1 Depth=1
+                                        # =>  This Inner Loop Header: Depth=2
+	movslq	-12(%rbp), %rax
+	movsbl	-17(%rbp,%rax), %eax
+	cmpl	$0, %eax
+	je	.LBB0_5
+# %bb.3:                                #   in Loop: Header=BB0_2 Depth=2
+	imull	$10, -8(%rbp), %eax
+	movslq	-12(%rbp), %rcx
+	movsbl	-17(%rbp,%rcx), %ecx
+	addl	%ecx, %eax
+	subl	$48, %eax
+	movl	%eax, -8(%rbp)
+# %bb.4:                                #   in Loop: Header=BB0_2 Depth=2
+	movl	-12(%rbp), %eax
+	addl	$1, %eax
+	movl	%eax, -12(%rbp)
+	jmp	.LBB0_2
+.LBB0_5:                                #   in Loop: Header=BB0_1 Depth=1
+	movl	-8(%rbp), %esi
+	leaq	.L.str.1(%rip), %rdi
+	movb	$0, %al
+	callq	printf@PLT
+	jmp	.LBB0_1
+.Lfunc_end0:
+	.size	main, .Lfunc_end0-main
+	.cfi_endproc
+                                        # -- End function
+	.type	.L.str,@object                  # @.str
+	.section	.rodata.str1.1,"aMS",@progbits,1
+.L.str:
+	.asciz	"%s"
+	.size	.L.str, 3
+
+	.type	.L.str.1,@object                # @.str.1
+.L.str.1:
+	.asciz	"input=%d\n"
+	.size	.L.str.1, 10
+
+	.ident	"clang version 20.1.8"
+	.section	".note.GNU-stack","",@progbits
+	.addrsig
+	.addrsig_sym __isoc99_scanf
+	.addrsig_sym printf
+```
 
 来看看`gcc.s`：
 
-#code-block(".LFB0:\n  .cfi_startproc\n  pushq  %rbp\n  .cfi_def_cfa_offset 16\n  .cfi_offset 6, -16\n  movq  %rsp, %rbp\n  .cfi_def_cfa_register 6\n  subq  $32, %rsp           # 预留 32 字节栈帧给局部变量\n  movq  %fs:40, %rax\n  movq  %rax, -8(%rbp)\n  xorl  %eax, %eax\n  movl  $0, -24(%rbp)       # sum = 0;\n  movl  $0, -20(%rbp)       # i = 0;\n.L4:\n  movl\t$0, -24(%rbp)       # sum = 0;\n  leaq\t-13(%rbp), %rax     # input[0] 的位置在-13(%rbp)\n    ...", lang: "asm", line-numbers: true, start: 12)
+```asm
+.LFB0:
+  .cfi_startproc
+  pushq  %rbp
+  .cfi_def_cfa_offset 16
+  .cfi_offset 6, -16
+  movq  %rsp, %rbp
+  .cfi_def_cfa_register 6
+  subq  $32, %rsp           # 预留 32 字节栈帧给局部变量
+  movq  %fs:40, %rax
+  movq  %rax, -8(%rbp)
+  xorl  %eax, %eax
+  movl  $0, -24(%rbp)       # sum = 0;
+  movl  $0, -20(%rbp)       # i = 0;
+.L4:
+  movl	$0, -24(%rbp)       # sum = 0;
+  leaq	-13(%rbp), %rax     # input[0] 的位置在-13(%rbp)
+    ...
+```
 
 再看看`clang.s`是如何处理的：
 
-#code-block("main:                                   # @main\n\t.cfi_startproc\n# %bb.0:\n\tpushq\t%rbp\n\t.cfi_def_cfa_offset 16\n\t.cfi_offset %rbp, -16\n\tmovq\t%rsp, %rbp\n\t.cfi_def_cfa_register %rbp\n\tsubq\t$32, %rsp       # 预留 32 字节栈帧给局部变量\n\tmovl\t$0, -4(%rbp)    # 返回值临时保留位，本程序未使用\n\tmovl\t$0, -8(%rbp)    # sum = 0;\n\tmovl\t$0, -12(%rbp)   # i = 0;\n.LBB0_1:                                # =>This Loop Header: Depth=1\n                                        #     Child Loop BB0_2 Depth 2\n\tmovl\t$0, -8(%rbp)    # sum = 0;\n\tleaq\t-17(%rbp), %rsi # input[0] 的位置在-17(%rbp)\n    ...", lang: "asm", line-numbers: true, start: 6)
+```asm
+main:                                   # @main
+	.cfi_startproc
+# %bb.0:
+	pushq	%rbp
+	.cfi_def_cfa_offset 16
+	.cfi_offset %rbp, -16
+	movq	%rsp, %rbp
+	.cfi_def_cfa_register %rbp
+	subq	$32, %rsp       # 预留 32 字节栈帧给局部变量
+	movl	$0, -4(%rbp)    # 返回值临时保留位，本程序未使用
+	movl	$0, -8(%rbp)    # sum = 0;
+	movl	$0, -12(%rbp)   # i = 0;
+.LBB0_1:                                # =>This Loop Header: Depth=1
+                                        #     Child Loop BB0_2 Depth 2
+	movl	$0, -8(%rbp)    # sum = 0;
+	leaq	-17(%rbp), %rsi # input[0] 的位置在-17(%rbp)
+    ...
+```
 
 好啦，这下就清楚了！
 
 我们来画一下栈：
-
 
 === GCC 栈
 
@@ -237,7 +432,6 @@ $ clang -S clang.i -o clang.s
   [-24],
   [sum],
 )
-
 
 === Clang 栈
 
@@ -266,21 +460,36 @@ $ clang -S clang.i -o clang.s
 *GCC为`i`和`input[0]`之间留足了栈帧，并且`input[4]`之后也没有变量可以影响循环，因此没出问题。*
 *而Clang让`input[4]`和`i`紧靠在一起，增加了数组越界的风险。*
 
-
 == 2. 汇编
-
 
 == 3. 链接
 
 哎呀这两个标题和本文没关系，加上只是为了目录更好看（
-
 
 = 验证猜想
 
 我们用 GCC 看看`input[-7]`？按道理就是`i`了吧！
 修改程序为
 
-#code-block("#include <stdio.h>\n\nint main(void)\n{\n    int sum = 0, i = 0;\n    char input[5];\n\n    while (1) {\n        sum = 0;\n        scanf(\"%s\", input);\n        for (i = 0; input[i] != '\\0'; i++)\n            sum = sum*10 + input[i] - '0';\n        printf(\"input=%d\\n\", sum);\n        printf(\"%d\\n\", input[-7]);\n    }\n    return 0;\n}", lang: "c", title: "test.c")
+```c
+#include <stdio.h>
+
+int main(void)
+{
+    int sum = 0, i = 0;
+    char input[5];
+
+    while (1) {
+        sum = 0;
+        scanf("%s", input);
+        for (i = 0; input[i] != '\0'; i++)
+            sum = sum*10 + input[i] - '0';
+        printf("input=%d\n", sum);
+        printf("%d\n", input[-7]);
+    }
+    return 0;
+}
+```
 
 运行程序：
 
@@ -294,12 +503,10 @@ input=12345
 
 大功告成！*果然，`input[-7]` 就是 `i`！*
 
-
 = 如何规避风险？
 
 #quote-block[
 _`-O0`了吗？`-fsanitize=address`了吗？快加上！_
-
 
 ]
 
@@ -343,7 +550,7 @@ Shadow bytes around the buggy address:
   0x7b4c18f00280: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
 Shadow byte legend (one shadow byte represents 8 application bytes):
   Addressable:           00
-  Partially addressable: 01 02 03 04 05 06 07 
+  Partially addressable: 01 02 03 04 05 06 07
   Heap left redzone:       fa
   Freed heap region:       fd
   Stack left redzone:      f1
@@ -366,7 +573,6 @@ Shadow byte legend (one shadow byte represents 8 application bytes):
 看得出来，加上参数确实有助于规避数组越界风险。
 
 *不过，最有效的方法还是事先考虑好所有情况，防范任何可能出现的 Bug！*#strike[（酒吧点炒饭.txt）]
-
 
 = 写在最后
 

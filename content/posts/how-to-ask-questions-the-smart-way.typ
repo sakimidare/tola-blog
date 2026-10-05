@@ -1,4 +1,4 @@
-#import "/templates/fuwari.typ": post, admonition, code-block, quote-block, github-card, link-card, content-image, hr-line
+#import "/templates/fuwari.typ": post, admonition, quote-block, github-card, link-card, content-image, hr-line, anchor
 
 #show: post.with(
   title: "提问的智慧",
@@ -28,7 +28,6 @@ Copyleft 2001 by D.H.Grand(nOBODY/Ginux), 2010 by Gasolin, 2015 by Ryan Wu
 
 #github-card("ryanhanwu/How-To-Ask-Questions-The-Smart-Way")
 
-
 = 声明
 
 许多项目在他们网站的帮助文档中链接了本指南。这很好，这正是我们想要的用途。但如果你是该项目管理员并试图创建指向本指南的超链接，请在超链接附近的显著位置注明：
@@ -38,7 +37,6 @@ Copyleft 2001 by D.H.Grand(nOBODY/Ginux), 2010 by Gasolin, 2015 by Ryan Wu
 我们已经深刻领教到缺少上述声明所带来的痛苦：我们将不停地被那些认为发布这本指南就意味着有责任解决世上所有技术问题的傻瓜苦苦纠缠。
 
 如果你因寻求某些帮助而阅读本指南，并在离开时还觉得可以从本文作者这里得到直接帮助，那你就是我们之前说的那些傻瓜之一。别问我们问题，我们只会忽略你。我们在这本指南中想教你如何从那些真正懂得你所遇到的软件或硬件问题的人处取得协助，而 99% 的情况下那不会是我们。除非你确定本指南的作者之一刚好是你所遇到的问题领域的专家，否则请不要打扰我们，这样大家都会开心一点。
-
 
 = 简介
 
@@ -64,7 +62,6 @@ Copyleft 2001 by D.H.Grand(nOBODY/Ginux), 2010 by Gasolin, 2015 by Ryan Wu
 
 （欢迎对本指南提出改进意见。你可以把你的建议发送至 #link("esr@thyrsus.com")[esr\@thyrsus.com] 或 #link("respond-auto@linuxmafia.com")[respond-auto\@linuxmafia.com]。然而请注意，本文并非#link("http://www.ietf.org/rfc/rfc1855.txt")[网络礼节]的通用指南，而我们通常会拒绝无助于在技术论坛得到有用答案的建议）。
 
-
 = 在提问之前
 
 在你准备要通过电子邮件、新闻群组或者聊天室提出技术问题前，请先做到以下事情：
@@ -78,7 +75,7 @@ Copyleft 2001 by D.H.Grand(nOBODY/Ginux), 2010 by Gasolin, 2015 by Ryan Wu
 + 如果你是程序开发者，请尝试阅读源代码以找到答案。
 + _谨慎使用 LLM 获取答案 (本站编者注)_。
 
-\<a id="LLM" tabindex="-1" style="width:0; height:0; overflow:hidden; display:block;"\>\</a\>
+#anchor("LLM")
 
 #admonition(kind: "warning", title: none)[
 #link("https://en.wikipedia.org/wiki/Large_Language_Model")[LLM]，大型语言模型（也就是 OpenAI 的 ChatGPT，Anthropic 的 Claude，Google 的 Gemini，深度求索的 DeepSeek 等 “AI”），看似是人类可以向 AI 询问任何问题，AI 就会给出看着非常可信的答案。有人可能会觉得如获至宝，看到有人问问题就把问题丢给它们问，再把回答随便贴上去。
@@ -91,12 +88,10 @@ Copyleft 2001 by D.H.Grand(nOBODY/Ginux), 2010 by Gasolin, 2015 by Ryan Wu
 
 因此，总结一下：如果一段文字看着是 AI 生成的，或者你打算向 AI 问问题，请先认为你看到的内容一个字都不能信。也请不要把“它说的对不对啊”的工作推给别人，因为比起对 LLM 缝缝补补，人类自己早就能把问题解决掉了。
 
-
 ]
 
 #admonition(kind: "note", title: none)[
 _以上段落摘自#link("https://wiki.archlinuxcn.org/wiki/%E5%BB%BA%E8%AE%AE%E9%98%85%E8%AF%BB/%E7%BB%99%E6%96%B0%E7%94%A8%E6%88%B7%E7%9A%84%E5%85%B3%E4%BA%8E%E5%A6%82%E4%BD%95%E4%B8%8D%E5%8E%BB%E5%BC%84%E5%9D%8F_Arch_Linux_%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%BB%BA%E8%AE%AE#%E8%B0%A8%E6%85%8E%E5%AF%B9%E5%BE%85_LLM_%E7%BB%99%E5%87%BA%E7%9A%84%E5%86%85%E5%AE%B9")[给新用户的关于如何不去弄坏 Arch Linux 系统的建议]。_
-
 
 ]
 
@@ -114,9 +109,7 @@ _以上段落摘自#link("https://wiki.archlinuxcn.org/wiki/%E5%BB%BA%E8%AE%AE%E
 
 另一方面，表明你愿意在找答案的过程中做点什么是一个非常好的开端。`谁能给点提示？`、`我的这个例子里缺了什么？`以及`我应该检查什么地方`比`请把我需要的确切的过程贴出来`更容易得到答复。因为你表现出只要有人能指个正确方向，你就有完成它的能力和决心。
 
-
 = 当你提问时
-
 
 == 慎选提问的论坛
 
@@ -143,7 +136,6 @@ _以上段落摘自#link("https://wiki.archlinuxcn.org/wiki/%E5%BB%BA%E8%AE%AE%E
 
 可以理解的是，老练的黑客和一些热门软件的作者正在接受过多的错发信息。就像那根最后压垮骆驼背的稻草一样，你的加入也有可能使情况走向极端 —— 已经好几次了，一些热门软件的作者由于涌入其私人邮箱的大量不堪忍受的无用邮件而不再提供支持。
 
-
 == Stack Overflow
 
 搜索，_然后_在 Stack Exchange 问。
@@ -160,7 +152,6 @@ Stack Exchange 已经成长到#link("https://stackexchange.com/sites")[超过一
 - Stack Overflow 是问写程序有关的问题。
 - Server Fault 是问服务器和网管相关的问题。
 
-
 == 网站和 IRC 论坛
 
 本地的用户群组（user group），或者你所用的 Linux 发行版本也许正在宣传他们的网页论坛或 IRC 频道，并提供新手帮助（在一些非英语国家，新手论坛很可能还是邮件列表），这些都是开始提问的好地方，特别是当你觉得遇到的也许只是相对简单或者很普通的问题时。有广告赞助的 IRC 频道是公开欢迎提问的地方，通常可以即时得到回应。
@@ -172,7 +163,6 @@ Stack Exchange 已经成长到#link("https://stackexchange.com/sites")[超过一
 通过论坛或 IRC 频道来提供用户支持服务有增长的趋势，电子邮件则大多为项目开发者间的交流而保留。所以最好先在论坛或 IRC 中寻求与该项目相关的协助。
 
 在使用 IRC 的时候，首先最好不要发布很长的问题描述，有些人称之为频道洪水。最好通过一句话的问题描述来开始聊天。
-
 
 == 第二步，使用项目邮件列表
 
@@ -189,7 +179,6 @@ Stack Exchange 已经成长到#link("https://stackexchange.com/sites")[超过一
 
 如果你找不到一个项目的邮件列表，而只能查到项目维护者的电子邮件地址，尽管向他发信。即使是在这种情况下，也别假设（项目）邮件列表不存在。在你的电子邮件中，请陈述你已经试过但没有找到合适的邮件列表，也提及你不反对将自己的邮件转发给他人（许多人认为，即使没什么秘密，私人电子邮件也不应该被公开。通过允许将你的电子邮件转发他人，你给了相应人员处置你邮件的选择）。
 
-
 == 使用有意义且描述明确的标题
 
 在邮件列表、新闻群组或论坛中，大约 50 字以内的标题是抓住资深专家注意力的好机会。别用喋喋不休的`帮帮忙`、`跪求`、`急`（更别说`救命啊！！！！`这样让人反感的话，用这种标题会被条件反射式地忽略）来浪费这个机会。不要妄想用你的痛苦程度来打动我们，而应该是在这点空间中使用极简单扼要的描述方式来提出问题。
@@ -199,18 +188,15 @@ Stack Exchange 已经成长到#link("https://stackexchange.com/sites")[超过一
 #quote-block[
 蠢问题：救命啊！我的笔记本电脑不能正常显示了！
 
-
 ]
 
 #quote-block[
 聪明问题：X.org 6.8.1 的鼠标指针会变形，某牌显卡 MV1005 芯片组。
 
-
 ]
 
 #quote-block[
 更聪明问题：X.org 6.8.1 的鼠标指针，在某牌显卡 MV1005 芯片组环境下 - 会变形。
-
 
 ]
 
@@ -226,13 +212,11 @@ Stack Exchange 已经成长到#link("https://stackexchange.com/sites")[超过一
 
 在网页论坛上，好的提问方式稍有不同，因为讨论串与特定的信息紧密结合，并且通常在讨论串外就看不到里面的内容，故通过回复提问，而非改变标题是可接受的。不是所有论坛都允许在回复中出现分离的标题，而且这样做了基本上没有人会去看。不过，通过回复提问，这本身就是暧昧的做法，因为它们只会被正在查看该标题的人读到。所以，除非你*只想*在该讨论串当前活跃的人群中提问，不然还是另起炉灶比较好。
 
-
 == 使问题容易回复
 
 以`请将你的回复发送到……`来结束你的问题多半会使你得不到回答。如果你觉得花几秒钟在邮件客户端设置一下回复地址都麻烦，我们也觉得花几秒钟思考你的问题更麻烦。如果你的邮件程序不支持这样做，#link("http://linuxmafia.com/faq/Mail/muas.html")[换个好点的]；如果是操作系统不支持这种邮件程序，也换个好点的。
 
 在论坛，要求通过电子邮件回复是非常无礼的，除非你认为回复的信息可能比较敏感（有人会为了某些未知的原因，只让你而不是整个论坛知道答案）。如果你只是想在有人回复讨论串时得到电子邮件提醒，可以要求网页论坛发送给你。几乎所有论坛都支持诸如`追踪此讨论串`、`有回复时发送邮件提醒`等功能。
-
 
 == 使用清晰、正确、精准且合乎语法的语句
 
@@ -252,7 +236,6 @@ Stack Exchange 已经成长到#link("https://stackexchange.com/sites")[超过一
 #quote-block[
 English is not my native language; please excuse typing errors.
 
-
 ]
 
 - 英文不是我的母语，请原谅我的错字或语法。
@@ -260,7 +243,6 @@ English is not my native language; please excuse typing errors.
 #quote-block[
 If you speak \$LANGUAGE, please email/PM me;
 I may need assistance translating my question.
-
 
 ]
 
@@ -271,7 +253,6 @@ I may need assistance translating my question.
 I am familiar with the technical terms,
 but some slang expressions and idioms are difficult for me.
 
-
 ]
 
 - 我对技术名词很熟悉，但对于俗语或是特别用法不甚了解。
@@ -280,12 +261,10 @@ but some slang expressions and idioms are difficult for me.
 I've posted my question in \$LANGUAGE and English.
 I'll be glad to translate responses, if you only use one or the other.
 
-
 ]
 
 - 我把我的问题用*某语言*和英文写出来。
 - 如果你只用其中的一种语言回答，我会乐意将回复翻译成为你使用的语言。
-
 
 == 使用易于读取且标准的文件格式发送问题
 
@@ -302,7 +281,6 @@ I'll be glad to translate responses, if you only use one or the other.
 
 如果你使用图形用户界面的邮件程序（如微软公司的 Outlook 或者其它类似的），注意它们的默认设置不一定满足这些要求。大多数这类程序有基于选单的`查看源代码`命令，用它来检查发送文件夹中的邮件，以确保发送的是纯文本文件同时没有一些奇怪的字符。
 
-
 == 精确地描述问题并言之有物
 
 - 仔细、清楚地描述你的问题或 Bug 的症状。
@@ -318,7 +296,6 @@ I'll be glad to translate responses, if you only use one or the other.
 
 #link("http://www.chiark.greenend.org.uk/~sgtatham/")[Simon Tatham] 写过一篇名为《#link("http://www.chiark.greenend.org.uk/~sgtatham/bugs-cn.html")[如何有效地报告Bug]》的出色文章。强力推荐你也读一读。
 
-
 == 话不在多而在精
 
 你需要提供精确有内容的信息。这并不是要求你简单的把成堆的出错代码或者资料完全转录到你的提问中。如果你有庞大而复杂的测试样例能重现程序挂掉的情境，尽量将它剪裁得越小越好。
@@ -327,7 +304,6 @@ I'll be glad to translate responses, if you only use one or the other.
 第一，表现出你为简化问题付出了努力，这可以使你得到回答的机会增加；
 第二，简化问题使你更有可能得到*有用*的答案；
 第三，在精炼你的 bug 报告的过程中，你很可能就自己找到了解决方法或权宜之计。
-
 
 == 别动辄声称找到 Bug
 
@@ -339,7 +315,6 @@ I'll be glad to translate responses, if you only use one or the other.
 
 提问时，即使你私下非常确信已经发现一个真正的 Bug，最好写得像是*你*做错了什么。如果真的有 Bug，你会在回复中看到这点。这样做的话，如果真有 Bug，维护者就会向你道歉，这总比你惹恼别人然后欠别人一个道歉要好一点。
 
-
 == 低声下气不能代替你的功课
 
 有些人明白他们不该粗鲁或傲慢的提问并要求得到答复，但他们选择另一个极端 —— 低声下气：`我知道我只是个可悲的新手，一个失败者，但...`。这既使人困扰，也没有用，尤其是伴随着与实际问题含糊不清的描述时更令人反感。
@@ -347,7 +322,6 @@ I'll be glad to translate responses, if you only use one or the other.
 别用原始灵长类动物的把戏来浪费你我的时间。取而代之的是，尽可能清楚地描述背景条件和你的问题情况。这比低声下气更好地定位了你的位置。
 
 有时网页论坛会设有专为新手提问的版面，如果你真的认为遇到了初学者的问题，到那去就是了，但一样别那么低声下气。
-
 
 == 描述问题症状而非你的猜测
 
@@ -359,7 +333,6 @@ I'll be glad to translate responses, if you only use one or the other.
 我在编译内核时接连遇到 SIG11 错误，
 我怀疑某条飞线搭在主板的走线上了，这种情况应该怎样检查最好？
 
-
 ]
 
 *聪明问题*
@@ -370,11 +343,9 @@ I'll be glad to translate responses, if you only use one or the other.
 但是在头 20 分钟内从没发生过相同的问题。重新启动也没有用，但是关机一晚上就又能工作 20 分钟。
 所有内存都换过了，没有效果。相关部分的标准编译记录如下…
 
-
 ]
 
 由于以上这点似乎让许多人觉得难以配合，这里有句话可以提醒你：`所有的诊断专家都来自密苏里州。` 美国国务院的官方座右铭则是：`让我看看`（出自国会议员 Willard D. Vandiver 在 1899 年时的讲话：`我来自一个出产玉米，棉花，牛蒡和民主党人的国家，滔滔雄辩既不能说服我，也不会让我满意。我来自密苏里州，你必须让我看看。`） 针对诊断者而言，这并不是一种怀疑，而只是一种真实而有用的需求，以便让他们看到的是与你看到的原始证据尽可能一致的东西，而不是你的猜测与归纳的结论。所以，大方地展示给我们看吧！
-
 
 == 按发生时间先后列出问题症状
 
@@ -383,7 +354,6 @@ I'll be glad to translate responses, if you only use one or the other.
 如果挂掉的程序有诊断选项（如 -v 的详述开关），试着选择这些能在记录中增加调试信息的选项。记住，`多`不等于`好`。试着选取适当的调试级别以便提供有用的信息而不是让读者淹没在垃圾中。
 
 如果你的说明很长（如超过四个段落），在开头简述问题，接下来再按时间顺序详述会有所帮助。这样黑客们在读你的记录时就知道该注意哪些内容了。
-
 
 == 描述目标而不是过程
 
@@ -396,7 +366,6 @@ I'll be glad to translate responses, if you only use one or the other.
 #quote-block[
 我怎样才能从某绘图程序的颜色选择器中取得十六进制的 RGB 值？
 
-
 ]
 
 *聪明问题*
@@ -405,11 +374,9 @@ I'll be glad to translate responses, if you only use one or the other.
 我正试着用替换一幅图片的色码（color table）成自己选定的色码，我现在知道的唯一方法是编辑每个色码区块（table slot），
 但却无法从某绘图程序的颜色选择器取得十六进制的 RGB 值。
 
-
 ]
 
 第二种提问法比较聪明，你可能得到像是`建议采用另一个更合适的工具`的回复。
-
 
 == 别要求使用私人电邮回复
 
@@ -418,7 +385,6 @@ I'll be glad to translate responses, if you only use one or the other.
 当你要求私下回复时，这个过程和奖励都被中止。别这样做，让*回复者*来决定是否私下回答 —— 如果他真这么做了，通常是因为他认为问题编写太差或者太肤浅，以至于不可能使其他人产生兴趣。
 
 这条规则存在一条有限的例外，如果你确信提问可能会引来大量雷同的回复时，那么这个神奇的提问句会是`向我发电邮，我将为论坛归纳这些回复`。试着将邮件列表或新闻群组从洪水般的雷同回复中解救出来是非常有礼貌的 —— 但你必须信守诺言。
-
 
 == 清楚明确地表达你的问题以及需求
 
@@ -430,7 +396,6 @@ I'll be glad to translate responses, if you only use one or the other.
 
 所以，界定一下你的问题，使专家花在辨识你的问题和回答所需要付出的时间减到最少，这技巧对你获得有用的答案相当有帮助 —— 但这技巧通常和简化问题有所区别。因此，问`我想更好地理解 X，可否指点一下哪有好一点说明？`通常比问`你能解释一下 X 吗？`更好。如果你的代码不能运作，通常请别人看看哪里有问题，比要求别人替你改正要明智得多。
 
-
 == 询问有关代码的问题时
 
 如果没有提示别人应该从何入手，别要求他人帮你调试有问题的代码。张贴几百行的代码，然后说一声：`它不能工作`会让你完全被忽略。只贴几十行代码，然后说一句：`在第七行以后，我期待它显示 <x>，但实际出现的是 <y>`比较有可能让你得到回应。
@@ -441,13 +406,11 @@ I'll be glad to translate responses, if you only use one or the other.
 
 如果你只是想让别人帮忙审查（Review）一下代码，在信的开头就要说出来，并且一定要提到你认为哪一部分特别需要关注以及为什么。
 
-
 == 别把自己家庭作业的问题贴上来
 
 黑客们很擅长分辨哪些问题是家庭作业式的问题；因为我们中的大多数都曾自己解决这类问题。同样，这些问题得由*你*来搞定，你会从中学到东西。你可以要求给点提示，但别要求得到完整的解决方案。
 
 如果你怀疑自己碰到了一个家庭作业式的问题，但仍然无法解决，试试在用户群组，论坛或（最后一招）在项目的*用户*邮件列表或论坛中提问。尽管黑客们*会*看出来，但一些有经验的用户也许仍会给你一些提示。
-
 
 == 去掉无意义的提问句
 
@@ -459,7 +422,6 @@ I'll be glad to translate responses, if you only use one or the other.
 
 一般来说，避免用 `是或否`、`对或错`、`有或没有`类型的问句，除非你想得到#link("https://strcat.de/questions-with-yes-or-no-answers.html")[是或否类型的回答]。
 
-
 == 即使你很急也不要在标题写`紧急`
 
 这是你的问题，不是我们的。宣称`紧急`极有可能事与愿违：大多数黑客会直接删除无礼和自私地企图即时引起关注的问题。更严重的是，`紧急`这个字（或是其他企图引起关注的标题）通常会被垃圾信过滤器过滤掉 —— 你希望能看到你问题的人可能永远也看不到。
@@ -470,7 +432,6 @@ I'll be glad to translate responses, if you only use one or the other.
 
 如果你觉得这点很不可思议，最好再把这份指南剩下的内容多读几遍，直到你弄懂了再发文。
 
-
 == 礼多人不怪，而且有时还很有帮助
 
 彬彬有礼，多用`请`和`谢谢您的关注`，或`谢谢你的关照`。让大家都知道你对他们花时间免费提供帮助心存感激。
@@ -480,7 +441,6 @@ I'll be glad to translate responses, if you only use one or the other.
 然而，如果你有一串的问题待解决，客气一点肯定会增加你得到有用回应的机会。
 
 （我们注意到，自从本指南发布后，从资深黑客那里得到的唯一严重缺陷反馈，就是对预先道谢这一条。一些黑客觉得`先谢了`意味着事后就不用再感谢任何人的暗示。我们的建议是要么先说`先谢了`，*然后*事后再对回复者表示感谢，或者换种方式表达感激，譬如用`谢谢你的关注`或`谢谢你的关照`。）
-
 
 == 问题解决后，加个简短的补充说明
 
@@ -500,11 +460,9 @@ I'll be glad to translate responses, if you only use one or the other.
 
 在黑客中，这种良好的后继行动实际上比传统的礼节更为重要，也是你如何透过善待他人而赢得声誉的方式，这是非常有价值的资产。
 
-
 = 如何解读答案
 
-\<a id="RTFM" tabindex="-1" style="width:0; height:0; overflow:hidden; display:block;"\>\</a\>
-
+#anchor("RTFM")
 
 === RTFM 和 STFW：如何知道你已完全搞砸了
 
@@ -521,13 +479,11 @@ RTFM 有一个年轻的亲戚。如果你收到`STFW（Search The Fucking Web）
 
 你不应该因此不爽；*依照黑客的标准，他已经表示了对你一定程度的关注，而没有对你的要求视而不见*。你应该对他祖母般的慈祥表示感谢。
 
-
 == 如果还是搞不懂
 
 如果你看不懂回应，别立刻要求对方解释。像你以前试着自己解决问题时那样（利用手册，FAQ，网络，身边的高手），先试着去搞懂他的回应。如果你真的需要对方解释，记得表现出你已经从中学到了点什么。
 
 比方说，如果我回答你：`看来似乎是 zentry 卡住了；你应该先清除它。`，然后，这是一个*很糟的*后续问题回应：`zentry 是什么？` *好*的问法应该是这样：`哦~~~我看过说明了但是只有 -z 和 -p 两个参数中提到了 zentries，而且还都没有清楚的解释如何清除它。你是指这两个中的哪一个吗？还是我看漏了什么？`
-
 
 == 处理无礼的回应
 
@@ -542,7 +498,6 @@ RTFM 有一个年轻的亲戚。如果你收到`STFW（Search The Fucking Web）
 Jeff Bigler 的观察总结和这个相关也值得一读 (*#link("http://www.mit.edu/~jcb/tact.html")[tact filters]*)。
 
 在下一节，我们会谈到另一个问题，当*你*行为不当时所会受到的`冒犯`。
-
 
 = 如何避免扮演失败者
 
@@ -565,7 +520,6 @@ Jeff Bigler 的观察总结和这个相关也值得一读 (*#link("http://www.mi
 这些来找麻烦的人要么是毫无办法但自以为是专家的不中用家伙，要么就是测试你是否真会搞砸的心理专家。其它读者要么不理睬，要么用自己的方式对付他们。这些来找麻烦的人在给他们自己找麻烦，这点你不用操心。
 
 也别让自己卷入口水战，最好不要理睬大多数的口水战 —— 当然，这是在你检验它们只是口水战，并且未指出你有搞砸的地方，同时也没有巧妙地将问题真正的答案藏于其后（这也是有可能的）。
-
 
 = 不该问的问题
 
@@ -591,51 +545,46 @@ Jeff Bigler 的观察总结和这个相关也值得一读 (*#link("http://www.mi
 
 #hr-line()
 
-\<a id="q1" tabindex="-1" style="width:0; height:0; overflow:hidden; display:block;"\>\</a\>
+#anchor("q1")
 
 #quote-block[
 问题：我能在哪找到 X 程序或 X 资源？
-
 
 ]
 
 回答：就在我找到它的地方啊，白痴 —— 搜索引擎的那一头。天哪！难道还有人不会用 #link("https://www.google.com")[Google] 吗？
 
-\<a id="q2" tabindex="-1" style="width:0; height:0; overflow:hidden; display:block;"\>\</a\>
+#anchor("q2")
 
 #quote-block[
 问题：我怎样用 X 做 Y？
-
 
 ]
 
 回答：如果你想解决的是 Y ，提问时别给出可能并不恰当的方法。这种问题说明提问者不但对 X 完全无知，也对 Y 要解决的问题糊涂，还被特定形势禁锢了思维。最好忽略这种人，等他们把问题搞清楚了再说。
 
-\<a id="q3" tabindex="-1" style="width:0; height:0; overflow:hidden; display:block;"\>\</a\>
+#anchor("q3")
 
 #quote-block[
 问题：如何设定我的 shell 提示？？
-
 
 ]
 
 回答：如果你有足够的智慧提这个问题，你也该有足够的智慧去 #link("#RTFM")[RTFM]，然后自己去找出来。
 
-\<a id="q4" tabindex="-1" style="width:0; height:0; overflow:hidden; display:block;"\>\</a\>
+#anchor("q4")
 
 #quote-block[
 问题：我可以用 Bass-o-matic 文件转换工具将 AcmeCorp 文件转换为 TeX 格式吗？
-
 
 ]
 
 回答：试试看就知道了。如果你试过，你就知道了答案，就不用浪费我的时间了。
 
-\<a id="q5" tabindex="-1" style="width:0; height:0; overflow:hidden; display:block;"\>\</a\>
+#anchor("q5")
 
 #quote-block[
 问题：我的{程序/设定/SQL 语句}没有用
-
 
 ]
 
@@ -645,11 +594,10 @@ Jeff Bigler 的观察总结和这个相关也值得一读 (*#link("http://www.mi
 - 真糟糕，希望你能搞定。
 - 这关我屁事？
 
-\<a id="q6" tabindex="-1" style="width:0; height:0; overflow:hidden; display:block;"\>\</a\>
+#anchor("q6")
 
 #quote-block[
 问题：我的 Windows 电脑有问题，你能帮我吗？
-
 
 ]
 
@@ -657,21 +605,19 @@ Jeff Bigler 的观察总结和这个相关也值得一读 (*#link("http://www.mi
 
 注意：如果程序有官方版 Windows 或者与 Windows 有互动（如 Samba），你*可以*问与 Windows 相关的问题，只是别对问题是由 Windows 操作系统而不是程序本身造成的回复感到惊讶， 因为 Windows 一般来说实在太烂，这种说法通常都是对的。
 
-\<a id="q7" tabindex="-1" style="width:0; height:0; overflow:hidden; display:block;"\>\</a\>
+#anchor("q7")
 
 #quote-block[
 问题：我的程序不会动了，我认为系统工具 X 有问题
-
 
 ]
 
 回答：你完全有可能是第一个注意到被成千上万用户反复使用的系统调用与函数库文件有明显缺陷的人，更有可能的是你完全没有根据。不同凡响的说法需要不同凡响的证据，当你这样声称时，你必须有清楚而详尽的缺陷说明文件作后盾。
 
-\<a id="q8" tabindex="-1" style="width:0; height:0; overflow:hidden; display:block;"\>\</a\>
+#anchor("q8")
 
 #quote-block[
 问题：我在安装 Linux（或者 X ）时有问题，你能帮我吗？
-
 
 ]
 
@@ -679,16 +625,14 @@ Jeff Bigler 的观察总结和这个相关也值得一读 (*#link("http://www.mi
 
 注意：如果安装问题与某 Linux 的发行版有关，在它的邮件列表、论坛或本地用户群组中提问也许是恰当的。此时，应描述问题的准确细节。在此之前，先用 `Linux` 和*所有*被怀疑的硬件作关键词仔细搜索。
 
-\<a id="q9" tabindex="-1" style="width:0; height:0; overflow:hidden; display:block;"\>\</a\>
+#anchor("q9")
 
 #quote-block[
 问题：我怎么才能破解 root 帐号/窃取 OP 特权/读别人的邮件呢？
 
-
 ]
 
 回答：想要这样做，说明了你是个卑鄙小人；想找个黑客帮你，说明你是个白痴！
-
 
 = 好问题与蠢问题
 
@@ -699,7 +643,6 @@ Jeff Bigler 的观察总结和这个相关也值得一读 (*#link("http://www.mi
 #quote-block[
 我可以在哪儿找到关于 Foonly Flurbamatic 的资料？
 
-
 ]
 
 这种问法无非想得到 #link("#RTFM")[STFW] 这样的回答。
@@ -708,7 +651,6 @@ Jeff Bigler 的观察总结和这个相关也值得一读 (*#link("http://www.mi
 
 #quote-block[
 我用 Google 搜索过 "Foonly Flurbamatic 2600"，但是没找到有用的结果。谁知道上哪儿去找对这种设备编程的资料？
-
 
 ]
 
@@ -719,7 +661,6 @@ Jeff Bigler 的观察总结和这个相关也值得一读 (*#link("http://www.mi
 #quote-block[
 我从 foo 项目找来的源码没法编译。它怎么这么烂？
 
-
 ]
 
 他觉得都是别人的错，这个傲慢自大的提问者。
@@ -728,7 +669,6 @@ Jeff Bigler 的观察总结和这个相关也值得一读 (*#link("http://www.mi
 
 #quote-block[
 foo 项目代码在 Nulix 6.2 版下无法编译通过。我读过了 FAQ，但里面没有提到跟 Nulix 有关的问题。这是我编译过程的记录，我有什么做的不对的地方吗？
-
 
 ]
 
@@ -739,7 +679,6 @@ foo 项目代码在 Nulix 6.2 版下无法编译通过。我读过了 FAQ，但�
 #quote-block[
 我的主机板有问题了，谁来帮我？
 
-
 ]
 
 某黑客对这类问题的回答通常是：`好的，还要帮你拍拍背和换尿布吗？`，然后按下删除键。
@@ -748,7 +687,6 @@ foo 项目代码在 Nulix 6.2 版下无法编译通过。我读过了 FAQ，但�
 
 #quote-block[
 我在 S2464 主机板上试过了 X 、 Y 和 Z ，但没什么作用，我又试了 A 、 B 和 C 。请注意当我尝试 C 时的奇怪现象。显然 florbish 正在 grommicking，但结果出人意料。通常在 Athlon MP 主机板上引起 grommicking 的原因是什么？有谁知道接下来我该做些什么测试才能找出问题？
-
 
 ]
 
@@ -764,7 +702,6 @@ foo 项目代码在 Nulix 6.2 版下无法编译通过。我读过了 FAQ，但�
 
 黑客从某种角度来说是拥有丰富知识但缺乏人情味的家伙；我相信他是对的，如果我*像*个乞讨者那样提问，不论我是谁，一定会惹恼某些人或者被他们忽视。他建议我记下这件事，这直接导致了本指南的出现。
 
-
 = 如果得不到回答
 
 如果仍得不到回答，请不要以为我们觉得无法帮助你。有时只是看到你问题的人不知道答案罢了。没有回应不代表你被忽视，虽然不可否认这种差别很难区分。
@@ -779,7 +716,6 @@ foo 项目代码在 Nulix 6.2 版下无法编译通过。我读过了 FAQ，但�
 
 对像是 Linux 这种大众化的软件，每个开发者至少会对应到上万名用户。根本不可能由一个人来处理来自上万名用户的求助电话。要知道，即使你要为这些协助付费，和你所购买的同类软件相比，你所付出的也是微不足道的（通常封闭源代码软件的技术支持费用比开源软件的要高得多，且内容也没那么丰富）。
 
-
 = 如何更好地回答问题
 
 *态度和善一点。* 问题带来的压力常使人显得无礼或愚蠢，其实并不是这样。
@@ -790,7 +726,6 @@ foo 项目代码在 Nulix 6.2 版下无法编译通过。我读过了 FAQ，但�
 
 #admonition(kind: "warning", title: none)[
 #link("#LLM")[不要使用 LLM 不懂装懂！]
-
 
 ]
 
@@ -808,13 +743,11 @@ foo 项目代码在 Nulix 6.2 版下无法编译通过。我读过了 FAQ，但�
 
 如果你在研究一番后才作出了回答，*展现你的技巧而不是直接端出结果*。毕竟`授人以鱼不如授人以渔`。
 
-
 = 相关资源
 
 如果你需要个人电脑、Unix 系统和网络如何运作的基础知识，参阅 #link("http://en.tldp.org/HOWTO/Unix-and-Internet-Fundamentals-HOWTO/")[Unix 系统和网络基本原理]。
 
 当你发布软件或补丁时，试着按#link("http://en.tldp.org/HOWTO/Software-Release-Practice-HOWTO/index.html")[软件发布实践]操作。
-
 
 = 鸣谢
 

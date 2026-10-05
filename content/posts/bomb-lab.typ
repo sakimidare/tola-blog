@@ -1,4 +1,4 @@
-#import "/templates/fuwari.typ": post, admonition, code-block, quote-block, github-card, link-card, content-image, hr-line
+#import "/templates/fuwari.typ": post, admonition, quote-block, github-card, link-card, content-image, hr-line, anchor
 
 #show: post.with(
   title: "Bomb Lab Writeup",
@@ -19,15 +19,12 @@
 
 有太多炸弹要我们处理，所以我们给每个学生一个炸弹来拆除。这是你的任务，你别无选择，只能接受，就是在截止时间前拆除你的炸弹。祝你好运，欢迎加入拆弹小组！
 
-
 ]
-
 
 = 开始
 
 #admonition(kind: "note", title: none)[
 本 WriteUp 所有操作均在 `Linux sakimidare-arch 7.0.2-arch1-1-lily #1 SMP PREEMPT_DYNAMIC Thu, 30 Apr 2026 05:29:46 +0000 x86_64 GNU/Linux` 上进行。
-
 
 ]
 
@@ -46,7 +43,123 @@
 
 首先来看 `bomb.c`:
 
-#code-block("/***************************************************************************\n * Dr. Evil's Insidious Bomb, Version 1.1\n * Copyright 2011, Dr. Evil Incorporated. All rights reserved.\n *\n * LICENSE:\n *\n * Dr. Evil Incorporated (the PERPETRATOR) hereby grants you (the\n * VICTIM) explicit permission to use this bomb (the BOMB).  This is a\n * time limited license, which expires on the death of the VICTIM.\n * The PERPETRATOR takes no responsibility for damage, frustration,\n * insanity, bug-eyes, carpal-tunnel syndrome, loss of sleep, or other\n * harm to the VICTIM.  Unless the PERPETRATOR wants to take credit,\n * that is.  The VICTIM may not distribute this bomb source code to\n * any enemies of the PERPETRATOR.  No VICTIM may debug,\n * reverse-engineer, run \"strings\" on, decompile, decrypt, or use any\n * other technique to gain knowledge of and defuse the BOMB.  BOMB\n * proof clothing may not be worn when handling this program.  The\n * PERPETRATOR will not apologize for the PERPETRATOR's poor sense of\n * humor.  This license is null and void where the BOMB is prohibited\n * by law.\n ***************************************************************************/\n\n#include <stdio.h>\n#include <stdlib.h>\n#include \"support.h\"\n#include \"phases.h\"\n\n/* \n * Note to self: Remember to erase this file so my victims will have no\n * idea what is going on, and so they will all blow up in a\n * spectaculary fiendish explosion. -- Dr. Evil \n */\n\nFILE *infile;\n\nint main(int argc, char *argv[])\n{\n    char *input;\n\n    /* Note to self: remember to port this bomb to Windows and put a \n     * fantastic GUI on it. */\n\n    /* When run with no arguments, the bomb reads its input lines \n     * from standard input. */\n    if (argc == 1) {  \n\tinfile = stdin;\n    } \n\n    /* When run with one argument <file>, the bomb reads from <file> \n     * until EOF, and then switches to standard input. Thus, as you \n     * defuse each phase, you can add its defusing string to <file> and\n     * avoid having to retype it. */\n    else if (argc == 2) {\n\tif (!(infile = fopen(argv[1], \"r\"))) {\n\t    printf(\"%s: Error: Couldn't open %s\\n\", argv[0], argv[1]);\n\t    exit(8);\n\t}\n    }\n\n    /* You can't call the bomb with more than 1 command line argument. */\n    else {\n\tprintf(\"Usage: %s [<input_file>]\\n\", argv[0]);\n\texit(8);\n    }\n\n    /* Do all sorts of secret stuff that makes the bomb harder to defuse. */\n    initialize_bomb();\n\n    printf(\"Welcome to my fiendish little bomb. You have 6 phases with\\n\");\n    printf(\"which to blow yourself up. Have a nice day!\\n\");\n\n    /* Hmm...  Six phases must be more secure than one phase! */\n    input = read_line();             /* Get input                   */\n    phase_1(input);                  /* Run the phase               */\n    phase_defused();                 /* Drat!  They figured it out!\n\t\t\t\t      * Let me know how they did it. */\n    printf(\"Phase 1 defused. How about the next one?\\n\");\n\n    /* The second phase is harder.  No one will ever figure out\n     * how to defuse this... */\n    input = read_line();\n    phase_2(input);\n    phase_defused();\n    printf(\"That's number 2.  Keep going!\\n\");\n\n    /* I guess this is too easy so far.  Some more complex code will\n     * confuse people. */\n    input = read_line();\n    phase_3(input);\n    phase_defused();\n    printf(\"Halfway there!\\n\");\n\n    /* Oh yeah?  Well, how good is your math?  Try on this saucy problem! */\n    input = read_line();\n    phase_4(input);\n    phase_defused();\n    printf(\"So you got that one.  Try this one.\\n\");\n    \n    /* Round and 'round in memory we go, where we stop, the bomb blows! */\n    input = read_line();\n    phase_5(input);\n    phase_defused();\n    printf(\"Good work!  On to the next...\\n\");\n\n    /* This phase will never be used, since no one will get past the\n     * earlier ones.  But just in case, make this one extra hard. */\n    input = read_line();\n    phase_6(input);\n    phase_defused();\n\n    /* Wow, they got it!  But isn't something... missing?  Perhaps\n     * something they overlooked?  Mua ha ha ha ha! */\n    \n    return 0;\n}", lang: "c", title: "bomb.c")
+```c
+/***************************************************************************
+ * Dr. Evil's Insidious Bomb, Version 1.1
+ * Copyright 2011, Dr. Evil Incorporated. All rights reserved.
+ *
+ * LICENSE:
+ *
+ * Dr. Evil Incorporated (the PERPETRATOR) hereby grants you (the
+ * VICTIM) explicit permission to use this bomb (the BOMB).  This is a
+ * time limited license, which expires on the death of the VICTIM.
+ * The PERPETRATOR takes no responsibility for damage, frustration,
+ * insanity, bug-eyes, carpal-tunnel syndrome, loss of sleep, or other
+ * harm to the VICTIM.  Unless the PERPETRATOR wants to take credit,
+ * that is.  The VICTIM may not distribute this bomb source code to
+ * any enemies of the PERPETRATOR.  No VICTIM may debug,
+ * reverse-engineer, run "strings" on, decompile, decrypt, or use any
+ * other technique to gain knowledge of and defuse the BOMB.  BOMB
+ * proof clothing may not be worn when handling this program.  The
+ * PERPETRATOR will not apologize for the PERPETRATOR's poor sense of
+ * humor.  This license is null and void where the BOMB is prohibited
+ * by law.
+ ***************************************************************************/
+
+#include <stdio.h>
+#include <stdlib.h>
+#include "support.h"
+#include "phases.h"
+
+/*
+ * Note to self: Remember to erase this file so my victims will have no
+ * idea what is going on, and so they will all blow up in a
+ * spectaculary fiendish explosion. -- Dr. Evil
+ */
+
+FILE *infile;
+
+int main(int argc, char *argv[])
+{
+    char *input;
+
+    /* Note to self: remember to port this bomb to Windows and put a
+     * fantastic GUI on it. */
+
+    /* When run with no arguments, the bomb reads its input lines
+     * from standard input. */
+    if (argc == 1) {
+	infile = stdin;
+    }
+
+    /* When run with one argument <file>, the bomb reads from <file>
+     * until EOF, and then switches to standard input. Thus, as you
+     * defuse each phase, you can add its defusing string to <file> and
+     * avoid having to retype it. */
+    else if (argc == 2) {
+	if (!(infile = fopen(argv[1], "r"))) {
+	    printf("%s: Error: Couldn't open %s\n", argv[0], argv[1]);
+	    exit(8);
+	}
+    }
+
+    /* You can't call the bomb with more than 1 command line argument. */
+    else {
+	printf("Usage: %s [<input_file>]\n", argv[0]);
+	exit(8);
+    }
+
+    /* Do all sorts of secret stuff that makes the bomb harder to defuse. */
+    initialize_bomb();
+
+    printf("Welcome to my fiendish little bomb. You have 6 phases with\n");
+    printf("which to blow yourself up. Have a nice day!\n");
+
+    /* Hmm...  Six phases must be more secure than one phase! */
+    input = read_line();             /* Get input                   */
+    phase_1(input);                  /* Run the phase               */
+    phase_defused();                 /* Drat!  They figured it out!
+				      * Let me know how they did it. */
+    printf("Phase 1 defused. How about the next one?\n");
+
+    /* The second phase is harder.  No one will ever figure out
+     * how to defuse this... */
+    input = read_line();
+    phase_2(input);
+    phase_defused();
+    printf("That's number 2.  Keep going!\n");
+
+    /* I guess this is too easy so far.  Some more complex code will
+     * confuse people. */
+    input = read_line();
+    phase_3(input);
+    phase_defused();
+    printf("Halfway there!\n");
+
+    /* Oh yeah?  Well, how good is your math?  Try on this saucy problem! */
+    input = read_line();
+    phase_4(input);
+    phase_defused();
+    printf("So you got that one.  Try this one.\n");
+
+    /* Round and 'round in memory we go, where we stop, the bomb blows! */
+    input = read_line();
+    phase_5(input);
+    phase_defused();
+    printf("Good work!  On to the next...\n");
+
+    /* This phase will never be used, since no one will get past the
+     * earlier ones.  But just in case, make this one extra hard. */
+    input = read_line();
+    phase_6(input);
+    phase_defused();
+
+    /* Wow, they got it!  But isn't something... missing?  Perhaps
+     * something they overlooked?  Mua ha ha ha ha! */
+
+    return 0;
+}
+```
 
 `support.h` 和 `phases.h` 并没有提供，源码中的 `initialize_bomb()`, `read_line()`, `phase_x()`, `phase_defused()` 未提供定义。这就需要我们用反汇编推出这几个函数内部的逻辑并猜出密钥。
 
@@ -59,15 +172,14 @@ void phase_x(char*);
 void phase_defused();
 ```
 
-
 = 反汇编
 
 首先用 `readelf` 看一眼这个 ELF 文件的布局：
 
 ```sh
-readelf -a bomb 
+readelf -a bomb
 ELF 头：
-  Magic：  7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00 
+  Magic：  7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00
   类别:                              ELF64
   数据:                              2 补码，小端序 (little endian)
   Version:                           1 (current)
@@ -173,7 +285,6 @@ There are no section groups in this file.
 
 对我们有用的部分是 `.text` 和 `.rodata` 段。前者保存机器码，后者保存用到的常量（包括字符串）。
 
-
 == `initialize_bomb()`
 
 ```sh
@@ -184,7 +295,6 @@ objdump -d bomb -disassemble=initialize_bomb
 objdump -d bomb --disassemble=initialize_bomb
 
 bomb：     文件格式 elf64-x86-64
-
 
 Disassembly of section .init:
 
@@ -294,7 +404,6 @@ $ objdump -d --start-address=0x4012a0 --stop-address=0x4013a0 bomb
 
 bomb：     文件格式 elf64-x86-64
 
-
 Disassembly of section .text:
 
 00000000004012a0 <sig_handler>:
@@ -325,14 +434,13 @@ Disassembly of section .text:
 $ objdump -s -j .rodata bomb | grep -A 5 "4024c0"
  4024c0 536f2079 6f752074 68696e6b 20796f75  So you think you
  4024d0 2063616e 2073746f 70207468 6520626f   can stop the bo
- 4024e0 6d622077 69746820 6374726c 2d632c20  mb with ctrl-c, 
- 4024f0 646f2079 6f753f00 43757273 65732c20  do you?.Curses, 
+ 4024e0 6d622077 69746820 6374726c 2d632c20  mb with ctrl-c,
+ 4024f0 646f2079 6f753f00 43757273 65732c20  do you?.Curses,
  402500 796f7527 76652066 6f756e64 20746865  you've found the
  402510 20736563 72657420 70686173 65210000   secret phase!..
 ```
 
 好吧确实没啥关系……不管了我们接着看下一个函数。
-
 
 == `phase_1()`
 
@@ -340,7 +448,6 @@ $ objdump -s -j .rodata bomb | grep -A 5 "4024c0"
 $ objdump -d bomb --disassemble=phase_1
 
 bomb：     文件格式 elf64-x86-64
-
 
 Disassembly of section .init:
 
@@ -369,7 +476,7 @@ $ objdump -s -j .rodata bomb | grep -A 10 "402400"
  402410 20776974 68204361 6e616461 20686176   with Canada hav
  402420 65206e65 76657220 6265656e 20626574  e never been bet
  402430 7465722e 00000000 576f7721 20596f75  ter.....Wow! You
- 402440 27766520 64656675 73656420 74686520  've defused the 
+ 402440 27766520 64656675 73656420 74686520  've defused the
  402450 73656372 65742073 74616765 2100666c  secret stage!.fl
  402460 79657273 00000000 00000000 00000000  yers............
  402470 7c0f4000 00000000 b90f4000 00000000  |.@.......@.....
@@ -396,7 +503,6 @@ Border relations with Canada have never been better.
 objdump -d bomb --start-address=0x401338 --stop-address=0x401400
 
 bomb：     文件格式 elf64-x86-64
-
 
 Disassembly of section .text:
 
@@ -457,14 +563,12 @@ Phase 1 defused. How about the next one?
 
 嘿嘿，拆弹成功！
 
-
 == `phase_2()`
 
 ```sh
-objdump -d bomb --disassemble=phase_2                           
+objdump -d bomb --disassemble=phase_2
 
 bomb：     文件格式 elf64-x86-64
-
 
 Disassembly of section .init:
 
@@ -504,7 +608,6 @@ Disassembly of section .fini:
 
 这个函数开始出现了比较多的跳转指令，猜测由 `if` 和 `while` 编译而来。
 
-
 === `<read_six_numbers>`
 
 先去看看 `40145c` 的 `read_six_numbers` 函数吧，看看读入的六个数字存到哪里去。
@@ -513,7 +616,6 @@ Disassembly of section .fini:
 objdump -d bomb --start-address=0x40145c --stop-address=0x40155c
 
 bomb：     文件格式 elf64-x86-64
-
 
 Disassembly of section .text:
 
@@ -562,7 +664,6 @@ int sscanf(const char *str, const char *format, ...);
 
 #admonition(kind: "note", title: none)[
 这个地方是我蒙的不小心蒙对了（）
-
 
 ]
 
@@ -686,7 +787,6 @@ if(sscanf("%d %d %d %d %d %d", &a1, &a2, &a3, &a4, &a5, &a6) <= 5) {
 
 于是我们顺利分析了 `read_six_numbers` 的行为。
 
-
 === 循环与跳转
 
 调用完 `read_six_numbers` 函数后，紧接着 `phase_2` 做了以下行为：
@@ -772,14 +872,12 @@ Phase 1 defused. How about the next one?
 That's number 2.  Keep going!
 ```
 
-
 == `phase_3()`
 
 ```sh
 objdump -d bomb --disassemble=phase_3
 
 bomb：     文件格式 elf64-x86-64
-
 
 Disassembly of section .init:
 
@@ -911,11 +1009,10 @@ Disassembly of section .fini:
 
 这正是 C 语言中 switch-case 语句编译后的典型模样。因为 switch 的分支太多，编译器为了效率，不会写一堆 if-else，而是直接在内存里建了一张“地址表”，根据你输入的数字直接查表跳转。
 
-
 ]
 
 ```sh
-$ gdb bomb 
+$ gdb bomb
 GNU gdb (GDB) 17.1
 Copyright (C) 2025 Free Software Foundation, Inc.
 License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
@@ -953,7 +1050,6 @@ Contents of section .rodata:
  402490 910f4000 00000000 980f4000 00000000  ..@.......@.....
  4024a0 9f0f4000 00000000 a60f4000 00000000  ..@.......@.....
 ```
-
 
 ]
 
@@ -1032,14 +1128,12 @@ That's number 2.  Keep going!
 Halfway there!
 ```
 
-
 == `phase_4()`
 
 ```sh
 $ objdump -d bomb --disassemble=phase_4
 
 bomb：     文件格式 elf64-x86-64
-
 
 Disassembly of section .init:
 
@@ -1098,10 +1192,9 @@ Disassembly of section .text:
 查看 `func4` 的汇编：
 
 ```sh
-objdump -d bomb --disassemble=func4                
+objdump -d bomb --disassemble=func4
 
 bomb：     文件格式 elf64-x86-64
-
 
 Disassembly of section .init:
 
@@ -1207,14 +1300,12 @@ Halfway there!
 So you got that one.  Try this one.
 ```
 
-
 == `phase_5()`
 
 ```sh
-$ objdump -d bomb --disassemble=phase_5                       
+$ objdump -d bomb --disassemble=phase_5
 
 bomb：     文件格式 elf64-x86-64
-
 
 Disassembly of section .init:
 
@@ -1227,7 +1318,7 @@ Disassembly of section .text:
   401063:       48 83 ec 20             sub    $0x20,%rsp
   401067:       48 89 fb                mov    %rdi,%rbx
   40106a:       64 48 8b 04 25 28 00    mov    %fs:0x28,%rax
-  401071:       00 00 
+  401071:       00 00
   401073:       48 89 44 24 18          mov    %rax,0x18(%rsp)
   401078:       31 c0                   xor    %eax,%eax
   40107a:       e8 9c 02 00 00          call   40131b <string_length>
@@ -1257,7 +1348,7 @@ Disassembly of section .text:
   4010d7:       eb b2                   jmp    40108b <phase_5+0x29>
   4010d9:       48 8b 44 24 18          mov    0x18(%rsp),%rax
   4010de:       64 48 33 04 25 28 00    xor    %fs:0x28,%rax
-  4010e5:       00 00 
+  4010e5:       00 00
   4010e7:       74 05                   je     4010ee <phase_5+0x8c>
   4010e9:       e8 42 fa ff ff          call   400b30 <__stack_chk_fail@plt>
   4010ee:       48 83 c4 20             add    $0x20,%rsp
@@ -1288,7 +1379,6 @@ If using GCC, this can be disabled with:
 -fno-stack-protector
 ```
 
-
 ]
 
 中文翻译如下：
@@ -1306,14 +1396,13 @@ If using GCC, this can be disabled with:
 -fno-stack-protector
 ```
 
-
 ]
 
 观察后续代码，确实有将 `%fs:0x28` 与 `%rax` 异或运算的逻辑，如下：
 
 ```sh
   4010de:       64 48 33 04 25 28 00    xor    %fs:0x28,%rax
-  4010e5:       00 00 
+  4010e5:       00 00
   4010e7:       74 05                   je     4010ee <phase_5+0x8c>
   4010e9:       e8 42 fa ff ff          call   400b30 <__stack_chk_fail@plt>
 ```
@@ -1338,9 +1427,9 @@ If using GCC, this can be disabled with:
 $ gdb bomb
 Reading symbols from bomb...
 (gdb) b *0x40107a             # 在 call 40131b <string_length> 处打断点
-Breakpoint 1 at 0x40107a 
+Breakpoint 1 at 0x40107a
 (gdb) r                       # 运行程序
-Starting program: /home/sakimidare/bomb/bomb 
+Starting program: /home/sakimidare/bomb/bomb
 Welcome to my fiendish little bomb. You have 6 phases with
 which to blow yourself up. Have a nice day!
 Border relations with Canada have never been better.
@@ -1358,7 +1447,7 @@ Breakpoint 1, 0x000000000040107a in phase_5 ()
 0x000000000040107f in phase_5 ()
 (gdb) i r eax                 # 立即查看寄存器 %eax 的值
 eax            0x6                 6
-(gdb) 
+(gdb)
 ```
 
 我们得出结论：`string_length` 函数返回的长度不包含 `\0`。也就是说，我们应该输入一个长度为 6 的字符串。
@@ -1428,7 +1517,7 @@ maduiersnfotvbyl
   4010d7:       eb b2                   jmp    40108b <phase_5+0x29>
   4010d9:       48 8b 44 24 18          mov    0x18(%rsp),%rax
   4010de:       64 48 33 04 25 28 00    xor    %fs:0x28,%rax
-  4010e5:       00 00 
+  4010e5:       00 00
   4010e7:       74 05                   je     4010ee <phase_5+0x8c>
   4010e9:       e8 42 fa ff ff          call   400b30 <__stack_chk_fail@plt>
   4010ee:       48 83 c4 20             add    $0x20,%rsp
@@ -1457,7 +1546,7 @@ IONEFG
 ```
 
 ```sh
-./bomb 
+./bomb
 Welcome to my fiendish little bomb. You have 6 phases with
 which to blow yourself up. Have a nice day!
 Border relations with Canada have never been better.
@@ -1472,14 +1561,12 @@ IONEFG
 Good work!  On to the next...
 ```
 
-
 == `phase_6()`
 
 ```sh
-$ objdump -d bomb --disassemble=phase_6                        
+$ objdump -d bomb --disassemble=phase_6
 
 bomb：     文件格式 elf64-x86-64
-
 
 Disassembly of section .init:
 
@@ -1558,7 +1645,7 @@ Disassembly of section .text:
   4011cd:       48 89 d1                mov    %rdx,%rcx
   4011d0:       eb eb                   jmp    4011bd <phase_6+0xc9>
   4011d2:       48 c7 42 08 00 00 00    movq   $0x0,0x8(%rdx)
-  4011d9:       00 
+  4011d9:       00
   4011da:       bd 05 00 00 00          mov    $0x5,%ebp
   4011df:       48 8b 43 08             mov    0x8(%rbx),%rax
   4011e3:       8b 00                   mov    (%rax),%eax
@@ -1629,7 +1716,6 @@ Disassembly of section .fini:
 #admonition(kind: "note", title: none)[
 以下为 Gemini 的回答：
 
-
 ]
 
 #quote-block[
@@ -1672,6 +1758,5 @@ Disassembly of section .fini:
   - 以此类推。总结%r12d 是当前选定数字的序号（外层）。
 
 `%ebx` 是正在与其对比的后续数字的序号（内层）。`%rbp`（及 `%r13`）作为指针在栈空间（`%rsp`）上移动，方便直接通过内存地址读取“基准值”。如果你输入的数字里有两个 3，那么当外层循环到第一个 3，内层循环扫描到第二个 3 时，cmp 结果就会相等，触发 401140 处的 `explode_bomb`。
-
 
 ]

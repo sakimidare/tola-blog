@@ -111,6 +111,24 @@ function normalizeMath(body) {
     .replace(/\\\\/g, "\\ ");
 }
 
+function stripHtml(line, env) {
+  return line
+    .replace(/<a\b[^>]*(?:id|name)=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi, (_m, id, inner) => {
+      const index = env.inline.length;
+      env.inline.push(`#anchor("${escapeString(id)}")`);
+      return `ZZIM${index}ZZ${inner}`;
+    })
+    .replace(/<a\b[^>]*>\s*<\/a>/gi, "")
+    .replace(/<a\b[^>]*>/gi, "")
+    .replace(/<\/a>/gi, "")
+    .replace(/<span\b[^>]*>/gi, "")
+    .replace(/<\/span>/gi, "")
+    .replace(/<p\b[^>]*>/gi, "")
+    .replace(/<\/p>/gi, "")
+    .replace(/<br\s*\/?>/gi, "  ")
+    .replace(/<img\b[^>]*src=["']([^"']+)["'][^>]*>/gi, (_m, src) => `![](${src.replace(/^\/images\//, "/assets/images/")})`);
+}
+
 function mathInline(line, env) {
   const parts = line.split("`");
   for (let i = 0; i < parts.length; i += 2) {
@@ -199,7 +217,7 @@ function convertBody(source, env, imageBase) {
       prepared.push("", `ZZPH${index}ZZ`, "");
       continue;
     }
-    prepared.push(mathInline(line, env));
+    prepared.push(mathInline(stripHtml(line, env), env));
   }
 
   const text = prepared.join("\n");
@@ -253,6 +271,7 @@ function renderInline(children, env, imageBase) {
 
 function resolveImage(src, env, imageBase) {
   if (/^https?:/.test(src)) return src;
+  if (src.startsWith("/images/")) return "/assets" + src;
   const name = basename(src);
   if (imageBase) {
     env.images.add(name);
@@ -268,26 +287,11 @@ function fenceRaw(code, lang) {
   return `${fence}${lang}\n${code}\n${fence}`;
 }
 
-function renderFence(token, env, imageBase) {
+function renderFence(token) {
   const info = (token.info || "").trim();
   let lang = info.split(/\s+/)[0] || "";
-  if (!/^[a-zA-Z0-9_+-]+$/.test(lang)) lang = "plain";
-  const titleMatch = info.match(/title\s*=\s*"([^"]*)"/);
-  const startMatch = info.match(/startLineNumber\s*=\s*(\d+)/);
-  const numbers = /showLineNumbers(?!=false)/.test(info) && !/showLineNumbers\s*=\s*false/.test(info);
-
-  // Prefer Typst's native fenced code; only fall back to the helper when a
-  // title or line numbers are requested.
-  if (!titleMatch && !numbers) {
-    return fenceRaw(token.content.replace(/\n$/, ""), lang === "plain" ? "" : lang);
-  }
-
-  const args = [`"${escapeString(token.content.replace(/\n$/, ""))}"`];
-  if (lang) args.push(`lang: "${lang}"`);
-  if (titleMatch) args.push(`title: "${escapeString(titleMatch[1])}"`);
-  if (numbers) args.push("line-numbers: true");
-  if (startMatch) args.push(`start: ${Number(startMatch[1])}`);
-  return `#code-block(${args.join(", ")})`;
+  if (!/^[a-zA-Z0-9_+-]+$/.test(lang) || lang === "plain") lang = "";
+  return fenceRaw(token.content.replace(/\n$/, ""), lang);
 }
 
 function renderTokens(tokens, env, imageBase) {
@@ -315,11 +319,9 @@ function renderTokens(tokens, env, imageBase) {
         else out += renderInline(token.children, env, imageBase);
         break;
       case "fence": out += renderFence(token, env, imageBase) + "\n\n"; break;
-      case "code_block": {
-        const args = [`"${escapeString(token.content.replace(/\n$/, ""))}"`];
-        out += `#code-block(${args.join(", ")})` + "\n\n";
+      case "code_block":
+        out += fenceRaw(token.content.replace(/\n$/, ""), "") + "\n\n";
         break;
-      }
       case "blockquote_open": out += "#quote-block[\n"; break;
       case "blockquote_close": out += "\n]\n\n"; break;
       case "bullet_list_open": listStack.push("- "); listDepth++; break;
@@ -367,7 +369,7 @@ function render(frontmatter, body) {
   const tagList = tagItems.length === 1 ? `${tagItems[0]},` : tagItems.join(", ");
   const summary = frontmatter.description ?? "";
   const lines = [
-    `#import "/templates/fuwari.typ": post, admonition, code-block, quote-block, github-card, link-card, content-image, hr-line`,
+    `#import "/templates/fuwari.typ": post, admonition, quote-block, github-card, link-card, content-image, hr-line, anchor`,
     "",
     "#show: post.with(",
     `  title: "${escapeString(frontmatter.title ?? slug)}",`,
@@ -385,7 +387,8 @@ function render(frontmatter, body) {
     typstBody.trim(),
     "",
   ];
-  return { slug, source: lines.join("\n"), env, stats };
+  const tidy = (text) => text.replace(/\n{3,}/g, "\n\n").replace(/[ \t]+$/gm, "").trim() + "\n";
+  return { slug, source: tidy(lines.join("\n")), env, stats };
 }
 
 function main() {
