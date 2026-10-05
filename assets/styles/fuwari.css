@@ -409,8 +409,8 @@ html.is-animating .transition-swup-fade { opacity: 0; transform: translateY(1rem
   .mobile-menu a:hover { color: var(--primary); background: var(--btn-plain-bg-hover); }
   .main-grid { grid-template-columns: 1fr; }
   .sidebar { grid-row: 2; }
-  .profile { display: grid; grid-template-columns: 8rem minmax(0, 1fr); align-items: center; gap: 1rem; }
-  .avatar { aspect-ratio: 1; }
+  .profile { display: block; }
+  .avatar-link { max-width: 12rem; margin: 0 auto .75rem; }
   .sidebar-sticky { position: static; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
@@ -434,7 +434,6 @@ html.is-animating .transition-swup-fade { opacity: 0; transform: translateY(1rem
   .post-card-enter { display: none; }
   .post-card-cover { display: block; width: auto; height: 12rem; margin: .75rem; }
   .meta-tags-optional { display: none; }
-  .profile { grid-template-columns: 6.5rem minmax(0, 1fr); }
   .sidebar-sticky { grid-template-columns: 1fr; }
   .post-container { padding: 1.25rem; }
   .post-header h1::before { display: none; }
