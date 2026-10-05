@@ -132,7 +132,7 @@
   ]
 }
 
-#let pdf-fonts = ("Noto Serif CJK SC",)
+#let pdf-fonts = ("Source Han Serif", "Noto Serif CJK SC")
 #let pdf-heading-fonts = ("Noto Sans CJK SC",)
 #let pdf-mono-fonts = ("JetBrains Mono", "Noto Sans Mono CJK SC")
 
@@ -163,7 +163,7 @@
   show heading.where(level: 2): set text(size: 14pt, weight: "bold")
   show heading.where(level: 3): set text(size: 12pt, weight: "bold")
   show link: set text(fill: rgb("#2563eb"))
-  show raw.where(block: true): set block(fill: luma(246), inset: 9pt, radius: 4pt, width: 100%, above: .9em, below: .9em)
+  show raw.where(block: true): set block(fill: none, inset: (x: 0pt, y: .3em), radius: 0pt, width: 100%, above: .9em, below: .9em, stroke: none)
   show raw.where(block: true): set text(font: pdf-mono-fonts, size: 8.5pt, lang: "en")
   show raw.where(block: false): it => box(fill: luma(240), inset: (x: .3em, y: .12em), radius: 2pt, text(font: pdf-mono-fonts, size: .9em, lang: "en", it))
   show list: set par(first-line-indent: 0em)
