@@ -6,15 +6,173 @@
 #let stats-data = json("stats.json")
 #let stats-of(permalink) = if permalink == none { (:) } else { stats-data.at(permalink, default: (:)) }
 
+// ---------------------------------------------------------------------------
+// Footnotes for HTML export.
+//
+// Typst's built-in footnote machinery cannot emit its endnote list when the
+// page provides a custom `<body>` element (which Tola does). We therefore
+// collect the notes with a state and render our own reference marks plus an
+// endnote list. Paged/PDF output keeps the native footnote behaviour.
+// ---------------------------------------------------------------------------
+#let _footnotes = state("fuwari-footnotes", ())
+
+#let footnote-ref(body) = context {
+  if target() != "html" { return [] }
+  let index = _footnotes.get().len() + 1
+  _footnotes.update(list => list + (body,))
+  html.elem("sup", attrs: (class: "footnote-ref"), html.elem("a", attrs: (
+    id: "fnref-" + str(index),
+    href: "#fn-" + str(index),
+    role: "doc-noteref",
+  ), str(index)))
+}
+
+#let footnote-list() = context {
+  if target() != "html" { return [] }
+  let notes = _footnotes.final()
+  if notes.len() == 0 { return [] }
+  html.elem("section", attrs: (class: "footnotes", role: "doc-endnotes"))[
+    #html.elem("div", attrs: (class: "footnotes-title"), "脚注")
+    #html.elem("ol")[
+      #for (index, note) in notes.enumerate() {
+        html.elem("li", attrs: (id: "fn-" + str(index + 1)), note + html.elem("a", attrs: (
+          href: "#fnref-" + str(index + 1),
+          class: "footnote-backref",
+          role: "doc-backlink",
+          "aria-label": "返回正文",
+        ), "↩"))
+      }
+    ]
+  ]
+}
+
 #let icon(name, class: "icon") = html.elem("iconify-icon", attrs: (icon: name, class: class, "aria-hidden": "true"))
 
-#let _posts() = pages().filter(p => p.permalink.starts-with("/posts/") and p.at("date", default: none) != none).sorted(key: p => str(p.date)).rev()
+// UI strings per language (extracted from the archive's i18n tables).
+#let _ui-data = json("i18n.json")
+
+#let _ui-aliases = (
+  "zh": "zh_CN",
+  "zh_cn": "zh_CN",
+  "zh-hans": "zh_CN",
+  "zh-tw": "zh_TW",
+  "en_us": "en",
+  "en_gb": "en",
+  "ong": "A_ong",
+  "a-ong": "A_ong",
+  "a_zh_iang": "A_zh_iang",
+  "a-zh-iang": "A_zh_iang",
+  "a-zh_iang": "A_zh_iang",
+  "zh_iang": "A_zh_iang",
+)
+
+#let ui(lang) = {
+  let key = if lang == none { "zh_CN" } else { str(lang) }
+  let key = if key in _ui-aliases { _ui-aliases.at(key) } else { key }
+  _ui-data.at(key, default: _ui-data.at("zh_CN"))
+}
+
+// Category / tag dictionary (Archive WORD_TRANSLATIONS). Some entries contain
+// `<ruby>base<rt>reading</rt></ruby>` markup, which we turn into real ruby.
+#let _words-data = json("words.json")
+
+#let _word-content(value) = {
+  let parts = value.split("<ruby>")
+  let out = ()
+  if parts.len() > 0 { out.push(parts.at(0)) }
+  for rest in parts.slice(1) {
+    let halves = rest.split("</ruby>")
+    let inner = halves.at(0)
+    let tail = if halves.len() > 1 { halves.slice(1).join("</ruby>") } else { "" }
+    let rt-parts = inner.split("<rt>")
+    let base = rt-parts.at(0)
+    let reading = if rt-parts.len() > 1 { rt-parts.at(1).replace("</rt>", "") } else { "" }
+    if target() == "html" {
+      out.push(html.elem("ruby", base + html.elem("rt", reading)))
+    } else {
+      out.push(base)
+    }
+    out.push(tail)
+  }
+  out.join("")
+}
+
+#let word(value, lang: none) = {
+  let clean = if value == none { "" } else { str(value) }
+  if clean == "" { return clean }
+  let entry = _words-data.at(clean, default: none)
+  if entry == none { return clean }
+  let key = if lang == none { "zh_CN" } else { str(lang) }
+  let key = if key in _ui-aliases { _ui-aliases.at(key) } else { key }
+  let translated = entry.at(key, default: none)
+  if translated == none { translated = entry.at("zh_CN", default: none) }
+  if translated == none { translated = clean }
+  _word-content(translated)
+}
+
+#let _str-of(value) = if value == none { "" } else { str(value) }
+
+#let _posts() = {
+  let all = pages().filter(p => p.permalink.starts-with("/posts/") and p.at("date", default: none) != none)
+  let unique = ()
+  let seen = ()
+  for p in all {
+    let key = _str-of(p.at("translate_key", default: ""))
+    if key == "" {
+      unique.push(p)
+      continue
+    }
+    if key in seen { continue }
+    seen.push(key)
+    // Show only the main (Chinese / language-less) version of a translation group.
+    let group = all.filter(q => _str-of(q.at("translate_key", default: "")) == key)
+    let main = group.find(q => {
+      let lang = _str-of(q.at("lang", default: ""))
+      lang == "" or lang == "zh_CN"
+    })
+    unique.push(if main == none { group.at(0) } else { main })
+  }
+  unique.sorted(key: p => str(p.date)).rev()
+}
 
 #let _date(value) = if value == none { "" } else if type(value) == datetime { value.display("[year]-[month]-[day]") } else { str(value) }
 
 #let _tag-url(tag) = "/archive/?tag=" + str(tag)
 
 #let _category-url(category) = if category == none or category == "" { "/archive/?uncategorized=1" } else { "/archive/?category=" + str(category) }
+
+// Translation groups: pages sharing a non-empty `translate_key`.
+#let language-labels = (
+  "zh_CN": "简体中文",
+  "zh_TW": "繁體中文",
+  "ja": "日本語",
+  "en": "English",
+  "ko": "한국어",
+  "ong": "Onglisch",
+  "A-zh_iang": "大瀛漢語",
+)
+
+#let _language-order = ("zh_CN", "zh_TW", "ja", "en", "ko", "ong", "A-zh_iang")
+
+#let _translations(translate_key) = {
+  if _str-of(translate_key) == "" { return () }
+  let key = _str-of(translate_key)
+  let items = pages().filter(p => _str-of(p.at("translate_key", default: "")) == key)
+  items
+    .map(p => {
+      let lang = _str-of(p.at("lang", default: ""))
+      (
+        lang: lang,
+        permalink: p.at("permalink", default: "/"),
+        title: p.at("title", default: ""),
+        label: language-labels.at(lang, default: if lang == "" { "?" } else { lang }),
+      )
+    })
+    .sorted(key: t => {
+      let index = _language-order.position(l => l == t.lang)
+      if index == none { 99 } else { index }
+    })
+}
 
 #let _head(title: none, summary: none, image: none, article: false, date: none, update: none, tags: ()) = context {
   if target() != "html" { return [] }
@@ -36,9 +194,11 @@
   for tag in tags { html.elem("meta", attrs: (property: "article:tag", content: str(tag))) }
 }
 
-#let _nav-link(href, label, external: false) = {
+#let _nav-link(href, label, external: false, key: none) = {
   let attrs = (href: href)
-  let extra = html.elem("span", attrs: (class: "nav-label"), label)
+  let label-attrs = (class: "nav-label")
+  if key != none { label-attrs.insert("data-i18n", key) }
+  let extra = html.elem("span", attrs: label-attrs, label)
   if external {
     attrs.insert("target", "_blank")
     attrs.insert("rel", "noopener")
@@ -47,34 +207,34 @@
   html.elem("a", attrs: attrs, extra)
 }
 
-#let _navbar() = html.elem("div", attrs: (id: "top-row", class: "top-row"))[
+#let _navbar(t) = html.elem("div", attrs: (id: "top-row", class: "top-row"))[
   #html.elem("div", attrs: (id: "navbar-wrapper", class: "navbar-wrapper"))[
     #html.elem("header", attrs: (id: "navbar", class: "navbar card-base onload-animation"))[
-      #html.elem("a", attrs: (class: "brand btn-plain", href: "/", "aria-label": "主页"), icon("material-symbols:home-outline-rounded") + html.elem("span", attrs: (class: "brand-name"), info.title))
+      #html.elem("a", attrs: (class: "brand btn-plain", href: "/", "aria-label": t.home, "data-i18n-aria": "home"), icon("material-symbols:home-outline-rounded") + html.elem("span", attrs: (class: "brand-name"), info.title))
       #html.elem("nav", attrs: (class: "nav-links", "aria-label": "主导航"))[
-        #_nav-link("/", "主页")
-        #_nav-link("/archive/", "归档")
-        #_nav-link("/about/", "关于")
-        #_nav-link("/friends/", "友链")
+        #_nav-link("/", t.home, key: "home")
+        #_nav-link("/archive/", t.archive, key: "archive")
+        #_nav-link("/about/", t.about, key: "about")
+        #_nav-link("/friends/", t.friends, key: "friends")
         #_nav-link("https://c.sakimidare.top", "C Programming", external: true)
       ]
       #html.elem("div", attrs: (class: "nav-actions"))[
-        #html.elem("label", attrs: (id: "desktop-search", class: "desktop-search"))[#icon("material-symbols:search-rounded") #html.elem("input", attrs: (id: "desktop-search-input", type: "search", placeholder: "你好", autocomplete: "off", "aria-label": "搜索文章"))]
-        #html.elem("button", attrs: (id: "search-switch", class: "nav-button search-switch btn-plain", type: "button", "aria-label": "搜索", "aria-expanded": "false"), icon("material-symbols:search-rounded"))
-        #html.elem("button", attrs: (id: "display-settings-switch", class: "nav-button btn-plain", type: "button", "aria-label": "显示设置", "aria-expanded": "false"), icon("material-symbols:palette-outline"))
+        #html.elem("label", attrs: (id: "desktop-search", class: "desktop-search"))[#icon("material-symbols:search-rounded") #html.elem("input", attrs: (id: "desktop-search-input", type: "search", placeholder: t.search, autocomplete: "off", "aria-label": t.search, "data-i18n-placeholder": "search", "data-i18n-aria": "search"))]
+        #html.elem("button", attrs: (id: "search-switch", class: "nav-button search-switch btn-plain", type: "button", "aria-label": t.search, "aria-expanded": "false", "data-i18n-aria": "search"), icon("material-symbols:search-rounded"))
+        #html.elem("button", attrs: (id: "display-settings-switch", class: "nav-button btn-plain", type: "button", "aria-label": t.more, "aria-expanded": "false", "data-i18n-aria": "more"), icon("material-symbols:palette-outline"))
         #html.elem("button", attrs: (id: "theme-toggle", class: "nav-button theme-toggle btn-plain", type: "button", "aria-label": "切换主题"), icon("material-symbols:wb-sunny-outline-rounded", class: "theme-icon theme-icon-light") + icon("material-symbols:dark-mode-outline-rounded", class: "theme-icon theme-icon-dark") + icon("material-symbols:radio-button-partial-outline", class: "theme-icon theme-icon-auto"))
         #html.elem("button", attrs: (id: "nav-menu-switch", class: "nav-button menu-switch btn-plain", type: "button", "aria-label": "菜单", "aria-expanded": "false"), icon("material-symbols:menu-rounded"))
       ]
       #html.elem("div", attrs: (id: "search-panel", class: "float-panel search-panel is-closed"))[
-        #html.elem("label", attrs: (class: "search-field"), icon("material-symbols:search-rounded") + html.elem("input", attrs: (id: "search-input", type: "search", placeholder: "搜索文章", autocomplete: "off")))
+        #html.elem("label", attrs: (class: "search-field"), icon("material-symbols:search-rounded") + html.elem("input", attrs: (id: "search-input", type: "search", placeholder: t.search, autocomplete: "off", "data-i18n-placeholder": "search")))
         #html.elem("div", attrs: (id: "search-results", class: "search-results"))
       ]
       #html.elem("div", attrs: (id: "display-setting", class: "float-panel display-setting is-closed"))[
-        #html.elem("strong", "主题色")
-        #html.elem("input", attrs: (id: "color-slider", type: "range", min: "0", max: "360", step: "5", "aria-label": "主题色"))
+        #html.elem("strong", attrs: ("data-i18n": "themeColor"), t.themeColor)
+        #html.elem("input", attrs: (id: "color-slider", type: "range", min: "0", max: "360", step: "5", "aria-label": t.themeColor, "data-i18n-aria": "themeColor"))
       ]
       #html.elem("nav", attrs: (id: "nav-menu-panel", class: "float-panel mobile-menu is-closed", "aria-label": "移动端导航"))[
-        #_nav-link("/", "主页") #_nav-link("/archive/", "归档") #_nav-link("/about/", "关于") #_nav-link("/friends/", "友链") #_nav-link("https://c.sakimidare.top", "C Programming", external: true)
+        #_nav-link("/", t.home, key: "home") #_nav-link("/archive/", t.archive, key: "archive") #_nav-link("/about/", t.about, key: "about") #_nav-link("/friends/", t.friends, key: "friends") #_nav-link("https://c.sakimidare.top", "C Programming", external: true)
       ]
     ]
   ]
@@ -94,32 +254,43 @@
   ]
 ]
 
-#let _widget(title, id, body) = html.elem("section", attrs: (id: id, class: "sidebar-widget card-base onload-animation"))[
-  #html.elem("h2", attrs: (class: "widget-title"), title)
-  #html.elem("div", attrs: (class: "widget-content"), body)
-]
+#let _widget(title, id, body, key: none) = {
+  let title-attrs = (class: "widget-title")
+  if key != none { title-attrs.insert("data-i18n", key) }
+  html.elem("section", attrs: (id: id, class: "sidebar-widget card-base onload-animation"))[
+    #html.elem("h2", attrs: title-attrs, title)
+    #html.elem("div", attrs: (class: "widget-content"), body)
+  ]
+}
 
-#let _sidebar() = context {
+#let _sidebar(t, lang) = context {
   let posts = _posts()
   let categories = (:)
   let tags = ()
   for item in posts {
     let category = item.at("category", default: none)
-    let key = if category == none or category == "" { "未分类" } else { str(category) }
+    let key = if category == none or category == "" { "" } else { str(category) }
     categories.insert(key, categories.at(key, default: 0) + 1)
     for tag in item.at("tags", default: ()) { if tag not in tags { tags.push(tag) } }
   }
   let category-links = {
     for category in categories.keys().sorted() {
-      html.elem("a", attrs: (class: "widget-link", href: "/archive", "data-href": _category-url(if category == "未分类" { none } else { category })), html.elem("span", category) + html.elem("span", attrs: (class: "count-badge"), str(categories.at(category))))
+      let label-attrs = (:)
+      if category == "" {
+        label-attrs.insert("data-i18n", "uncategorized")
+      } else {
+        label-attrs.insert("data-word", category)
+      }
+      let label = if category == "" { t.uncategorized } else { word(category, lang: lang) }
+      html.elem("a", attrs: (class: "widget-link", href: "/archive", "data-href": _category-url(if category == "" { none } else { category })), html.elem("span", attrs: label-attrs, label) + html.elem("span", attrs: (class: "count-badge"), str(categories.at(category))))
     }
   }
-  let tag-links = { for tag in tags.sorted() { html.elem("a", attrs: (class: "tag-button", href: "/archive", "data-href": _tag-url(tag)), str(tag)) } }
+  let tag-links = { for tag in tags.sorted() { html.elem("a", attrs: (class: "tag-button", href: "/archive", "data-href": _tag-url(tag), "data-word": str(tag)), word(str(tag), lang: lang)) } }
   html.elem("aside", attrs: (id: "sidebar", class: "sidebar onload-animation"))[
     #_profile()
     #html.elem("div", attrs: (id: "sidebar-sticky", class: "sidebar-sticky"))[
-      #if categories.len() > 0 { _widget("分类", "categories", category-links) }
-      #if tags.len() > 0 { _widget("标签", "tags", tag-links) }
+      #if categories.len() > 0 { _widget(t.categories, "categories", category-links, key: "categories") }
+      #if tags.len() > 0 { _widget(t.tags, "tags", tag-links, key: "tags") }
     ]
   ]
 }
@@ -138,15 +309,27 @@
   ]
 }
 
-#let pdf-fonts = ("Source Han Serif", "Noto Serif SC", "Noto Serif CJK SC")
+#let pdf-fonts = ("Noto Serif SC", "Noto Serif CJK SC", "Source Han Serif SC")
 
-#let pdf-heading-fonts = ("Source Han Serif", "Noto Serif SC", "Noto Serif CJK SC")
+#let pdf-heading-fonts = ("Noto Serif SC", "Noto Serif CJK SC", "Source Han Serif SC")
 
 #let pdf-mono-fonts = ("JetBrains Mono", "Noto Sans Mono CJK SC", "Noto Serif SC")
 
 #let _join-strings(list) = list.fold("", (acc, item) => acc + (if acc == "" { "" } else { ", " }) + str(item))
 
-#let paged-doc(title: none, date: none, update: none, tags: (), category: none, summary: none, article: false, body) = {
+#let paged-doc(title: none, date: none, update: none, tags: (), category: none, summary: none, article: false, lang: none, body) = {
+  let t = ui(lang)
+  let base-fonts = if lang == "en" {
+    ("Source Serif 4", "Noto Serif SC", "Noto Serif CJK SC")
+  } else if lang == "ja" {
+    ("Source Han Serif JP", "Noto Serif SC", "Noto Serif CJK SC")
+  } else if lang == "ong" {
+    ("Old English Onglisch", "Source Serif 4", "Noto Serif SC")
+  } else if lang == "A-zh_iang" {
+    ("Source Han Serif JP", "Noto Serif SC")
+  } else {
+    pdf-fonts
+  }
   set page(
     paper: "a4",
     margin: (x: 2.2cm, top: 2.3cm, bottom: 2.4cm),
@@ -163,7 +346,7 @@
       )
     ],
   )
-  set text(font: pdf-fonts, size: 10.5pt, lang: "zh", region: "cn")
+  set text(font: base-fonts, size: 10.5pt, lang: "zh", region: "cn")
   set par(justify: true, leading: .85em, first-line-indent: 0em, spacing: 1.1em)
   show heading: set block(above: 1.4em, below: .7em)
   show heading: set text(font: pdf-heading-fonts)
@@ -215,21 +398,25 @@
     v(1.6em)
     line(length: 100%, stroke: .4pt + luma(210))
     v(.3em)
-    text(size: 8.5pt, fill: luma(120))[作者 #info.author　·　许可证 CC BY-NC-SA 4.0]
+    text(size: 8.5pt, fill: luma(120))[#t.author #info.author　·　#t.license CC BY-NC-SA 4.0]
   }
 }
 
-#let fuwari-base(body, title: none, summary: none, date: none, update: none, tags: (), category: none, image: none, draft: false, words: none, minutes: none, article: false) = {
+#let fuwari-base(body, title: none, summary: none, date: none, update: none, tags: (), category: none, image: none, draft: false, words: none, minutes: none, lang: none, translate_key: none, article: false) = {
+  let t = ui(lang)
   let view = context {
     if target() == "html" {
       html.elem("div", attrs: (class: "site-shell", "data-page-kind": if article { "post" } else { "page" }))[
-        #_navbar()
+        #_navbar(t)
         #_banner()
         #html.elem("div", attrs: (class: "main-stage"))[
           #html.elem("div", attrs: (id: "main-grid", class: "main-grid"))[
-            #_sidebar()
-            #html.elem("main", attrs: (id: "swup-container", class: "main-column transition-swup-fade"))[
-              #html.elem("div", attrs: (id: "content-wrapper", class: "content-wrapper onload-animation"), body)
+            #_sidebar(t, lang)
+            #html.elem("main", attrs: (id: "swup-container", class: "main-column transition-swup-fade", "data-page-lang": if lang == none { "zh_CN" } else { str(lang) }))[
+              #html.elem("div", attrs: (id: "content-wrapper", class: "content-wrapper onload-animation"), {
+                show footnote: it => if target() == "html" { footnote-ref(it.body) } else { it }
+                body
+              })
               #_footer()
             ]
           ]
@@ -239,12 +426,12 @@
       ]
     } else {
       [
-        #show: paged-doc.with(title: title, date: date, update: update, tags: tags, category: category, summary: summary, article: article)
+        #show: paged-doc.with(title: title, date: date, update: update, tags: tags, category: category, summary: summary, article: article, lang: lang)
         #body
       ]
     }
   }
-  tola-page(title: title, summary: summary, date: date, update: update, tags: tags, draft: draft, words: words, minutes: minutes, category: category, image: image, head: _head(title: title, summary: summary, image: image, article: article, date: date, update: update, tags: tags))[#view]
+  tola-page(title: title, summary: summary, date: date, update: update, tags: tags, draft: draft, words: words, minutes: minutes, category: category, image: image, lang: lang, translate_key: translate_key, head: _head(title: title, summary: summary, image: image, article: article, date: date, update: update, tags: tags))[#view]
 }
 
 #let page-card(body) = context {

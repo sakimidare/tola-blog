@@ -1,5 +1,4 @@
-#import "/templates/fuwari.typ": fuwari-base, post-card, empty-note
-#import "@tola/pages:0.0.0": pages
+#import "/templates/fuwari.typ": fuwari-base, post-card, empty-note, _posts
 #import "@tola/site:0.0.0": info
 
 #show: fuwari-base.with(
@@ -7,10 +6,7 @@
   summary: info.description,
 )
 
-#let posts = pages().filter(p => "/posts/" in p.permalink and p.at("date", default: none) != none).sorted(key: p => {
-  let date = p.at("date", default: none)
-  str(if date == none { "" } else { date })
-}).rev()
+#let posts = _posts()
 #context {
   let cards = if posts.len() == 0 {
     empty-note("暂无文章")

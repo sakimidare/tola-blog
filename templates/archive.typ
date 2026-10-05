@@ -1,5 +1,5 @@
 // Archive timeline.
-#import "/templates/layout.typ": icon
+#import "/templates/layout.typ": icon, ui
 
 #let _short-date(value) = {
   let s = str(value)
@@ -25,6 +25,7 @@
     }
   }
   let years = ()
+  let t = ui(none)
   let buckets = (:)
   for item in posts {
     let year = _year-of(item.at("date", default: ""))
@@ -35,7 +36,7 @@
     for year in years {
       let items = buckets.at(year)
       html.elem("section", attrs: (class: "archive-group"))[
-        #html.elem("div", attrs: (class: "archive-year-row"), html.elem("span", attrs: (class: "archive-year"), year) + html.elem("span", attrs: (class: "archive-dot")) + html.elem("span", attrs: (class: "archive-count"), str(items.len()) + " 篇文章"))
+        #html.elem("div", attrs: (class: "archive-year-row"), html.elem("span", attrs: (class: "archive-year"), year) + html.elem("span", attrs: (class: "archive-dot")) + html.elem("span", attrs: (class: "archive-count"), str(items.len()) + " " + (if items.len() == 1 { t.postCount } else { t.postsCount })))
         #html.elem("div", attrs: (class: "archive-items"))[
           #for item in items {
             let tags = item.at("tags", default: ())

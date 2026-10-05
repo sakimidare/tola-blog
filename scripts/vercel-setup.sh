@@ -54,18 +54,5 @@ fi
 "$BIN_DIR/tola" --version
 "$BIN_DIR/typst" --version
 
-# Fonts used by PDF generation (the build image has no CJK fonts).
-FONT_DIR="${PWD}/assets/fonts"
-mkdir -p "$FONT_DIR"
-fetch_font() {
-  # fetch_font <url> <filename>
-  local dest="$FONT_DIR/$2"
-  if [ ! -s "$dest" ]; then
-    echo "==> installing font $2"
-    download "$1" "$dest"
-  fi
-}
-fetch_font "https://github.com/notofonts/noto-cjk/raw/main/Serif/SubsetOTF/SC/NotoSerifSC-Regular.otf" "NotoSerifSC-Regular.otf"
-fetch_font "https://github.com/notofonts/noto-cjk/raw/main/Serif/SubsetOTF/SC/NotoSerifSC-Bold.otf" "NotoSerifSC-Bold.otf"
-fetch_font "https://github.com/google/fonts/raw/main/ofl/jetbrainsmono/JetBrainsMono%5Bwght%5D.ttf" "JetBrainsMono.ttf"
-ls -la "$FONT_DIR"
+# PDF fonts are vendored in `fonts-pdf/` (committed, self-hosted), so nothing to
+# download here. `build-pdf.mjs` points Typst at that directory.

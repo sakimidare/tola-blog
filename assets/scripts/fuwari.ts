@@ -9,6 +9,7 @@ import { mountCodeCopy } from "./copy";
 import { mountArchiveFilter } from "./filter";
 import { syncDataHrefs } from "./links";
 import { mountGithubCards } from "./github";
+import { applyI18n } from "./i18n";
 import { cleanupPage } from "./lifecycle";
 
 function syncBodyState(): void {
@@ -20,6 +21,7 @@ function syncBodyState(): void {
 function mountPage(): void {
   syncBodyState();
   syncDataHrefs();
+  applyI18n();
   mountToc();
   mountCodeCopy();
   mountLightbox();

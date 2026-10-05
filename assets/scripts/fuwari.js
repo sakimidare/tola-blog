@@ -734,9 +734,9 @@ function mountSearch() {
     if (pagefind) {
       try {
         const response = await pagefind.search(query);
-        const data = await Promise.all(response.results.slice(0, 8).map((item) => item.data()));
+        const data2 = await Promise.all(response.results.slice(0, 8).map((item) => item.data()));
         if (current !== sequence) return;
-        for (const item of data) appendResult(results, item.meta.title ?? item.url, item.url, item.excerpt);
+        for (const item of data2) appendResult(results, item.meta.title ?? item.url, item.url, item.excerpt);
         if (results.childElementCount > 0) panel?.classList.remove("is-closed");
         return;
       } catch {
@@ -1346,8 +1346,8 @@ var Slide = class {
    * @param {number} index
    * @param {PhotoSwipe} pswp
    */
-  constructor(data, index, pswp) {
-    this.data = data;
+  constructor(data2, index, pswp) {
+    this.data = data2;
     this.index = index;
     this.pswp = pswp;
     this.isActive = index === pswp.currIndex;
@@ -1361,7 +1361,7 @@ var Slide = class {
       y: 0
     };
     this.isFirstSlide = this.isActive && !pswp.opener.isOpen;
-    this.zoomLevels = new ZoomLevel(pswp.options, data, index, pswp);
+    this.zoomLevels = new ZoomLevel(pswp.options, data2, index, pswp);
     this.pswp.dispatch("gettingData", {
       slide: this,
       data: this.data,
@@ -3520,10 +3520,10 @@ var UIElement = class {
    * @param {PhotoSwipe} pswp
    * @param {UIElementData} data
    */
-  constructor(pswp, data) {
+  constructor(pswp, data2) {
     var _container;
-    const name = data.name || data.className;
-    let elementHTML = data.html;
+    const name = data2.name || data2.className;
+    let elementHTML = data2.html;
     if (pswp.options[name] === false) {
       return;
     }
@@ -3531,29 +3531,29 @@ var UIElement = class {
       elementHTML = pswp.options[name + "SVG"];
     }
     pswp.dispatch("uiElementCreate", {
-      data
+      data: data2
     });
     let className = "";
-    if (data.isButton) {
+    if (data2.isButton) {
       className += "pswp__button ";
-      className += data.className || `pswp__button--${data.name}`;
+      className += data2.className || `pswp__button--${data2.name}`;
     } else {
-      className += data.className || `pswp__${data.name}`;
+      className += data2.className || `pswp__${data2.name}`;
     }
-    let tagName = data.isButton ? data.tagName || "button" : data.tagName || "div";
+    let tagName = data2.isButton ? data2.tagName || "button" : data2.tagName || "div";
     tagName = /** @type {keyof HTMLElementTagNameMap} */
     tagName.toLowerCase();
     const element = createElement(className, tagName);
-    if (data.isButton) {
+    if (data2.isButton) {
       if (tagName === "button") {
         element.type = "button";
       }
       let {
         title
-      } = data;
+      } = data2;
       const {
         ariaLabel
-      } = data;
+      } = data2;
       if (typeof pswp.options[name + "Title"] === "string") {
         title = pswp.options[name + "Title"];
       }
@@ -3566,19 +3566,19 @@ var UIElement = class {
       }
     }
     element.innerHTML = addElementHTML(elementHTML);
-    if (data.onInit) {
-      data.onInit(element, pswp);
+    if (data2.onInit) {
+      data2.onInit(element, pswp);
     }
-    if (data.onClick) {
+    if (data2.onClick) {
       element.onclick = (e) => {
-        if (typeof data.onClick === "string") {
-          pswp[data.onClick]();
-        } else if (typeof data.onClick === "function") {
-          data.onClick(e, element, pswp);
+        if (typeof data2.onClick === "string") {
+          pswp[data2.onClick]();
+        } else if (typeof data2.onClick === "function") {
+          data2.onClick(e, element, pswp);
         }
       };
     }
-    const appendTo = data.appendTo || "bar";
+    const appendTo = data2.appendTo || "bar";
     let container = pswp.element;
     if (appendTo === "bar") {
       if (!pswp.topBar) {
@@ -3591,7 +3591,7 @@ var UIElement = class {
         container = pswp.scrollWrap;
       }
     }
-    (_container = container) === null || _container === void 0 || _container.appendChild(pswp.applyFilters("uiElement", element, data));
+    (_container = container) === null || _container === void 0 || _container.appendChild(pswp.applyFilters("uiElement", element, data2));
   }
 };
 function initArrowButton(element, pswp, isNextButton) {
@@ -6743,20 +6743,20 @@ function mountGithubCards() {
     if (!repo) continue;
     card.dataset.state = "loading";
     card.classList.add("fetch-waiting");
-    fetch(`https://api.github.com/repos/${repo}`, { referrerPolicy: "no-referrer" }).then((response) => response.ok ? response.json() : Promise.reject(new Error(String(response.status)))).then((data) => {
+    fetch(`https://api.github.com/repos/${repo}`, { referrerPolicy: "no-referrer" }).then((response) => response.ok ? response.json() : Promise.reject(new Error(String(response.status)))).then((data2) => {
       const description = card.querySelector(".gc-description");
-      if (description) description.textContent = (data.description ?? "").replace(/:[a-zA-Z0-9_]+:/g, "") || "Description not set";
+      if (description) description.textContent = (data2.description ?? "").replace(/:[a-zA-Z0-9_]+:/g, "") || "Description not set";
       const language = card.querySelector(".gc-language");
-      if (language) language.textContent = data.language ?? "";
+      if (language) language.textContent = data2.language ?? "";
       const stars = card.querySelector(".gc-stars");
-      if (stars) stars.textContent = compact(data.stargazers_count);
+      if (stars) stars.textContent = compact(data2.stargazers_count);
       const forks = card.querySelector(".gc-forks");
-      if (forks) forks.textContent = compact(data.forks);
+      if (forks) forks.textContent = compact(data2.forks);
       const license = card.querySelector(".gc-license");
-      if (license) license.textContent = data.license?.spdx_id ?? "no-license";
+      if (license) license.textContent = data2.license?.spdx_id ?? "no-license";
       const avatar = card.querySelector(".gc-avatar");
-      if (avatar && data.owner?.avatar_url) {
-        avatar.style.backgroundImage = `url('${data.owner.avatar_url}')`;
+      if (avatar && data2.owner?.avatar_url) {
+        avatar.style.backgroundImage = `url('${data2.owner.avatar_url}')`;
         avatar.style.backgroundColor = "transparent";
       }
       card.classList.remove("fetch-waiting");
@@ -6769,6 +6769,546 @@ function mountGithubCards() {
   }
 }
 
+// templates/i18n.json
+var i18n_default = {
+  A_ong: {
+    home: "H\u014Dm",
+    about: "An d\u0131 Sa\u0131to",
+    archive: "\xC1rc\u0131ve",
+    search: "S\u0113con",
+    tags: "Taggs",
+    categories: "Categ\xF3r\u0131en",
+    recentPosts: "Laetos Posts",
+    comments: "Regardon",
+    untitled: "Non-Theman",
+    uncategorized: "Non-Categ\xF3r\u0131en",
+    noTags: "Non-Taggs",
+    wordCount: "\u01BFord",
+    wordsCount: "\u01BFords",
+    minuteCount: "m\xEDnute",
+    minutesCount: "m\xEDnuten",
+    postCount: "post",
+    postsCount: "posts",
+    themeColor: "Dyon des Thema",
+    lightMode: "L\u0131ct",
+    darkMode: "Darc",
+    systemMode: "sub Syst\xE9m",
+    more: "m\u0153r",
+    author: "Scrippor",
+    publishedAt: "gapubl\u0131schde an",
+    license: "L\u0131sens",
+    friends: "Fr\u0153nds"
+  },
+  A_zh_iang: {
+    home: "\u6249\u8449",
+    about: "\u8FF0\u8981",
+    archive: "\u5165\u6863",
+    search: "\u691C\u7D22",
+    tags: "\u6A19\u8B58",
+    categories: "\u9580\u985E",
+    recentPosts: "\u65B0\u7BC7",
+    comments: "\u8A55\u4FA1",
+    untitled: "\u7121\u984C",
+    uncategorized: "\u9580\u985E\u672A\u5165",
+    noTags: "\u7121\u6A19\u8B58",
+    wordCount: "\u5B57",
+    wordsCount: "\u5B57",
+    minuteCount: "\u6D0B\u5206",
+    minutesCount: "\u6D0B\u5206",
+    postCount: "\u7BC7",
+    postsCount: "\u7BC7",
+    themeColor: "\u4E3B\u8272",
+    lightMode: "\u660E",
+    darkMode: "\u6697",
+    systemMode: "\u5F93\u5E38",
+    more: "\u4F59\u8005",
+    author: "\u4F5C\u8005",
+    publishedAt: "\u8F09\u65BC",
+    license: "\u8A31\u53EF\u79D1\u6761",
+    friends: "\u53CB\u9396"
+  },
+  en: {
+    home: "Home",
+    about: "About",
+    archive: "Archive",
+    search: "Search",
+    tags: "Tags",
+    categories: "Categories",
+    recentPosts: "Recent Posts",
+    comments: "Comments",
+    untitled: "Untitled",
+    uncategorized: "Uncategorized",
+    noTags: "No Tags",
+    wordCount: "word",
+    wordsCount: "words",
+    minuteCount: "minute",
+    minutesCount: "minutes",
+    postCount: "post",
+    postsCount: "posts",
+    themeColor: "Theme Color",
+    lightMode: "Light",
+    darkMode: "Dark",
+    systemMode: "System",
+    more: "More",
+    author: "Author",
+    publishedAt: "Published at",
+    license: "License",
+    friends: "Friends"
+  },
+  es: {
+    home: "Inicio",
+    about: "Sobre m\xED",
+    archive: "Archivo",
+    search: "Buscar",
+    tags: "Etiquetas",
+    categories: "Categor\xEDas",
+    recentPosts: "Publicaciones recientes",
+    comments: "Comentarios",
+    untitled: "Sin t\xEDtulo",
+    uncategorized: "Sin categor\xEDa",
+    noTags: "Sin etiquetas",
+    wordCount: "palabra",
+    wordsCount: "palabras",
+    minuteCount: "minuto",
+    minutesCount: "minutos",
+    postCount: "publicaci\xF3n",
+    postsCount: "publicaciones",
+    themeColor: "Color del tema",
+    lightMode: "Claro",
+    darkMode: "Oscuro",
+    systemMode: "Sistema",
+    more: "M\xE1s",
+    author: "Autor",
+    publishedAt: "Publicado el",
+    license: "Licencia",
+    friends: "Amigos"
+  },
+  id: {
+    home: "Beranda",
+    about: "Tentang",
+    archive: "Arsip",
+    search: "Cari",
+    tags: "Tag",
+    categories: "Kategori",
+    recentPosts: "Postingan Terbaru",
+    comments: "Komentar",
+    untitled: "Tanpa Judul",
+    uncategorized: "Tanpa Kategori",
+    noTags: "Tanpa Tag",
+    wordCount: "kata",
+    wordsCount: "kata",
+    minuteCount: "menit",
+    minutesCount: "menit",
+    postCount: "postingan",
+    postsCount: "postingan",
+    themeColor: "Warna Tema",
+    lightMode: "Terang",
+    darkMode: "Gelap",
+    systemMode: "Sistem",
+    more: "Lainnya",
+    author: "Penulis",
+    publishedAt: "Diterbitkan pada",
+    license: "Lisensi",
+    friends: "Teman-teman"
+  },
+  ja: {
+    home: "\u30DB\u30FC\u30E0",
+    about: "\u6982\u8981",
+    archive: "\u30A2\u30FC\u30AB\u30A4\u30D6",
+    search: "\u691C\u7D22",
+    tags: "\u30BF\u30B0",
+    categories: "\u30AB\u30C6\u30B4\u30EA",
+    recentPosts: "\u6700\u8FD1\u306E\u6295\u7A3F",
+    comments: "\u30B3\u30E1\u30F3\u30C8",
+    untitled: "\u30BF\u30A4\u30C8\u30EB\u306A\u3057",
+    uncategorized: "\u30AB\u30C6\u30B4\u30EA\u306A\u3057",
+    noTags: "\u30BF\u30B0\u306A\u3057",
+    wordCount: "\u6587\u5B57",
+    wordsCount: "\u6587\u5B57",
+    minuteCount: "\u5206",
+    minutesCount: "\u5206",
+    postCount: "\u4EF6\u306E\u6295\u7A3F",
+    postsCount: "\u4EF6\u306E\u6295\u7A3F",
+    themeColor: "\u30C6\u30FC\u30DE\u30AB\u30E9\u30FC",
+    lightMode: "\u30E9\u30A4\u30C8",
+    darkMode: "\u30C0\u30FC\u30AF",
+    systemMode: "\u30B7\u30B9\u30C6\u30E0",
+    more: "\u3082\u3063\u3068",
+    author: "\u4F5C\u8005",
+    publishedAt: "\u516C\u958B\u65E5",
+    license: "\u30E9\u30A4\u30BB\u30F3\u30B9",
+    friends: "\u304A\u53CB\u9054"
+  },
+  ko: {
+    home: "\uD648",
+    about: "\uC18C\uAC1C",
+    archive: "\uC544\uCE74\uC774\uBE0C",
+    search: "\uAC80\uC0C9",
+    tags: "\uD0DC\uADF8",
+    categories: "\uCE74\uD14C\uACE0\uB9AC",
+    recentPosts: "\uCD5C\uADFC \uAC8C\uC2DC\uBB3C",
+    comments: "\uB313\uAE00",
+    untitled: "\uC81C\uBAA9 \uC5C6\uC74C",
+    uncategorized: "\uBD84\uB958\uB418\uC9C0 \uC54A\uC74C",
+    noTags: "\uD0DC\uADF8 \uC5C6\uC74C",
+    wordCount: "\uB2E8\uC5B4",
+    wordsCount: "\uB2E8\uC5B4",
+    minuteCount: "\uBD84",
+    minutesCount: "\uBD84",
+    postCount: "\uAC8C\uC2DC\uBB3C",
+    postsCount: "\uAC8C\uC2DC\uBB3C",
+    themeColor: "\uD14C\uB9C8 \uC0C9\uC0C1",
+    lightMode: "\uBC1D\uC740 \uBAA8\uB4DC",
+    darkMode: "\uC5B4\uB450\uC6B4 \uBAA8\uB4DC",
+    systemMode: "\uC2DC\uC2A4\uD15C \uBAA8\uB4DC",
+    more: "\uB354 \uBCF4\uAE30",
+    author: "\uC800\uC790",
+    publishedAt: "\uAC8C\uC2DC\uC77C",
+    license: "\uB77C\uC774\uC120\uC2A4",
+    friends: "\uCE5C\uAD6C\uB4E4"
+  },
+  th: {
+    home: "\u0E2B\u0E19\u0E49\u0E32\u0E41\u0E23\u0E01",
+    about: "\u0E40\u0E01\u0E35\u0E48\u0E22\u0E27\u0E01\u0E31\u0E1A",
+    archive: "\u0E04\u0E25\u0E31\u0E07",
+    search: "\u0E04\u0E49\u0E19\u0E2B\u0E32",
+    tags: "\u0E1B\u0E49\u0E32\u0E22\u0E01\u0E33\u0E01\u0E31\u0E1A",
+    categories: "\u0E2B\u0E21\u0E27\u0E14\u0E2B\u0E21\u0E39\u0E48",
+    recentPosts: "\u0E42\u0E1E\u0E2A\u0E15\u0E4C\u0E25\u0E48\u0E32\u0E2A\u0E38\u0E14",
+    comments: "\u0E04\u0E27\u0E32\u0E21\u0E04\u0E34\u0E14\u0E40\u0E2B\u0E47\u0E19",
+    untitled: "\u0E44\u0E21\u0E48\u0E44\u0E14\u0E49\u0E15\u0E31\u0E49\u0E07\u0E0A\u0E37\u0E48\u0E2D",
+    uncategorized: "\u0E44\u0E21\u0E48\u0E44\u0E14\u0E49\u0E08\u0E31\u0E14\u0E2B\u0E21\u0E27\u0E14\u0E2B\u0E21\u0E39\u0E48",
+    noTags: "\u0E44\u0E21\u0E48\u0E21\u0E35\u0E1B\u0E49\u0E32\u0E22\u0E01\u0E33\u0E01\u0E31\u0E1A",
+    wordCount: "\u0E04\u0E33",
+    wordsCount: "\u0E04\u0E33",
+    minuteCount: "\u0E19\u0E32\u0E17\u0E35",
+    minutesCount: "\u0E19\u0E32\u0E17\u0E35",
+    postCount: "\u0E42\u0E1E\u0E2A\u0E15\u0E4C",
+    postsCount: "\u0E42\u0E1E\u0E2A\u0E15\u0E4C",
+    themeColor: "\u0E2A\u0E35\u0E02\u0E2D\u0E07\u0E18\u0E35\u0E21",
+    lightMode: "\u0E2A\u0E27\u0E48\u0E32\u0E07",
+    darkMode: "\u0E21\u0E37\u0E14",
+    systemMode: "\u0E15\u0E32\u0E21\u0E23\u0E30\u0E1A\u0E1A",
+    more: "\u0E14\u0E39\u0E40\u0E1E\u0E34\u0E48\u0E21",
+    author: "\u0E1C\u0E39\u0E49\u0E40\u0E02\u0E35\u0E22\u0E19",
+    publishedAt: "\u0E40\u0E1C\u0E22\u0E41\u0E1E\u0E23\u0E48\u0E40\u0E21\u0E37\u0E48\u0E2D",
+    license: "\u0E2A\u0E31\u0E0D\u0E0D\u0E32\u0E2D\u0E19\u0E38\u0E0D\u0E32\u0E15",
+    friends: "\u0E40\u0E1E\u0E37\u0E48\u0E2D\u0E19\u0E46"
+  },
+  tr: {
+    home: "Anasayfa",
+    about: "Hakk\u0131nda",
+    archive: "Ar\u015Fiv",
+    search: "Ara",
+    tags: "Taglar",
+    categories: "Katagoriler",
+    recentPosts: "Son Payla\u015F\u0131mlar",
+    comments: "Yorumlar",
+    untitled: "Ba\u015Fl\u0131ks\u0131z",
+    uncategorized: "Katagorisiz",
+    noTags: "Tag Bulunamad\u0131",
+    wordCount: "kelime",
+    wordsCount: "kelime",
+    minuteCount: "dakika",
+    minutesCount: "dakika",
+    postCount: "g\xF6nderi",
+    postsCount: "g\xF6nderiler",
+    themeColor: "Tema Rengi",
+    lightMode: "Ayd\u0131nl\u0131k",
+    darkMode: "Koyu",
+    systemMode: "Sistem",
+    more: "Daha Fazla",
+    author: "Yazar",
+    publishedAt: "Yay\u0131nlanma:",
+    license: "Lisans",
+    friends: "Arkada\u015Flar"
+  },
+  vi: {
+    home: "Trang ch\u1EE7",
+    about: "Gi\u1EDBi thi\u1EC7u",
+    archive: "Kho b\xE0i",
+    search: "T\xECm ki\u1EBFm",
+    tags: "Th\u1EBB",
+    categories: "Danh m\u1EE5c",
+    recentPosts: "B\xE0i vi\u1EBFt m\u1EDBi nh\u1EA5t",
+    comments: "B\xECnh lu\u1EADn",
+    untitled: "Kh\xF4ng ti\xEAu \u0111\u1EC1",
+    uncategorized: "Ch\u01B0a ph\xE2n lo\u1EA1i",
+    noTags: "Ch\u01B0a c\xF3 th\u1EBB",
+    wordCount: "t\u1EEB",
+    wordsCount: "t\u1EEB",
+    minuteCount: "ph\xFAt \u0111\u1ECDc",
+    minutesCount: "ph\xFAt \u0111\u1ECDc",
+    postCount: "b\xE0i vi\u1EBFt",
+    postsCount: "b\xE0i vi\u1EBFt",
+    themeColor: "M\xE0u giao di\u1EC7n",
+    lightMode: "S\xE1ng",
+    darkMode: "T\u1ED1i",
+    systemMode: "H\u1EC7 th\u1ED1ng",
+    more: "Th\xEAm",
+    author: "T\xE1c gi\u1EA3",
+    publishedAt: "\u0110\u0103ng v\xE0o l\xFAc",
+    license: "Gi\u1EA5y ph\xE9p b\u1EA3n quy\u1EC1n",
+    friends: "B\u1EA1n"
+  },
+  zh_CN: {
+    home: "\u4E3B\u9875",
+    about: "\u5173\u4E8E",
+    archive: "\u5F52\u6863",
+    search: "\u641C\u7D22",
+    tags: "\u6807\u7B7E",
+    categories: "\u5206\u7C7B",
+    recentPosts: "\u6700\u65B0\u6587\u7AE0",
+    comments: "\u8BC4\u8BBA",
+    untitled: "\u65E0\u6807\u9898",
+    uncategorized: "\u672A\u5206\u7C7B",
+    noTags: "\u65E0\u6807\u7B7E",
+    wordCount: "\u5B57",
+    wordsCount: "\u5B57",
+    minuteCount: "\u5206\u949F",
+    minutesCount: "\u5206\u949F",
+    postCount: "\u7BC7\u6587\u7AE0",
+    postsCount: "\u7BC7\u6587\u7AE0",
+    themeColor: "\u4E3B\u9898\u8272",
+    lightMode: "\u4EAE\u8272",
+    darkMode: "\u6697\u8272",
+    systemMode: "\u8DDF\u968F\u7CFB\u7EDF",
+    more: "\u66F4\u591A",
+    author: "\u4F5C\u8005",
+    publishedAt: "\u53D1\u5E03\u4E8E",
+    license: "\u8BB8\u53EF\u534F\u8BAE",
+    friends: "\u53CB\u94FE"
+  },
+  zh_TW: {
+    home: "\u9996\u9801",
+    about: "\u95DC\u65BC",
+    archive: "\u5F59\u6574",
+    search: "\u641C\u5C0B",
+    tags: "\u6A19\u7C64",
+    categories: "\u5206\u985E",
+    recentPosts: "\u6700\u65B0\u6587\u7AE0",
+    comments: "\u8A55\u8AD6",
+    untitled: "\u7121\u6A19\u984C",
+    uncategorized: "\u672A\u5206\u985E",
+    noTags: "\u7121\u6A19\u7C64",
+    wordCount: "\u5B57",
+    wordsCount: "\u5B57",
+    minuteCount: "\u5206\u9418",
+    minutesCount: "\u5206\u9418",
+    postCount: "\u7BC7\u6587\u7AE0",
+    postsCount: "\u7BC7\u6587\u7AE0",
+    themeColor: "\u4E3B\u984C\u8272",
+    lightMode: "\u4EAE\u8272",
+    darkMode: "\u6697\u8272",
+    systemMode: "\u8DDF\u96A8\u7CFB\u7D71",
+    more: "\u66F4\u591A",
+    author: "\u4F5C\u8005",
+    publishedAt: "\u767C\u4F48\u65BC",
+    license: "\u8A31\u53EF\u5354\u8B70",
+    friends: "\u53CB\u93C8"
+  }
+};
+
+// templates/words.json
+var words_default = {
+  \u6211\u4E0E\u661F\u5149\u540C\u884C: {
+    zh_CN: "\u6211\u4E0E\u661F\u5149\u540C\u884C",
+    ja: "\u661F\u306E\u5149\u3068\u5171\u306B\u5F81\u304F",
+    en: "With Astrolight"
+  },
+  \u7AF9\u53D6\u62FE\u9057\u7269\u8BED: {
+    zh_CN: "\u7AF9\u53D6\u62FE\u9057\u7269\u8BED",
+    ja: "\u7AF9\u53D6\u62FE\u907A\u7269\u8A9E",
+    en: "Later Collection of Tales from the Bamboo Cutter"
+  },
+  \u701B\u5BF0: {
+    zh_CN: "\u701B\u5BF0",
+    ja: "<ruby>\u701B\u5BF0<rt>\u3048\u3044\u304B\u3093</rt></ruby>",
+    en: "Aeonivacuum"
+  },
+  \u65BC\u7559\u6839: {
+    zh_CN: "\u65BC\u7559\u6839",
+    ja: "<ruby>\u65BC\u7559\u6839<rt>\u30AA\u30EB\u30B1\u30F3</rt></ruby>",
+    en: "Orken"
+  },
+  \u8BC3\u53E4\u68F1: {
+    zh_CN: "\u8BC3\u53E4\u68F1",
+    ja: "<ruby>\u8A36\u53E4\u7A1C<rt>\u30CF\u30B3\u30ED\u30F3</rt></ruby>",
+    en: "Hacorum"
+  },
+  \u8840\u5996: {
+    zh_CN: "\u8840\u5996",
+    ja: "\u8840\u5996",
+    en: "Homines Sanguinei"
+  },
+  \u6545\u4E8B: {
+    zh_CN: "\u6545\u4E8B",
+    ja: "\u7269\u8A9E",
+    en: "Story"
+  },
+  \u540C\u4EBA: {
+    zh_CN: "\u540C\u4EBA",
+    ja: "\u4E8C\u6B21\u5275\u4F5C",
+    en: "Fanfiction"
+  },
+  \u602A\u7269\u730E\u4EBA: {
+    zh_CN: "\u602A\u7269\u730E\u4EBA",
+    ja: "\u30E2\u30F3\u30B9\u30BF\u30FC\u30CF\u30F3\u30BF\u30FC",
+    en: "Monster Hunter"
+  },
+  \u5916\u4F20: {
+    zh_CN: "\u5916\u4F20",
+    ja: "\u5916\u4F1D",
+    en: "Sidestory"
+  },
+  \u4E1C\u65B9: {
+    zh_CN: "\u4E1C\u65B9",
+    ja: "\u6771\u65B9",
+    en: "Touhou"
+  },
+  \u6708\u90FD: {
+    zh_CN: "\u6708\u90FD",
+    ja: "\u6708\u306E\u90FD",
+    en: "Moon Capital"
+  },
+  \u84EC\u83B1\u5C71\u8F89\u591C: {
+    zh_CN: "\u84EC\u83B1\u5C71\u8F89\u591C",
+    ja: "\u84EC\u83B1\u5C71\u8F1D\u591C",
+    en: "Houraisan Kaguya"
+  },
+  \u8BBE\u5B9A: {
+    zh_CN: "\u8BBE\u5B9A",
+    ja: "\u8A2D\u5B9A",
+    en: "Setting"
+  },
+  \u592E\u989D\u5217: {
+    zh_CN: "\u592E\u989D\u5217",
+    ja: "<ruby>\u592E\u984D\u5217<rt>\u30AA\u30F3\u30B0\u30EA\u30B7</rt></ruby>",
+    en: "Ongland"
+  },
+  \u606F\u5F8B: {
+    zh_CN: "\u606F\u5F8B",
+    ja: "<ruby>\u606F\u5F8B<rt>\u305D\u304F\u308A\u3061</rt></ruby>",
+    en: "Sihrut"
+  },
+  \u4E16\u754C\u6A21\u578B: {
+    zh_CN: "\u4E16\u754C\u6A21\u578B",
+    ja: "\u4E16\u754C\u30E2\u30C7\u30EB",
+    en: "World Model"
+  },
+  \u6811\u4E0A\u8424\u706B\u866B: {
+    zh_CN: "\u6811\u4E0A\u8424\u706B\u866B",
+    ja: "\u6A39\u4E0A\u306E\u86CD",
+    en: "Fireflies on Tree"
+  },
+  \u701B\u6D32: {
+    zh_CN: "\u701B\u6D32",
+    ja: "<ruby>\u701B\u6D32<rt>\u3048\u3044\u3057\u3085\u3046</rt></ruby>",
+    en: "Iangdom Continent"
+  },
+  \u5927\u701B: {
+    zh_CN: "\u5927\u701B",
+    ja: "<ruby>\u5927\u701B<rt>\u305F\u3044\u3048\u3044</rt></ruby>",
+    en: "Iangdom"
+  },
+  \u51A5\u754C: {
+    zh_CN: "\u51A5\u754C",
+    ja: "\u51A5\u754C",
+    en: "Netherworld"
+  },
+  \u5929\u7A7A\u57CE: {
+    zh_CN: "\u5929\u7A7A\u57CE",
+    ja: "\u5929\u7A7A\u57CE",
+    en: "Sky City"
+  },
+  \u53E4\u4EE3\u6587\u660E: {
+    zh_CN: "\u53E4\u4EE3\u6587\u660E",
+    ja: "\u53E4\u4EE3\u6587\u660E",
+    en: "Ancient Civilization"
+  },
+  \u5F02\u76F8: {
+    zh_CN: "\u5F02\u76F8",
+    ja: "\u7570\u76F8",
+    en: "Allophases"
+  },
+  \u571F\u884C\u5996: {
+    zh_CN: "\u571F\u884C\u5996",
+    ja: "<ruby>\u571F\u884C<rt>\u3064\u3061\u3086\u304F</rt></ruby><ruby>\u5996<rt>\u3042\u3084\u304B\u3057</rt></ruby>",
+    en: "Homines Terrirepentes"
+  },
+  \u6218\u4E89: {
+    zh_CN: "\u6218\u4E89",
+    ja: "\u6226\u4E89",
+    en: "War"
+  },
+  \u91C7\u82B1\u5996: {
+    zh_CN: "\u91C7\u82B1\u5996",
+    ja: "<ruby>\u82B1\u6458<rt>\u306F\u306A\u3064\u3080</rt></ruby><ruby>\u5996<rt>\u3042\u3084\u304B\u3057</rt></ruby>",
+    en: "Homines Meridiani"
+  },
+  \u6B7B\u7075\u6A31: {
+    zh_CN: "\u6B7B\u7075\u6A31",
+    ja: "<ruby>\u6B7B\u970A<rt>\u3057\u308A\u3087\u3046</rt></ruby><ruby>\u685C<rt>\u3056\u304F\u3089</rt></ruby>",
+    en: "Sakura Necromorphae"
+  },
+  \u77B1\u82B1: {
+    zh_CN: "\u77B1\u82B1",
+    ja: "<ruby>\u77B1<rt>\u3072\u304B\u3059</rt></ruby>",
+    en: "Hiwhasue"
+  },
+  \u4EBA\u9020\u8BED\u8A00: {
+    zh_CN: "\u4EBA\u9020\u8BED\u8A00",
+    ja: "\u4EBA\u5DE5\u8A00\u8A9E",
+    en: "Constructed Language"
+  }
+};
+
+// assets/scripts/i18n.ts
+var data = i18n_default;
+var wordData = words_default;
+var aliases = {
+  zh: "zh_CN",
+  "zh-hans": "zh_CN",
+  "zh-cn": "zh_CN",
+  "zh-tw": "zh_TW",
+  en_us: "en",
+  en_gb: "en",
+  ong: "A_ong",
+  "a-ong": "A_ong",
+  a_zh_iang: "A_zh_iang",
+  "a-zh-iang": "A_zh_iang",
+  "a-zh_iang": "A_zh_iang",
+  zh_iang: "A_zh_iang"
+};
+function resolveKey(lang) {
+  const raw = lang && lang.trim() !== "" ? lang : "zh_CN";
+  return aliases[raw] ?? raw;
+}
+function applyI18n() {
+  const main = document.querySelector("#swup-container");
+  const key = resolveKey(main?.dataset.pageLang);
+  const t = data[key] ?? data.zh_CN ?? {};
+  document.querySelectorAll("[data-i18n]").forEach((el) => {
+    const id = el.dataset.i18n;
+    if (id && t[id]) el.textContent = t[id];
+  });
+  document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
+    const id = el.dataset.i18nPlaceholder;
+    if (id && t[id]) el.placeholder = t[id];
+  });
+  document.querySelectorAll("[data-i18n-aria]").forEach((el) => {
+    const id = el.dataset.i18nAria;
+    if (id && t[id]) el.setAttribute("aria-label", t[id]);
+  });
+  document.querySelectorAll("[data-word]").forEach((el) => {
+    const term = el.dataset.word;
+    if (!term) return;
+    const entry = wordData[term];
+    const html = entry ? entry[key] ?? entry.zh_CN : void 0;
+    if (html) el.innerHTML = html;
+  });
+}
+
 // assets/scripts/fuwari.ts
 function syncBodyState() {
   document.documentElement.classList.toggle("is-home", location.pathname === "/" || location.pathname === "");
@@ -6778,6 +7318,7 @@ function syncBodyState() {
 function mountPage() {
   syncBodyState();
   syncDataHrefs();
+  applyI18n();
   mountToc();
   mountCodeCopy();
   mountLightbox();

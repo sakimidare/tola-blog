@@ -78,7 +78,7 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 html { min-width: 20rem; scroll-behavior: smooth; background: var(--page-bg); line-height: 1.5; -webkit-text-size-adjust: 100%; overflow-x: clip; }
-body { min-width: 20rem; min-height: 100vh; margin: 0; background: var(--page-bg); color: var(--deep-text); font-family: MiSans, Roboto, system-ui, sans-serif; line-height: 1.5; -webkit-font-smoothing: antialiased; overflow-x: clip; }
+body { min-width: 20rem; min-height: 100vh; margin: 0; background: var(--page-bg); color: var(--deep-text); font-family: "Source Han Serif SC", "Source Han Serif JP", MiSans, Roboto, system-ui, sans-serif; line-height: 1.5; -webkit-font-smoothing: antialiased; overflow-x: clip; }
 h1, h2, h3, h4, h5, h6, p, figure, blockquote, dl, dd, pre { margin: 0; }
 ul, ol { margin: 0; padding: 0; }
 img, svg, video, canvas { display: block; vertical-align: middle; }
@@ -218,8 +218,8 @@ html.is-home .sidebar-sticky { top: calc(1rem - (var(--banner-home) - var(--bann
 .post-card-enter:active { background: var(--btn-regular-bg-active); transform: scale(.95); }
 .post-card-enter .icon { font-size: 2.25rem; transition: transform 260ms var(--ease-out); }
 .post-card-enter:hover .icon { transform: translateX(.2rem); }
-.post-card-cover { position: relative; width: 28%; margin: .75rem; overflow: hidden; border-radius: .75rem; }
-.post-card-cover img { width: 100%; height: 100%; object-fit: cover; }
+.post-card-cover { position: relative; flex: none; width: 28%; min-width: 0; margin: .75rem; overflow: hidden; border-radius: .75rem; }
+.post-card-cover img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .post-card-cover > span { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: white; background: rgb(0 0 0 / 0%); }
 .post-card-cover .icon { font-size: 3rem; opacity: 0; transform: scale(.5); }
 .post-card-cover:hover { transform: scale(.99); }
@@ -240,7 +240,7 @@ html.is-home .sidebar-sticky { top: calc(1rem - (var(--banner-home) - var(--bann
 .post-pdf:hover { background: var(--btn-regular-bg-hover); transform: translateY(-1px); }
 .post-pdf .icon { font-size: 1.1rem; }
 .post-cover { display: block; width: 100%; max-height: 32rem; margin: .5rem 0 2rem; border-radius: .75rem; object-fit: cover; cursor: zoom-in; }
-.markdown-content { color: var(--text-75); }
+.markdown-content { color: var(--text-75); font-family: "Source Han Serif SC", "Source Han Serif JP", MiSans, "Noto Serif SC", serif; }
 .markdown-content ul, .markdown-content ol { margin: 1rem 0; padding-left: 1.6rem; }
 .markdown-content ul { list-style: disc; }
 .markdown-content ol { list-style: decimal; }
@@ -461,3 +461,102 @@ html.is-animating .transition-swup-fade { opacity: 0; transform: translateY(1rem
 .notfound .runner-canvas { position: relative; height: 9.375rem; max-width: 37.5rem; overflow: hidden; opacity: 1; z-index: 2; }
 .notfound #offline-resources { display: none; }
 .notfound .icon { display: none; }
+
+/* ==========================================================================
+   Archive (ArchiveAeonivacuus) component styles
+   ========================================================================== */
+
+/* Inline font directives: #zh / #ja / #old-ja / #ong / #old-cjk / #dfkai /
+   #ipa / #latin / #kai / #mincho */
+.markdown-content .ff-zh_cn { font-family: "Source Han Serif SC", serif; }
+.markdown-content .ff-ja { font-family: "Source Han Serif JP", serif; }
+.markdown-content .ff-ja_old { font-family: "Asebi Mincho", "Source Han Serif JP", "Source Han Serif Old", serif; font-synthesis: weight; }
+.markdown-content .ff-ong { font-family: "Old English Onglisch", serif; }
+.markdown-content .ff-cjk_old { font-family: "Source Han Serif Old", "Source Han Serif SC", serif; font-synthesis: weight; }
+.markdown-content .ff-dfkai { font-family: "DFKai-SB", KaiTi, "Source Han Serif SC", "Source Han Serif JP", serif; }
+.markdown-content .ff-en { font-family: "Times New Roman", serif; }
+.markdown-content .ff-rom { font-family: "HighTowerText", serif; font-synthesis: weight; }
+.markdown-content .ff-kai { font-family: KaiTi, "Source Han Serif SC", "Source Han Serif JP", serif; }
+.markdown-content .ff-min { font-family: "MS Mincho", "Source Han Serif JP", serif; }
+
+/* Ruby: smaller reading text, exclude annotations from text selection. */
+ruby rt, ruby rp { font-size: .5em; user-select: none; -webkit-user-select: none; }
+
+/* Literary layouts. */
+.poem, .shi, .spellcard { text-align: center; }
+.poem_en { font-style: italic; }
+.poem_ong { font-family: "Old English Onglisch", serif; }
+.shi:lang(zh), .spellcard:lang(zh) { font-family: KaiTi, "Source Han Serif SC", "Source Han Serif JP", serif; }
+.ci { padding-left: 1.5em; padding-right: 1.5em; }
+.ci:lang(zh) { font-family: KaiTi, "Source Han Serif SC", "Source Han Serif JP", serif; }
+.ci p { margin: .5em 0; text-indent: 2em; }
+.waka { font-family: "DFKai-SB", KaiTi, "Source Han Serif SC", "Source Han Serif JP", serif; text-align: center; }
+.graph-title { text-align: center; }
+.cast-list { text-align: center; color: var(--text-50); }
+.rotate-text { display: inline-block; transform: rotate(270deg); }
+.tx-blue { color: #0075ff; }
+.tx-red { color: #ff0000; }
+.tx-box { display: inline; padding: 0 2px; border: 1px solid currentColor; }
+.tx-right { text-align: right; }
+.font-ht p { font-family: "Source Han Serif SC", "Source Han Serif JP", serif; }
+
+/* Dialogue blocks. */
+.dialog-block { display: grid; grid-template-columns: 6em 1fr; gap: 1.5rem; align-items: baseline; margin-bottom: 1.5rem; }
+.dialog-person { font-weight: 700; font-size: .9em; line-height: 1.6; text-align: right; }
+.dialog-content > :first-child { margin-top: 0; }
+.dialog-content > :last-child { margin-bottom: 0; }
+@media (max-width: 600px) {
+  .dialog-block { display: block; }
+  .dialog-person { margin-bottom: .25rem; text-align: left; }
+  .dialog-content { padding-left: 1rem; border-left: 2px solid var(--line-divider); }
+}
+
+/* Tables rendered by #data-table / #web-table. */
+.typst-table-wrap { width: 100%; margin: 1.25rem 0; overflow-x: auto; }
+.typst-table-wrap table { width: 100%; border-collapse: collapse; }
+
+/* #card / #github render through the shared .card-hyperlink component above. */
+
+/* Mermaid diagrams. */
+.markdown-content pre.mermaid { margin: 1.25rem 0; padding: 1rem; border-radius: .75rem; background: var(--card-block-bg); text-align: center; }
+
+/* Footnotes (rendered by the custom HTML show rule). */
+/* Footnotes (rendered by the custom HTML show rule). The body link styling
+   (dashed underline + padding) must be reset on the superscript mark and the
+   back-reference, otherwise it leaves an ugly gap around the number. */
+.markdown-content sup.footnote-ref { font-size: .72em; line-height: 0; vertical-align: super; }
+.markdown-content sup.footnote-ref > a,
+.markdown-content a.footnote-backref {
+  display: inline !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: none !important;
+  color: var(--primary) !important;
+  text-decoration: none !important;
+}
+.markdown-content sup.footnote-ref > a:hover,
+.markdown-content a.footnote-backref:hover { text-decoration: underline !important; text-underline-offset: .15em; }
+.footnotes { margin-top: 3rem; padding-top: 1.25rem; border-top: 1px solid var(--line-divider); color: var(--text-50); font-size: .875rem; }
+.footnotes-title { margin: 0 0 .6rem; color: var(--text-50); font-size: .8rem; font-weight: 700; letter-spacing: .08em; }
+.footnotes ol { margin: 0; padding-left: 1.5rem; }
+.footnotes li { margin: .4rem 0; line-height: 1.75; }
+.footnotes li::marker { color: var(--primary); font-weight: 700; }
+.markdown-content a.footnote-backref { margin-left: .35rem !important; }
+
+/* Per-language article fonts (Archive translations). */
+#post-container[data-lang="en"] .markdown-content, #post-container[data-lang="en"] .post-header h1 { font-family: "Source Serif 4", "Source Han Serif SC", "Source Han Serif JP", serif; }
+#post-container[data-lang="ja"] .markdown-content, #post-container[data-lang="ja"] .post-header h1 { font-family: "Source Han Serif JP", "Source Han Serif SC", serif; }
+#post-container[data-lang="zh_TW"] .markdown-content, #post-container[data-lang="zh_TW"] .post-header h1 { font-family: "Source Han Serif SC", "Source Han Serif JP", serif; }
+#post-container[data-lang="ong"] .markdown-content, #post-container[data-lang="ong"] .post-header h1 { font-family: "Old English Onglisch", "Source Serif 4", "Source Han Serif SC", serif; }
+#post-container[data-lang="A-zh_iang"] .markdown-content, #post-container[data-lang="A-zh_iang"] .post-header h1 { font-family: "Source Han Serif JP", "Source Han Serif SC", serif; }
+
+/* Translation switcher. */
+.post-translations { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem .75rem; margin: .85rem 0 0; padding: .5rem .75rem; border: 1px solid var(--line-divider); border-radius: .65rem; background: color-mix(in oklch, var(--btn-regular-bg) 55%, transparent); }
+.translations-label { display: inline-flex; align-items: center; gap: .35rem; color: var(--text-50); font-size: .75rem; font-weight: 700; letter-spacing: .04em; }
+.translations-label .icon { font-size: 1rem; }
+.translations-list { display: inline-flex; flex-wrap: wrap; gap: .4rem; }
+.translation-link { padding: .18rem .62rem; border: 1px solid var(--line-divider); border-radius: .5rem; color: var(--text-75); font-size: .85rem; font-weight: 700; transition: color 150ms ease, border-color 150ms ease, background-color 150ms ease; }
+.translation-link:hover { color: var(--primary); border-color: var(--primary); }
+.translation-link.is-current { color: #fff; background: var(--primary); border-color: transparent; pointer-events: none; }

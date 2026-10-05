@@ -10,7 +10,7 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const contentDir = join(root, "content");
 const outDir = join(root, "public");
 const pkgPath = join(root, ".tola", "packages");
-const fontDir = join(root, "assets", "fonts");
+const fontDir = join(root, "fonts-pdf");
 const fontArgs = existsSync(fontDir) ? ["--font-path", fontDir] : [];
 
 function walk(dir) {
