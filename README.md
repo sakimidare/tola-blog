@@ -41,7 +41,11 @@
 │   ├── 404.typ
 │   └── posts/              # 文章
 ├── templates/
-│   ├── fuwari.typ          # 主题模板与组件（导航、侧栏、卡片、代码块、Admonition…）
+│   ├── fuwari.typ          # 入口（barrel，再导出以下模块）
+│   ├── layout.typ          # 站点框架：导航、侧栏、Banner、页脚、TOC、SEO、PDF 排版
+│   ├── post.typ            # 文章页与文章卡片
+│   ├── components.typ      # 内容组件：quote-block、ruby、admonition、github/link 卡片等
+│   ├── archive.typ         # 归档时间轴
 │   └── tola.typ            # Tola 基础模板（自动生成，勿改）
 ├── assets/
 │   ├── styles/             # fuwari.css、photoswipe.css
@@ -123,7 +127,7 @@ int main(void) { return 0; }
 ```
 ````
 
-其他可用组件：`admonition`、`quote-block`、`github-card`、`link-card`、`content-image`、`hr-line`、`anchor`。
+其他可用组件（在 `/templates/components.typ`，也可继续从 `/templates/fuwari.typ` 导入）：`admonition`、`quote-block`、`ruby`、`github-card`、`link-card`、`content-image`、`hr-line`、`empty-note`、`card-list`、`anchor`。
 
 ## 从 Fuwari 迁移
 
