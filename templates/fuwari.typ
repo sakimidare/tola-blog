@@ -378,7 +378,7 @@
 
 #let ruby(base, reading) = context {
   if target() == "html" {
-    html.elem("ruby")[#base #html.elem("rt")[#reading]]
+    html.elem("ruby", base + html.elem("rt", reading))
   } else {
     box(stack(
       dir: ttb,
