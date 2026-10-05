@@ -23,7 +23,6 @@
       #cards
     ]
   } else {
-    heading(level: 1)[#info.title]
     cards
   }
 }

@@ -6,7 +6,7 @@
 )
 
 #page-card[
-  = About
+  #context { if target() == "html" { heading(level: 1)[About] } }
 
   有人也许会以为，关于代码的书有点儿落后于时代——代码不再是问题；我们应当关注模型和需求。确实，有人说过我们正在临近代码的终结点。
 

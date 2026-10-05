@@ -6,7 +6,7 @@
 )
 
 #page-card[
-  = 404
+  #context { if target() == "html" { heading(level: 1)[404] } }
 
   你访问的页面不存在，或者已经被移动。
 
