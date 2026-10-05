@@ -147,13 +147,13 @@
 #let ja(body) = font-span("ff-ja", "Source Han Serif JP", body)
 #let old-ja(body) = font-span("ff-ja_old", "Asebi Mincho", body)
 #let ong(body) = font-span("ff-ong", "Old English Onglisch", body)
-#let ipa(body) = font-span("ff-en", ("Times New Roman", "Source Serif 4"), body)
+#let ipa(body) = font-span("ff-en", "Source Serif 4", body)
 #let latin(body) = font-span("ff-rom", ("High Tower Text", "Source Serif 4"), body)
-#let zh(body) = font-span("ff-zh_cn", ("Source Han Serif SC", "Noto Serif SC"), body)
+#let zh(body) = font-span("ff-zh_cn", "Noto Serif SC", body)
 #let old-cjk(body) = font-span("ff-cjk_old", ("Source Han Serif Old Style", "Noto Serif SC"), body)
 #let dfkai(body) = font-span("ff-dfkai", "DFKai-SB", body)
 #let kai(body) = font-span("ff-kai", "KaiTi", body)
-#let mincho(body) = font-span("ff-min", ("MS Mincho", "Source Han Serif JP"), body)
+#let mincho(body) = font-span("ff-min", "Source Han Serif JP", body)
 
 #let monster(name, japanese: "", kind: none) = {
   let value = [#name]

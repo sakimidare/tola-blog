@@ -309,9 +309,9 @@
   ]
 }
 
-#let pdf-fonts = ("Noto Serif SC", "Noto Serif CJK SC", "Source Han Serif SC")
+#let pdf-fonts = ("Noto Serif SC",)
 
-#let pdf-heading-fonts = ("Noto Serif SC", "Noto Serif CJK SC", "Source Han Serif SC")
+#let pdf-heading-fonts = ("Noto Serif SC",)
 
 #let pdf-mono-fonts = ("JetBrains Mono", "Noto Sans Mono CJK SC", "Noto Serif SC")
 
@@ -320,9 +320,9 @@
 #let paged-doc(title: none, date: none, update: none, tags: (), category: none, summary: none, article: false, lang: none, body) = {
   let t = ui(lang)
   let base-fonts = if lang == "en" {
-    ("Source Serif 4", "Noto Serif SC", "Noto Serif CJK SC")
+    ("Source Serif 4", "Noto Serif SC")
   } else if lang == "ja" {
-    ("Source Han Serif JP", "Noto Serif SC", "Noto Serif CJK SC")
+    ("Source Han Serif JP", "Noto Serif SC")
   } else if lang == "ong" {
     ("Old English Onglisch", "Source Serif 4", "Noto Serif SC")
   } else if lang == "A-zh_iang" {
