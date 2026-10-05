@@ -376,6 +376,19 @@
   if target() == "html" { html.elem("img", attrs: (src: src, alt: alt, loading: "lazy")) } else { image(src, width: 100%) }
 }
 
+#let ruby(base, reading) = context {
+  if target() == "html" {
+    html.elem("ruby")[#base #html.elem("rt")[#reading]]
+  } else {
+    box(stack(
+      dir: ttb,
+      spacing: 0.08em,
+      align(center, move(dy: -0.12em, text(size: 0.5em, reading))),
+      align(center, base),
+    ))
+  }
+}
+
 #let hr-line() = context {
   if target() == "html" { html.elem("hr") } else { line(length: 100%, stroke: 0.5pt) }
 }
