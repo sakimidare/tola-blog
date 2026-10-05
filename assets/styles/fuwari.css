@@ -3,7 +3,7 @@
 
 :root {
   color-scheme: light;
-  --hue: 220;
+  --hue: 265;
   --page-width: 75rem;
   --toc-width: calc((100vw - var(--page-width)) / 2 - 1rem);
   --radius-large: 1rem;

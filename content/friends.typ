@@ -1,4 +1,4 @@
-#import "/templates/fuwari.typ": fuwari-base, page-card, card-list, link-card
+#import "/templates/fuwari.typ": *
 
 #show: fuwari-base.with(
   title: "Friends",
@@ -10,13 +10,35 @@
 
   这里是友情链接。
 
-  #card-list[
-    #link-card("https://thesky233.github.io/", "TheSky233's Blog", avatar: "http://q1.qlogo.cn/g?b=qq&nk=1602458048&s=640", description: "And in that light...")
-    #link-card("https://blog.archlinux.tech/", "日落果的 Blog", avatar: "https://avatars.githubusercontent.com/u/37149302?v=4", description: "日落果的 Blog")
-    #link-card("https://blog.chyk.ink/", "風雪城", avatar: "https://q1.qlogo.cn/g?b=qq&nk=3526514925&s=640", description: "浩繁星空下的一场稚嫩的梦")
-    #link-card("https://onear.eu.org", "Onear's Blog", avatar: "https://q1.qlogo.cn/g?b=qq&nk=122441928&s=640", description: "Onear's Blog")
-    #link-card("https://blog.y11han.icu", "Y11Han's ICU", avatar: "https://q1.qlogo.cn/g?b=qq&nk=2172029629&s=640", description: "该病房一切内容不构成投资建议")
-    #link-card("https://www.yorozumoon.cn/", "井枝万事屋", avatar: "https://www.yorozumoon.cn/images/Moonhalf_head.png", description: "濂珠沉葬，玉碎琉璃")
-    #link-card("https://blog.45dino.me/", "45dino's Blog", avatar: "https://q1.qlogo.cn/g?b=qq&nk=2957283301&s=640", description: "45 dino's Blog")
-  ]
+  特别感谢：
+
+  #card(
+    href: "https://www.sakimidare.top/",
+    title: "咲乱SakiMidare",
+    avatar: "http://q.qlogo.cn/headimg_dl?dst_uin=3285956207&spec=640",
+  )[心臓は点滅するかしら……]
+
+  没有他就没有这个博客。TT
+
+  == 架空世界观创作者（很多是我的群友，感谢他们支撑我坚持这个爱好）
+
+  #card(
+    href: "https://shohna.fandom.com/zh/wiki/%E8%93%9D%E5%9C%B0%E7%BE%A4%E5%B2%9B_Wiki",
+    title: "Kikomas - Cathine世界观",
+    avatar: "http://q.qlogo.cn/headimg_dl?dst_uin=1474705162&spec=640",
+  )[跳入那些诡谲的呓语 / 寻找那些褪色的真相]
+
+  #card(
+    href: "http://bluevalley.wikidot.com/",
+    title: "奶酪AmerUzily企划下的协作 - 蓝谷矿联",
+    avatar: "https://img.cdn1.vip/i/6906390f3c3e6_1762015503.png",
+  )[欢迎接入蓝谷矿联全域信息系统]
+
+  == 一些给我重要帮助的群友
+
+  #card(
+    href: "https://www.xiaohongshu.com/user/profile/682e82f7000000000e0115b5?xsec_token=ABN-cDH9JcdKxcFyhbWRyoRzKrx-A1kf_wCjLu1YJEWrU%3D&xsec_source=pc_search",
+    title: "Izumi Rei",
+    avatar: "http://q.qlogo.cn/headimg_dl?dst_uin=2211614153&spec=640",
+  )[我的思辨能力很大程度上拜他所教。]
 ]

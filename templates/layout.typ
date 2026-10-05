@@ -241,15 +241,15 @@
 ]
 
 #let _profile() = html.elem("section", attrs: (class: "profile card-base"))[
-  #html.elem("a", attrs: (href: "/about/", class: "avatar-link", "aria-label": "关于作者"), html.elem("span", attrs: (class: "avatar-overlay"), icon("fa6-regular:address-card")) + html.elem("img", attrs: (class: "avatar", src: "/assets/images/avatar.jpeg", alt: "SakiMidare")))
+  #html.elem("a", attrs: (href: "/about/", class: "avatar-link", "aria-label": "关于作者"), html.elem("span", attrs: (class: "avatar-overlay"), icon("fa6-regular:address-card")) + html.elem("img", attrs: (class: "avatar", src: "/assets/images/avatar.jpeg", alt: "Archive Aeonivacuus")))
   #html.elem("div", attrs: (class: "profile-body"))[
     #html.elem("strong", attrs: (class: "profile-name"), info.author)
     #html.elem("span", attrs: (class: "profile-accent"))
-    #html.elem("p", attrs: (class: "profile-bio"), "心臓は点滅するかしら……")
+    #html.elem("p", attrs: (class: "profile-bio"), info.description)
     #html.elem("div", attrs: (class: "profile-links"))[
-      #html.elem("a", attrs: (href: "mailto:sakimidare@outlook.com", rel: "me", "aria-label": "Email"), icon("material-symbols:mail-rounded"))
-      #html.elem("a", attrs: (href: "https://space.bilibili.com/285741399", target: "_blank", rel: "me noopener", "aria-label": "Bilibili"), icon("fa6-brands:bilibili"))
-      #html.elem("a", attrs: (href: "https://github.com/sakimidare", target: "_blank", rel: "me noopener", "aria-label": "GitHub"), icon("fa6-brands:github"))
+      #html.elem("a", attrs: (href: "mailto:1187625889@qq.com", rel: "me", "aria-label": "Email"), icon("material-symbols:mail-rounded"))
+      #html.elem("a", attrs: (href: "https://space.bilibili.com/171245629", target: "_blank", rel: "me noopener", "aria-label": "Bilibili"), icon("fa6-brands:bilibili"))
+      #html.elem("a", attrs: (href: "https://github.com/ArchiveAeonivacuus", target: "_blank", rel: "me noopener", "aria-label": "GitHub"), icon("fa6-brands:github"))
     ]
   ]
 ]
@@ -296,7 +296,7 @@
 }
 
 #let _banner() = html.elem("div", attrs: (id: "banner-wrapper", class: "banner-wrapper"))[
-  #html.elem("img", attrs: (id: "banner", src: "/assets/images/banner1.jpeg", alt: "博客横幅", class: "banner-image"))
+  #html.elem("img", attrs: (id: "banner", src: "/assets/images/banner.jpeg", alt: "博客横幅", class: "banner-image"))
 ]
 
 #let _footer() = html.elem("footer", attrs: (class: "footer onload-animation"), html.elem("span", "© " + info.author) + html.elem("span", attrs: ("aria-hidden": "true"), "·") + html.elem("a", attrs: (href: "/feed.xml"), "RSS"))

@@ -5,10 +5,10 @@
 # Access in Typst via `#import "@tola/site:0.0.0": info`
 # For custom fields, use `[site.info.extra]` and access via `info.extra.xxx`
 [site.info]
-title = "SakiMidare's Blog"  # Site title
-author = "SakiMidare"  # Author name
-email = "sakimidare@outlook.com"  # Author email
-description = "心臓は点滅するかしら"  # Site description
+title = "Archive Aeonivacuus"  # Site title
+author = "Archive Aeonivacuus"  # Author name
+email = "1187625889@qq.com"  # Author email
+description = "漫步远乡 / ゑんきやうにありく"  # Site description
 url = "https://sakimidare.top/"  # Site URL, path used as prefix (e.g., "https://example.com/blog/docs")
 language = "zh-Hans"  # Language code (e.g., "en", "zh-Hans")
 copyright = ""  # Copyright notice

@@ -68,7 +68,7 @@ export function mountSettings(): void {
   });
 
   const slider = document.querySelector<HTMLInputElement>("#color-slider");
-  const hue = storage.get("hue", "220");
+  const hue = storage.get("hue", "265");
   root.style.setProperty("--hue", hue);
   if (slider) {
     slider.value = hue;

@@ -664,7 +664,7 @@ function mountSettings() {
     applyTheme(theme);
   });
   const slider = document.querySelector("#color-slider");
-  const hue = storage.get("hue", "220");
+  const hue = storage.get("hue", "265");
   root.style.setProperty("--hue", hue);
   if (slider) {
     slider.value = hue;
