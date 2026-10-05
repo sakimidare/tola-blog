@@ -1,5 +1,9 @@
 {
   "tinymist.rootPath": "/home/sakimidare/tola-blog",
+  "tinymist.fontPaths": [
+    "${workspaceFolder}/fonts-pdf"
+  ],
+  "tinymist.systemFonts": false,
   "tinymist.typstExtraArgs": [
     "--features=html",
     "--package-path=/home/sakimidare/tola-blog/.tola/packages"

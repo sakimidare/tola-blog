@@ -13,32 +13,10 @@ const pkgPath = join(root, ".tola", "packages");
 const fontDir = join(root, "fonts-pdf");
 const fontArgs = existsSync(fontDir) ? ["--font-path", fontDir] : [];
 
-// `@tola/site`'s `info` is injected by Tola as `sys.inputs.__tola_site`, which the
-// bare Typst CLI cannot reproduce (inputs are strings only). Pass the needed
-// fields as string inputs so paged output can credit the site/author.
-function readSiteInfo(tomlPath) {
-  const info = {};
-  let inSection = false;
-  for (const raw of readFileSync(tomlPath, "utf8").split(/\r?\n/)) {
-    const line = raw.trim();
-    if (line.startsWith("[")) {
-      inSection = line === "[site.info]";
-      continue;
-    }
-    if (!inSection || line === "" || line.startsWith("#")) continue;
-    const match = line.match(/^([A-Za-z0-9_]+)\s*=\s*"(.*)"\s*(?:#.*)?$/);
-    if (match) info[match[1]] = match[2];
-  }
-  return info;
-}
-
-const siteInfo = readSiteInfo(join(root, "tola.toml"));
-const inputArgs = [
-  "--input", `site_title=${siteInfo.title ?? ""}`,
-  "--input", `site_author=${siteInfo.author ?? ""}`,
-  "--input", `site_description=${siteInfo.description ?? ""}`,
-  "--input", `site_language=${siteInfo.language ?? ""}`,
-];
+// Site metadata for paged output comes from templates/site-info.json (generated
+// by scripts/build-site-info.mjs), so the CLI build and the editor preview match.
+// `--ignore-system-fonts` makes the PDF use only the vendored fonts-pdf/ set,
+// matching Tinymist with `systemFonts: false`.
 
 function walk(dir) {
   const files = [];
@@ -64,7 +42,7 @@ for (const file of files) {
   const out = join(outDir, rel + ".pdf");
   mkdirSync(dirname(out), { recursive: true });
   try {
-    execFileSync("typst", ["compile", "--package-path", pkgPath, "--root", root, ...fontArgs, ...inputArgs, file, out], { stdio: "pipe" });
+    execFileSync("typst", ["compile", "--package-path", pkgPath, "--root", root, "--ignore-system-fonts", ...fontArgs, file, out], { stdio: "pipe" });
     ok += 1;
   } catch (error) {
     const message = error.stderr?.toString().trim().split("\n").slice(0, 3).join(" ") ?? String(error);
