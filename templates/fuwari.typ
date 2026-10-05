@@ -132,6 +132,10 @@
   ]
 }
 
+#let pdf-fonts = ("Noto Serif CJK SC",)
+#let pdf-heading-fonts = ("Noto Sans CJK SC",)
+#let pdf-mono-fonts = ("JetBrains Mono", "Noto Sans Mono CJK SC")
+
 #let _join-strings(list) = list.fold("", (acc, item) => acc + (if acc == "" { "" } else { ", " }) + str(item))
 
 #let paged-doc(title: none, date: none, update: none, tags: (), category: none, summary: none, article: false, body) = {
@@ -151,17 +155,17 @@
       )
     ],
   )
-  set text(font: ("New Computer Modern", "Noto Serif CJK SC", "Noto Sans CJK SC"), size: 10.5pt, lang: "zh", region: "cn")
+  set text(font: pdf-fonts, size: 10.5pt, lang: "zh", region: "cn")
   set par(justify: true, leading: .85em, first-line-indent: 2em, spacing: 1.1em)
   show heading: set block(above: 1.4em, below: .7em)
-  show heading: set text(font: ("Noto Sans CJK SC", "Noto Serif CJK SC"))
+  show heading: set text(font: pdf-heading-fonts)
   show heading.where(level: 1): set text(size: 18pt, weight: "bold")
   show heading.where(level: 2): set text(size: 14pt, weight: "bold")
   show heading.where(level: 3): set text(size: 12pt, weight: "bold")
   show link: set text(fill: rgb("#2563eb"))
   show raw.where(block: true): set block(fill: luma(246), inset: 9pt, radius: 4pt, width: 100%, above: .9em, below: .9em)
-  show raw.where(block: true): set text(font: ("DejaVu Sans Mono", "Noto Sans Mono CJK SC"), size: 8.5pt, lang: "en")
-  show raw.where(block: false): it => box(fill: luma(240), inset: (x: .3em, y: .12em), radius: 2pt, text(font: ("DejaVu Sans Mono", "Noto Sans Mono CJK SC"), size: .9em, lang: "en", it))
+  show raw.where(block: true): set text(font: pdf-mono-fonts, size: 8.5pt, lang: "en")
+  show raw.where(block: false): it => box(fill: luma(240), inset: (x: .3em, y: .12em), radius: 2pt, text(font: pdf-mono-fonts, size: .9em, lang: "en", it))
   show list: set par(first-line-indent: 0em)
   show enum: set par(first-line-indent: 0em)
   show table.cell: set align(left)
@@ -199,12 +203,20 @@
 
   if article {
     context {
-      if query(heading).len() > 0 {
-        v(.6em)
-        set text(size: 10pt)
-        outline(title: "目录", depth: 2, indent: 1.3em)
-        v(.4em)
-        pagebreak()
+      let entries = query(heading).filter(entry => entry.level <= 2)
+      if entries.len() >= 3 {
+        block(above: 1em, below: .7em)[
+          #set text(size: 9pt, fill: luma(115))
+          #text(weight: "bold", fill: luma(80))[目录]
+          #v(.25em)
+          #for entry in entries {
+            linebreak()
+            link(entry.location(), {
+              if entry.level == 2 { h(1.1em) }
+              entry.body
+            })
+          }
+        ]
       }
     }
   }
