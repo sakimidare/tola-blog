@@ -2017,9 +2017,30 @@ var Runner = class _Runner {
 window.Runner = Runner;
 
 // assets/scripts/dino/index.ts
+var JUMP_CODES = /* @__PURE__ */ new Set(["Space", "ArrowUp", "ArrowDown", "KeyW", "KeyS"]);
+var JUMP_KEYS = /* @__PURE__ */ new Set([" ", "Spacebar", "ArrowUp", "ArrowDown", "w", "W", "s", "S"]);
+function isEditable(target) {
+  const element = target;
+  if (!element || !element.tagName) return false;
+  return element.tagName === "INPUT" || element.tagName === "TEXTAREA" || element.isContentEditable === true;
+}
+function installScrollGuard() {
+  document.addEventListener(
+    "keydown",
+    (event) => {
+      if (isEditable(event.target)) return;
+      if (JUMP_CODES.has(event.code) || JUMP_KEYS.has(event.key)) event.preventDefault();
+    },
+    { passive: false }
+  );
+}
+var guardInstalled = false;
 function initDino(selector = ".interstitial-wrapper") {
-  if (document.querySelector(selector)) {
-    new Runner(selector);
+  if (!document.querySelector(selector)) return;
+  new Runner(selector);
+  if (!guardInstalled) {
+    guardInstalled = true;
+    installScrollGuard();
   }
 }
 document.addEventListener("DOMContentLoaded", () => {
