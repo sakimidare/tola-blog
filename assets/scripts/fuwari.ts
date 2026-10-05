@@ -8,6 +8,7 @@ import { mountLightbox } from "./lightbox";
 import { mountCodeCopy } from "./copy";
 import { mountArchiveFilter } from "./filter";
 import { syncDataHrefs } from "./links";
+import { mountGithubCards } from "./github";
 import { cleanupPage } from "./lifecycle";
 
 function syncBodyState(): void {
@@ -24,6 +25,7 @@ function mountPage(): void {
   mountLightbox();
   mountComments();
   mountArchiveFilter();
+  mountGithubCards();
 }
 
 function mountGlobal(): void {

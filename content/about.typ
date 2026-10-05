@@ -1,4 +1,4 @@
-#import "/templates/fuwari.typ": fuwari-base, page-card, quote-block
+#import "/templates/fuwari.typ": fuwari-base, page-card, quote-block, github-card
 
 #show: fuwari-base.with(
   title: "About",
@@ -13,6 +13,8 @@
   #quote-block[扯淡！我们永远抛不掉代码，因为代码呈现了需求的细节。将需求明确到机器可以执行的细节程度，就是编程要做的事，而这种规约正是代码。]
 
   我期待语言的抽象程度继续提升，也期待领域特定语言的数量继续增长。但这不会消除代码：只要仍然需要精确表达需求，代码就会存在。
+
+  #github-card("sakimidare/sakimidare.github.io")
 
   == Sources
 

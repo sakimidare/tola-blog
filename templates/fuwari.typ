@@ -321,30 +321,43 @@
   if target() == "html" { html.elem("p", attrs: (class: "post-list-empty"), text) } else { text }
 }
 
-#let friend-list(body) = context {
-  if target() == "html" { html.elem("div", attrs: (class: "friend-list"), body) } else { body }
+#let card-list(body) = context {
+  if target() == "html" { html.elem("div", attrs: (class: "card-list"), body) } else { body }
 }
 
 #let github-card(repo) = context {
   let href = "https://github.com/" + repo
+  let parts = repo.split("/")
+  let owner = if parts.len() > 0 { parts.at(0) } else { repo }
+  let name = if parts.len() > 1 { parts.at(1) } else { "" }
   if target() != "html" { link(href, repo) } else {
-    html.elem("a", attrs: (class: "github-card", href: href, target: "_blank", rel: "noopener"))[
-      #html.elem("span", attrs: (class: "github-card-repo"), repo)
-      #html.elem("span", attrs: (class: "github-card-hint"), href)
-    ]
+    html.elem("a", attrs: (class: "card-github", href: href, target: "_blank", rel: "noopener noreferrer", "data-repo": repo),
+      html.elem("span", attrs: (class: "gc-titlebar"),
+        html.elem("span", attrs: (class: "gc-titlebar-left"),
+          html.elem("span", attrs: (class: "gc-owner"),
+            html.elem("span", attrs: (class: "gc-avatar")) + html.elem("span", attrs: (class: "gc-user"), owner))
+          + html.elem("span", attrs: (class: "gc-divider"), "/")
+          + html.elem("span", attrs: (class: "gc-repo"), name))
+        + html.elem("span", attrs: (class: "github-logo")))
+      + html.elem("span", attrs: (class: "gc-description"), "Waiting for api.github.com...")
+      + html.elem("span", attrs: (class: "gc-infobar"),
+          html.elem("span", attrs: (class: "gc-stars"), "0")
+          + html.elem("span", attrs: (class: "gc-forks"), "0")
+          + html.elem("span", attrs: (class: "gc-license"), "no-license")
+          + html.elem("span", attrs: (class: "gc-language"), "")))
   }
 }
 
 #let link-card(href, title, avatar: none, description: none) = context {
   if target() != "html" { link(href, title) } else {
-    html.elem("a", attrs: (class: "link-card", href: href, target: "_blank", rel: "noopener"))[
-      #if avatar != none and avatar != "" { html.elem("img", attrs: (class: "link-card-avatar", src: avatar, alt: "")) }
-      #html.elem("span", attrs: (class: "link-card-body"))[
-        #html.elem("span", attrs: (class: "link-card-title"), title)
-        #html.elem("span", attrs: (class: "link-card-url"), href)
-        #if description != none and description != "" { html.elem("span", attrs: (class: "link-card-desc"), description) }
-      ]
-    ]
+    let avatar-node = if avatar != none and avatar != "" {
+      html.elem("span", attrs: (class: "hc-avatar", style: "background-image:url('" + avatar + "');"))
+    } else {
+      html.elem("span", attrs: (class: "hc-avatar"))
+    }
+    html.elem("a", attrs: (class: "card-hyperlink", href: href, target: "_blank", rel: "noopener noreferrer"),
+      html.elem("span", attrs: (class: "hc-titlebar"), avatar-node + html.elem("span", attrs: (class: "hc-title"), title))
+      + html.elem("span", attrs: (class: "hc-description"), if description == none { "" } else { description }))
   }
 }
 
