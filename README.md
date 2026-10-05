@@ -128,9 +128,45 @@ node scripts/migrate-posts.mjs
 
 ## 部署
 
-`public/` 为纯静态产物，可部署到任意静态托管（GitHub Pages、Cloudflare Pages、Vercel 等）。
+`public/` 为纯静态产物，可部署到任意静态托管。
+
+构建依赖 **Tola** 与 **Typst CLI**。托管平台若没有预装，可在构建阶段自动下载官方二进制（见 `scripts/vercel-setup.sh`）。
 
 部署前请确认 `tola.toml` 中的 `site.info.url` 已设置为线上地址。
+
+### Vercel
+
+仓库已包含 `vercel.json`，构建时会用 `scripts/vercel-setup.sh` 下载 Tola（`x86_64-linux-static`）与 Typst（`x86_64-unknown-linux-musl`）到 `./bin` 并加入 `PATH`：
+
+```json
+{
+  "installCommand": "pnpm install",
+  "buildCommand": "bash scripts/vercel-setup.sh && PATH=$PWD/bin:$PATH pnpm run build",
+  "outputDirectory": "public"
+}
+```
+
+**方式一：Git 集成（推荐）**
+
+1. 打开 <https://vercel.com/new>，导入 `sakimidare/tola-blog`
+2. Framework Preset 选 **Other**（Vercel 会自动读取 `vercel.json`）
+3. 直接 Deploy；之后每次 push 到 `main` 会自动构建
+
+**方式二：CLI**
+
+```bash
+pnpm add -g vercel
+vercel login
+vercel link          # 关联项目
+vercel --prod        # 生产部署
+```
+
+**自定义域名**：在 Vercel 项目的 Settings → Domains 绑定域名，并把 `tola.toml` 的 `site.info.url` 改为该域名（影响 sitemap / RSS / OG 的绝对地址）。
+
+### 其他平台
+
+- **GitHub Pages / Cloudflare Pages**：同样在构建命令前安装 Tola 与 Typst，输出目录设为 `public`
+- **无构建环境**：本地 `pnpm build` 后，将 `public/` 作为静态站点直接上传
 
 ## 致谢与许可
 
