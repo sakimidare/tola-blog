@@ -1,4 +1,4 @@
-#import "/templates/fuwari.typ": post, admonition, code-block, quote-block, github-card, link-card
+#import "/templates/fuwari.typ": post, admonition, code-block, quote-block, github-card, link-card, content-image, hr-line
 
 #show: post.with(
   title: "提问的智慧",
@@ -589,7 +589,7 @@ Jeff Bigler 的观察总结和这个相关也值得一读 (*#link("http://www.mi
 
 问题：#link("#q9")[我怎么才能破解 root 帐号/窃取 OP 特权/读别人的邮件呢？]
 
-#html.elem("hr")
+#hr-line()
 
 \<a id="q1" tabindex="-1" style="width:0; height:0; overflow:hidden; display:block;"\>\</a\>
 

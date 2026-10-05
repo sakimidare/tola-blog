@@ -1,4 +1,4 @@
-#import "/templates/fuwari.typ": fuwari-base, post-card
+#import "/templates/fuwari.typ": fuwari-base, post-card, empty-note
 #import "@tola/pages:0.0.0": pages
 #import "@tola/site:0.0.0": info
 
@@ -13,7 +13,7 @@
 }).rev()
 #context {
   let cards = if posts.len() == 0 {
-    html.elem("p", attrs: (class: "post-list-empty"))[暂无文章]
+    empty-note("暂无文章")
   } else {
     for item in posts { post-card(item) }
   }

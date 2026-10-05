@@ -1,4 +1,4 @@
-#import "/templates/fuwari.typ": post, admonition, code-block, quote-block, github-card, link-card
+#import "/templates/fuwari.typ": post, admonition, code-block, quote-block, github-card, link-card, content-image, hr-line
 
 #show: post.with(
   title: "写 C 时遇到的一个小问题",

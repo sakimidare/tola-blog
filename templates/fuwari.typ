@@ -12,7 +12,8 @@
 #let _tag-url(tag) = "/archive/?tag=" + str(tag)
 #let _category-url(category) = if category == none or category == "" { "/archive/?uncategorized=1" } else { "/archive/?category=" + str(category) }
 
-#let _head(title: none, summary: none, image: none, article: false, date: none, update: none, tags: ()) = {
+#let _head(title: none, summary: none, image: none, article: false, date: none, update: none, tags: ()) = context {
+  if target() != "html" { return [] }
   let page-title = if title == none or title == info.title { info.title + " - A personal blog site." } else { str(title) + " - " + info.title }
   let description = if summary == none or summary == "" { page-title } else { summary }
   html.elem("title")[#page-title]
@@ -55,7 +56,7 @@
         #html.elem("label", attrs: (id: "desktop-search", class: "desktop-search"))[#icon("material-symbols:search-rounded") #html.elem("input", attrs: (id: "desktop-search-input", type: "search", placeholder: "你好", autocomplete: "off", "aria-label": "搜索文章"))]
         #html.elem("button", attrs: (id: "search-switch", class: "nav-button search-switch btn-plain", type: "button", "aria-label": "搜索", "aria-expanded": "false"), icon("material-symbols:search-rounded"))
         #html.elem("button", attrs: (id: "display-settings-switch", class: "nav-button btn-plain", type: "button", "aria-label": "显示设置", "aria-expanded": "false"), icon("material-symbols:palette-outline"))
-        #html.elem("button", attrs: (id: "theme-toggle", class: "nav-button btn-plain", type: "button", "aria-label": "切换主题"), icon("material-symbols:radio-button-partial-outline"))
+        #html.elem("button", attrs: (id: "theme-toggle", class: "nav-button theme-toggle btn-plain", type: "button", "aria-label": "切换主题"), icon("material-symbols:wb-sunny-outline-rounded", class: "theme-icon theme-icon-light") + icon("material-symbols:dark-mode-outline-rounded", class: "theme-icon theme-icon-dark") + icon("material-symbols:radio-button-partial-outline", class: "theme-icon theme-icon-auto"))
         #html.elem("button", attrs: (id: "nav-menu-switch", class: "nav-button menu-switch btn-plain", type: "button", "aria-label": "菜单", "aria-expanded": "false"), icon("material-symbols:menu-rounded"))
       ]
       #html.elem("div", attrs: (id: "search-panel", class: "float-panel search-panel is-closed"))[
@@ -178,19 +179,27 @@
   let all-posts = _posts()
   let previous = prev(all-posts)
   let following = next(all-posts)
-  let navigation = html.elem("nav", attrs: (class: "post-navigation", "aria-label": "文章导航"))[
-    #if following != none { html.elem("a", attrs: (href: following.permalink, class: "post-nav-link post-nav-prev card-base"), icon("material-symbols:chevron-left-rounded") + html.elem("span", following.title)) }
-    #if previous != none { html.elem("a", attrs: (href: previous.permalink, class: "post-nav-link post-nav-next card-base"), html.elem("span", previous.title) + icon("material-symbols:chevron-right-rounded")) }
-  ]
-  let license = html.elem("section", attrs: (class: "post-license"))[
-    #html.elem("strong", title)
-    #html.elem("a", attrs: (class: "license-url", href: if current-permalink == none { "/" } else { current-permalink }), if current-permalink == none { "/" } else { str(current-permalink) })
-    #html.elem("div", attrs: (class: "license-details"))[
-      #html.elem("span", html.elem("small", "作者") + html.elem("span", info.author))
-      #html.elem("span", html.elem("small", "发布于") + html.elem("span", _date(date)))
-      #html.elem("span", html.elem("small", "许可证") + html.elem("a", attrs: (href: "https://creativecommons.org/licenses/by-nc-sa/4.0/", target: "_blank", rel: "noopener"), "CC BY-NC-SA 4.0"))
+  let navigation = context if target() == "html" {
+    html.elem("nav", attrs: (class: "post-navigation", "aria-label": "文章导航"))[
+      #if following != none { html.elem("a", attrs: (href: following.permalink, class: "post-nav-link post-nav-prev card-base"), icon("material-symbols:chevron-left-rounded") + html.elem("span", following.title)) }
+      #if previous != none { html.elem("a", attrs: (href: previous.permalink, class: "post-nav-link post-nav-next card-base"), html.elem("span", previous.title) + icon("material-symbols:chevron-right-rounded")) }
     ]
-  ]
+  } else { [] }
+  let license = context if target() == "html" {
+    html.elem("section", attrs: (class: "post-license"))[
+      #html.elem("strong", title)
+      #html.elem("a", attrs: (class: "license-url", href: if current-permalink == none { "/" } else { current-permalink }), if current-permalink == none { "/" } else { str(current-permalink) })
+      #html.elem("div", attrs: (class: "license-details"))[
+        #html.elem("span", html.elem("small", "作者") + html.elem("span", info.author))
+        #html.elem("span", html.elem("small", "发布于") + html.elem("span", _date(date)))
+        #html.elem("span", html.elem("small", "许可证") + html.elem("a", attrs: (href: "https://creativecommons.org/licenses/by-nc-sa/4.0/", target: "_blank", rel: "noopener"), "CC BY-NC-SA 4.0"))
+      ]
+    ]
+  } else { [] }
+  let pdf-url = if current-permalink == none { none } else {
+    let p = str(current-permalink)
+    (if p.ends-with("/") { p.slice(0, p.len() - 1) } else { p }) + ".pdf"
+  }
   let article-body = context if target() == "html" {
     [
       #html.elem("article", attrs: (id: "post-container", class: "post-container card-base"))[
@@ -200,6 +209,11 @@
           #_post-meta(date: date, update: update, category: category, tags: tags)
           #if summary != none and summary != "" { html.elem("p", attrs: (class: "post-summary"), summary) }
         ]
+        #if pdf-url != none {
+          html.elem("div", attrs: (class: "post-actions"))[
+            #html.elem("a", attrs: (class: "post-pdf btn-regular", href: pdf-url, download: ""), icon("material-symbols:download-rounded") + html.elem("span", "下载 PDF"))
+          ]
+        }
         #if image != none and image != "" { html.elem("img", attrs: (id: "post-cover", class: "post-cover onload-animation", src: image, alt: "文章封面")) }
         #html.elem("div", attrs: (class: "markdown-content onload-animation", "data-pagefind-body": ""), body)
         #license
@@ -293,6 +307,22 @@
 
 #let quote-block(body) = context {
   if target() != "html" { quote(body) } else { html.elem("blockquote", body) }
+}
+
+#let content-image(src, alt: "") = context {
+  if target() == "html" { html.elem("img", attrs: (src: src, alt: alt, loading: "lazy")) } else { image(src, width: 100%) }
+}
+
+#let hr-line() = context {
+  if target() == "html" { html.elem("hr") } else { line(length: 100%, stroke: 0.5pt) }
+}
+
+#let empty-note(text) = context {
+  if target() == "html" { html.elem("p", attrs: (class: "post-list-empty"), text) } else { text }
+}
+
+#let friend-list(body) = context {
+  if target() == "html" { html.elem("div", attrs: (class: "friend-list"), body) } else { body }
 }
 
 #let github-card(repo) = context {

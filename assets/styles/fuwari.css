@@ -128,6 +128,11 @@ a > p, h2 > p, button > p, .meta-item > p { display: contents; margin: 0; }
 .search-switch { display: none; }
 .nav-button { z-index: 0; width: 2.75rem; height: 2.75rem; padding: 0; background: transparent; cursor: pointer; }
 .nav-button .icon { font-size: 1.25rem; }
+.theme-icon { position: absolute; top: 50%; left: 50%; width: 1em; height: 1em; font-size: 1.25rem; opacity: 0; transform: translate(-50%, -50%); transition: opacity 200ms ease, transform 250ms var(--ease-out); }
+html[data-theme="light"] .theme-icon-light,
+html[data-theme="dark"] .theme-icon-dark,
+html[data-theme="auto"] .theme-icon-auto { opacity: 1; }
+.theme-toggle:hover .theme-icon { transform: translate(-50%, -50%) scale(1.08); }
 .menu-switch { display: none; }
 .float-panel { position: absolute; z-index: 70; top: 5.25rem; right: 1rem; width: min(30rem, calc(100vw - 2rem)); padding: .5rem; border-radius: var(--radius-large); background: var(--float-panel-bg); box-shadow: 0 18px 45px rgb(0 0 0 / 18%); opacity: 1; transform: translateY(0) scale(1); transform-origin: top right; transition: opacity 180ms ease, transform 260ms var(--ease-out), visibility 0s linear; visibility: visible; }
 .float-panel.is-closed { opacity: 0; transform: translateY(-.5rem) scale(.96); pointer-events: none; visibility: hidden; transition: opacity 140ms ease, transform 180ms ease, visibility 0s linear 180ms; }
@@ -228,6 +233,10 @@ html.is-home .sidebar-sticky { top: calc(1rem - (var(--banner-home) - var(--bann
 .post-header .post-meta { margin-bottom: 1.25rem; }
 .post-header h1 { position: relative; margin: 0 0 .85rem; color: var(--text-90); font-size: clamp(2rem, 4vw, 2.25rem); line-height: 1.25; }
 .post-summary { margin: 1rem 0 0; color: var(--text-50); }
+.post-actions { display: flex; flex-wrap: wrap; gap: .5rem; margin: .9rem 0 0; }
+.post-pdf { display: inline-flex; height: 2.25rem; align-items: center; gap: .4rem; padding: 0 .9rem; border-radius: .6rem; color: var(--btn-content); background: var(--btn-regular-bg); font-size: .85rem; font-weight: 700; }
+.post-pdf:hover { background: var(--btn-regular-bg-hover); transform: translateY(-1px); }
+.post-pdf .icon { font-size: 1.1rem; }
 .post-cover { display: block; width: 100%; max-height: 32rem; margin: .5rem 0 2rem; border-radius: .75rem; object-fit: cover; cursor: zoom-in; }
 .markdown-content { color: var(--text-75); }
 .markdown-content ul, .markdown-content ol { margin: 1rem 0; padding-left: 1.6rem; }

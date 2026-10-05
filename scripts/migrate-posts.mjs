@@ -240,7 +240,7 @@ function renderInline(children, env, imageBase) {
       case "image": {
         const src = (token.attrs || []).find((a) => a[0] === "src")?.[1] ?? "";
         const alt = (token.attrs || []).find((a) => a[0] === "alt")?.[1] ?? "";
-        out += `#html.elem("img", attrs: (src: "${escapeString(resolveImage(src, env, imageBase))}", alt: "${escapeString(alt)}", loading: "lazy"))`;
+        out += `#content-image("${escapeString(resolveImage(src, env, imageBase))}", alt: "${escapeString(alt)}")`;
         break;
       }
       case "softbreak": out += "\n"; break;
@@ -314,7 +314,7 @@ function renderTokens(tokens, env, imageBase) {
       case "ordered_list_close": listStack.pop(); listDepth--; out += "\n"; break;
       case "list_item_open": out += (out.endsWith("\n") || out === "" ? "" : "\n") + "  ".repeat(Math.max(0, token.level - 1)) + (listStack[listStack.length - 1] ?? "- "); break;
       case "list_item_close": out += "\n"; break;
-      case "hr": out += '#html.elem("hr")\n\n'; break;
+      case "hr": out += '#hr-line()\n\n'; break;
       case "table_open": table = { rows: [], current: null, cell: null }; break;
       case "tr_open": if (table) table.current = []; break;
       case "tr_close": if (table && table.current) table.rows.push(table.current); break;
@@ -353,7 +353,7 @@ function render(frontmatter, body) {
   const tagList = tagItems.length === 1 ? `${tagItems[0]},` : tagItems.join(", ");
   const summary = frontmatter.description ?? "";
   const lines = [
-    `#import "/templates/fuwari.typ": post, admonition, code-block, quote-block, github-card, link-card`,
+    `#import "/templates/fuwari.typ": post, admonition, code-block, quote-block, github-card, link-card, content-image, hr-line`,
     "",
     "#show: post.with(",
     `  title: "${escapeString(frontmatter.title ?? slug)}",`,

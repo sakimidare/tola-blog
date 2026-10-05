@@ -1,4 +1,4 @@
-#import "/templates/fuwari.typ": post, admonition, code-block, quote-block, github-card, link-card
+#import "/templates/fuwari.typ": post, admonition, code-block, quote-block, github-card, link-card, content-image, hr-line
 
 #show: post.with(
   title: "Niri 安装与配置",
@@ -23,9 +23,9 @@ Niri 和 我们熟悉的 Windows 桌面或 KDE Plasma 不同。他是一个水�
 
 话不多说，赶快端上成品图：
 
-#html.elem("img", attrs: (src: "/assets/posts/niri-manual/screenshot1.png", alt: "", loading: "lazy"))
-#html.elem("img", attrs: (src: "/assets/posts/niri-manual/screenshot2.png", alt: "", loading: "lazy"))
-#html.elem("img", attrs: (src: "/assets/posts/niri-manual/screenshot3.png", alt: "", loading: "lazy"))
+#content-image("/assets/posts/niri-manual/screenshot1.png", alt: "")
+#content-image("/assets/posts/niri-manual/screenshot2.png", alt: "")
+#content-image("/assets/posts/niri-manual/screenshot3.png", alt: "")
 
 通知栏的图标暂时没有配置，不过问题不大。想拥有这个炫酷 WM (Window Manager) 吗？跟我一步一步配置，你也可以做到！
 

@@ -1,4 +1,4 @@
-#import "/templates/fuwari.typ": fuwari-base, page-card
+#import "/templates/fuwari.typ": fuwari-base, page-card, friend-list
 
 #show: fuwari-base.with(
   title: "Friends",
@@ -18,7 +18,7 @@
 
   这里是友情链接。
 
-  #html.elem("div", attrs: (class: "friend-list"))[
+  #friend-list[
     #friend("TheSky233's Blog", "https://thesky233.github.io/", "https://q1.qlogo.cn/g?b=qq&nk=1602458048&s=640", "And in that light...")
     #friend("日落果的 Blog", "https://blog.archlinux.tech/", "https://avatars.githubusercontent.com/u/37149302?v=4", "日落果的 Blog")
     #friend("風雪城", "https://blog.chyk.ink/", "https://q1.qlogo.cn/g?b=qq&nk=3526514925&s=640", "浩繁星空下的一场稚嫩的梦")
