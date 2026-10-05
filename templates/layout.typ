@@ -347,7 +347,7 @@
     ],
   )
   set text(font: base-fonts, size: 10.5pt, lang: "zh", region: "cn")
-  set par(justify: true, leading: .85em, first-line-indent: 0em, spacing: 1.1em)
+  set par(justify: true, leading: .85em, first-line-indent: 0em, spacing: 1.25em)
   show heading: set block(above: 1.4em, below: .7em)
   show heading: set text(font: pdf-heading-fonts)
   show heading.where(level: 1): set text(size: 18pt, weight: "bold")
