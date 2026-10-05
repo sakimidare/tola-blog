@@ -319,6 +319,10 @@
 
 #let paged-doc(title: none, date: none, update: none, tags: (), category: none, summary: none, article: false, lang: none, body) = {
   let t = ui(lang)
+  // Site metadata: prefer Tola's `info`, fall back to the string inputs passed
+  // by scripts/build-pdf.mjs (the CLI can't inject Tola's dict input).
+  let site-title = if _str-of(info.title) == "" { sys.inputs.at("site_title", default: "") } else { info.title }
+  let site-author = if _str-of(info.author) == "" { sys.inputs.at("site_author", default: "") } else { info.author }
   let base-fonts = if lang == "en" {
     ("Source Serif 4", "Noto Serif SC")
   } else if lang == "ja" {
@@ -341,7 +345,7 @@
       #grid(
         columns: (1fr, 1fr),
         align: (left + horizon, right + horizon),
-        [#info.title],
+        [#site-title],
         [第 #counter(page).display() 页],
       )
     ],
@@ -398,7 +402,7 @@
     v(1.6em)
     line(length: 100%, stroke: .4pt + luma(210))
     v(.3em)
-    text(size: 8.5pt, fill: luma(120))[#t.author #info.author　·　#t.license CC BY-NC-SA 4.0]
+    text(size: 8.5pt, fill: luma(120))[#t.author #site-author　·　#t.license CC BY-NC-SA 4.0]
   }
 }
 
