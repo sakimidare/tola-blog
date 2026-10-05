@@ -16,6 +16,8 @@
   if target() != "html" { return [] }
   let page-title = if title == none or title == info.title { info.title + " - A personal blog site." } else { str(title) + " - " + info.title }
   let description = if summary == none or summary == "" { page-title } else { summary }
+  html.elem("meta", attrs: (charset: "utf-8"))
+  html.meta(name: "viewport", content: "width=device-width, initial-scale=1")
   html.elem("title")[#page-title]
   html.meta(name: "description", content: description)
   html.meta(name: "author", content: info.author)
