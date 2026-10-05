@@ -114,7 +114,21 @@ pnpm check   # tsc --noEmit + tola validate（链接与资源）
 正文……
 ```
 
-可用组件：`code-block`、`admonition`、`quote-block`、`github-card`、`link-card`、`content-image`、`hr-line`。
+代码块优先使用 Typst 原生围栏：
+
+````markdown
+```c
+int main(void) { return 0; }
+```
+````
+
+需要标题或行号时再用 `#code-block`：
+
+```typst
+#code-block("...", lang: "c", title: "main.c", line-numbers: true, start: 1)
+```
+
+其他可用组件：`admonition`、`quote-block`、`github-card`、`link-card`、`content-image`、`hr-line`。
 
 ## 从 Fuwari 迁移
 

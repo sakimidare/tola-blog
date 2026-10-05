@@ -254,7 +254,7 @@ html.is-home .sidebar-sticky { top: calc(1rem - (var(--banner-home) - var(--bann
 .markdown-content p a:not(.card-github):not(.card-hyperlink), .markdown-content li a:not(.card-github):not(.card-hyperlink), .markdown-content blockquote a:not(.card-github):not(.card-hyperlink), .markdown-content td a { display: inline; padding: .08rem .18rem; border-radius: .25rem; color: var(--primary); text-decoration: underline dashed var(--link-underline); text-underline-offset: .25rem; }
 .markdown-content p a:not(.card-github):not(.card-hyperlink):hover, .markdown-content li a:not(.card-github):not(.card-hyperlink):hover, .markdown-content blockquote a:not(.card-github):not(.card-hyperlink):hover, .markdown-content td a:hover { background: var(--link-hover); text-decoration-color: transparent; }
 .markdown-content code { padding: .15rem .4rem; border-radius: .4rem; color: var(--inline-code-color); background: var(--inline-code-bg); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: .9em; }
-.markdown-content pre { position: relative; overflow-x: auto; padding: 1rem; border-radius: .75rem; color: var(--text-75); background: transparent; }
+.markdown-content pre { position: relative; overflow-x: auto; margin: 1.25rem 0; padding: 1rem; border-radius: .75rem; color: var(--text-75); background: transparent; }
 .code-block { margin: 1.25rem 0; border-radius: .75rem; overflow: hidden; background: transparent; }
 .code-block pre { margin: 0; border-radius: 0; background: transparent; }
 .code-block-head { padding: .5rem .9rem; border-bottom: 1px solid var(--line-divider); color: var(--text-50); font-size: .78rem; font-family: "JetBrains Mono", ui-monospace, monospace; }

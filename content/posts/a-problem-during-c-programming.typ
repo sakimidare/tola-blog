@@ -18,7 +18,15 @@
 
 在浏览#link("https://akaedu.github.io/book/ch10s03.html")[Linux C编程一站式学习 第十章 gdb 3. 观察点] 时遇到了上述代码。这段代码目的很简单：把从输入设备输入的整数字符串转换为整数并输出。原文采用了以下调试步骤发现了问题：
 
-#code-block("$ ./main\n123\ninput=123\n67\ninput=67\n12345\ninput=123407", lang: "sh")
+```sh
+$ ./main
+123
+input=123
+67
+input=67
+12345
+input=123407
+```
 
 原文的解释是：在内存中，局部变量`i`紧跟在`input[4]`后，所以`input[5]`指的就是局部变量`i`。而从键盘输入了`12345`，分别给`input`的各个元素赋值，便成了：
 
@@ -34,7 +42,16 @@
 
 原文使用了 GDB 调试，部分调试信息如下：
 
-#code-block("(gdb) n\n11\t\t\tfor (i = 0; input[i] != '\\0'; i++)\n(gdb) p sum\n$3 = 12345\n(gdb) n\n12\t\t\t\tsum = sum*10 + input[i] - '0';\n(gdb) x/7b input\n0xbfb8f0a7:\t0x31\t0x32\t0x33\t0x34\t0x35\t0x05\t0x00", lang: "sh")
+```sh
+(gdb) n
+11			for (i = 0; input[i] != '\0'; i++)
+(gdb) p sum
+$3 = 12345
+(gdb) n
+12				sum = sum*10 + input[i] - '0';
+(gdb) x/7b input
+0xbfb8f0a7:	0x31	0x32	0x33	0x34	0x35	0x05	0x00
+```
 
 `i`后面一个地址位置的值是`0x00`，因此最后一次循环执行了 `12345*10 + 0x05 - '\0'`，得到了 `123407` 。
 
@@ -45,13 +62,24 @@
 
 我在使用 CLion 调试上述代码，正常得很！
 
-#code-block("12345\ninput=12345\n114514\ninput=114514\n1919810\ninput=1919810\n^C", lang: "sh")
+```sh
+12345
+input=12345
+114514
+input=114514
+1919810
+input=1919810
+^C
+```
 
 怎么回事呢？
 
 看了一眼原文的上一页，发现原作者是这么编译运行的：
 
-#code-block("$ gcc main.c -g -o main\n$ ./main ", lang: "sh")
+```sh
+$ gcc main.c -g -o main
+$ ./main 
+```
 
 行吧，我也这么办。
 
@@ -61,11 +89,31 @@
 
 这时我有点摸不着头脑，看一眼我的 GCC 和 Linux 版本：
 
-#code-block("$ uname -a\nLinux sakimidare-arch 6.16.2-arch1-1 #1 SMP PREEMPT_DYNAMIC Wed, 20 Aug 2025 21:43:45 +0000 x86_64 GNU/Linux\n\n$ gcc --version\ngcc (GCC) 15.2.1 20250813\nCopyright © 2025 Free Software Foundation, Inc.\n本程序是自由软件；请参看源代码的版权声明。本软件没有任何担保；\n包括没有适销性和某一专用目的下的适用性担保。", lang: "sh")
+```sh
+$ uname -a
+Linux sakimidare-arch 6.16.2-arch1-1 #1 SMP PREEMPT_DYNAMIC Wed, 20 Aug 2025 21:43:45 +0000 x86_64 GNU/Linux
+
+$ gcc --version
+gcc (GCC) 15.2.1 20250813
+Copyright © 2025 Free Software Foundation, Inc.
+本程序是自由软件；请参看源代码的版权声明。本软件没有任何担保；
+包括没有适销性和某一专用目的下的适用性担保。
+```
 
 好嘛，再试试其他编译器呢？总不会这个 Bug 到现代机器上不复存在了吧……
 
-#code-block("$ clang main.c -o main\n$ ./main\n12345\ninput=123407\n666666\ninput=666617\n123456789\ninput=123407\n114514\ninput=114467", lang: "sh")
+```sh
+$ clang main.c -o main
+$ ./main
+12345
+input=123407
+666666
+input=666617
+123456789
+input=123407
+114514
+input=114467
+```
 
 问题出现了！有时出错的代码比正确而不可靠的代码更有意义。
 
@@ -99,11 +147,29 @@
 
 用 `gcc` 和 `clang` 分别预处理这个 `main.c`，看看生成的预处理文件有什么不一样吧！
 
-#code-block("$ gcc -E main.c -o gcc.i\n$ clang -E main.c -o clang.i", lang: "sh")
+```sh
+$ gcc -E main.c -o gcc.i
+$ clang -E main.c -o clang.i
+```
 
 发现`main()`函数部分代码一样，都是：
 
-#code-block("int main(void)\n{\n    int sum = 0, i = 0;\n    char input[5];\n\n    while (1) {\n        sum = 0;\n        scanf(\"%s\", input);\n        for (i = 0; input[i] != '\\0'; i++)\n            sum = sum*10 + input[i] - '0';\n        printf(\"input=%d\\n\", sum);\n    }\n    return 0;\n}", lang: "c")
+```c
+int main(void)
+{
+    int sum = 0, i = 0;
+    char input[5];
+
+    while (1) {
+        sum = 0;
+        scanf("%s", input);
+        for (i = 0; input[i] != '\0'; i++)
+            sum = sum*10 + input[i] - '0';
+        printf("input=%d\n", sum);
+    }
+    return 0;
+}
+```
 
 这也符合我们的认知，因为预处理只是进行了替换操作，不涉及修改函数的逻辑。
 
@@ -124,7 +190,10 @@
 
 出发吧！
 
-#code-block("$ gcc -S gcc.i -o gcc.s\n$ clang -S clang.i -o clang.s", lang: "sh")
+```sh
+$ gcc -S gcc.i -o gcc.s
+$ clang -S clang.i -o clang.s
+```
 
 把这两个文件都贴出来：
 
@@ -215,7 +284,13 @@
 
 运行程序：
 
-#code-block("$ gcc test.c -o test\n$ ./test\n12345\ninput=12345\n5", lang: "sh")
+```sh
+$ gcc test.c -o test
+$ ./test
+12345
+input=12345
+5
+```
 
 大功告成！*果然，`input[-7]` 就是 `i`！*
 
@@ -231,7 +306,62 @@ _`-O0`了吗？`-fsanitize=address`了吗？快加上！_
 一位群友如是说。
 好吧好吧，我们加上这两个参数再编译一次试试：
 
-#code-block("$ gcc -O0 -fsanitize=address test.c -o test\n$ ./test\n1234567\n=================================================================\n==16748==ERROR: AddressSanitizer: stack-buffer-overflow on address 0x7b4c18f00025 at pc 0x7f4c1ba6e51d bp 0x7ffdce2744c0 sp 0x7ffdce273c48\nWRITE of size 8 at 0x7b4c18f00025 thread T0\n    #0 0x7f4c1ba6e51c in scanf_common /usr/src/debug/gcc/gcc/libsanitizer/sanitizer_common/sanitizer_common_interceptors_format.inc:342\n    #1 0x7f4c1ba8edee in __isoc23_vscanf /usr/src/debug/gcc/gcc/libsanitizer/sanitizer_common/sanitizer_common_interceptors.inc:1554\n    #2 0x7f4c1ba8f5f5 in __isoc23_scanf /usr/src/debug/gcc/gcc/libsanitizer/sanitizer_common/sanitizer_common_interceptors.inc:1584\n    #3 0x564e475b9254 in main (/home/sakimidare/CLionProjects/c_study/test+0x1254) (BuildId: 35fabe8824d13d3c1ca4e2836107a3b16992a4a9)\n    #4 0x7f4c1b627674  (/usr/lib/libc.so.6+0x27674) (BuildId: 4fe011c94a88e8aeb6f2201b9eb369f42b4a1e9e)\n    #5 0x7f4c1b627728 in __libc_start_main (/usr/lib/libc.so.6+0x27728) (BuildId: 4fe011c94a88e8aeb6f2201b9eb369f42b4a1e9e)\n    #6 0x564e475b90d4 in _start (/home/sakimidare/CLionProjects/c_study/test+0x10d4) (BuildId: 35fabe8824d13d3c1ca4e2836107a3b16992a4a9)\n\nAddress 0x7b4c18f00025 is located in stack of thread T0 at offset 37 in frame\n    #0 0x564e475b91b8 in main (/home/sakimidare/CLionProjects/c_study/test+0x11b8) (BuildId: 35fabe8824d13d3c1ca4e2836107a3b16992a4a9)\n\n  This frame has 1 object(s):\n    [32, 37) 'input' (line 6) <== Memory access at offset 37 overflows this variable\nHINT: this may be a false positive if your program uses some custom stack unwind mechanism, swapcontext or vfork\n      (longjmp and C++ exceptions *are* supported)\nSUMMARY: AddressSanitizer: stack-buffer-overflow (/home/sakimidare/CLionProjects/c_study/test+0x1254) (BuildId: 35fabe8824d13d3c1ca4e2836107a3b16992a4a9) in main\nShadow bytes around the buggy address:\n  0x7b4c18effd80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n  0x7b4c18effe00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n  0x7b4c18effe80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n  0x7b4c18efff00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n  0x7b4c18efff80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n=>0x7b4c18f00000: f1 f1 f1 f1[05]f3 f3 f3 00 00 00 00 00 00 00 00\n  0x7b4c18f00080: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n  0x7b4c18f00100: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n  0x7b4c18f00180: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n  0x7b4c18f00200: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n  0x7b4c18f00280: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nShadow byte legend (one shadow byte represents 8 application bytes):\n  Addressable:           00\n  Partially addressable: 01 02 03 04 05 06 07 \n  Heap left redzone:       fa\n  Freed heap region:       fd\n  Stack left redzone:      f1\n  Stack mid redzone:       f2\n  Stack right redzone:     f3\n  Stack after return:      f5\n  Stack use after scope:   f8\n  Global redzone:          f9\n  Global init order:       f6\n  Poisoned by user:        f7\n  Container overflow:      fc\n  Array cookie:            ac\n  Intra object redzone:    bb\n  ASan internal:           fe\n  Left alloca redzone:     ca\n  Right alloca redzone:    cb\n==16748==ABORTING", lang: "sh")
+```sh
+$ gcc -O0 -fsanitize=address test.c -o test
+$ ./test
+1234567
+=================================================================
+==16748==ERROR: AddressSanitizer: stack-buffer-overflow on address 0x7b4c18f00025 at pc 0x7f4c1ba6e51d bp 0x7ffdce2744c0 sp 0x7ffdce273c48
+WRITE of size 8 at 0x7b4c18f00025 thread T0
+    #0 0x7f4c1ba6e51c in scanf_common /usr/src/debug/gcc/gcc/libsanitizer/sanitizer_common/sanitizer_common_interceptors_format.inc:342
+    #1 0x7f4c1ba8edee in __isoc23_vscanf /usr/src/debug/gcc/gcc/libsanitizer/sanitizer_common/sanitizer_common_interceptors.inc:1554
+    #2 0x7f4c1ba8f5f5 in __isoc23_scanf /usr/src/debug/gcc/gcc/libsanitizer/sanitizer_common/sanitizer_common_interceptors.inc:1584
+    #3 0x564e475b9254 in main (/home/sakimidare/CLionProjects/c_study/test+0x1254) (BuildId: 35fabe8824d13d3c1ca4e2836107a3b16992a4a9)
+    #4 0x7f4c1b627674  (/usr/lib/libc.so.6+0x27674) (BuildId: 4fe011c94a88e8aeb6f2201b9eb369f42b4a1e9e)
+    #5 0x7f4c1b627728 in __libc_start_main (/usr/lib/libc.so.6+0x27728) (BuildId: 4fe011c94a88e8aeb6f2201b9eb369f42b4a1e9e)
+    #6 0x564e475b90d4 in _start (/home/sakimidare/CLionProjects/c_study/test+0x10d4) (BuildId: 35fabe8824d13d3c1ca4e2836107a3b16992a4a9)
+
+Address 0x7b4c18f00025 is located in stack of thread T0 at offset 37 in frame
+    #0 0x564e475b91b8 in main (/home/sakimidare/CLionProjects/c_study/test+0x11b8) (BuildId: 35fabe8824d13d3c1ca4e2836107a3b16992a4a9)
+
+  This frame has 1 object(s):
+    [32, 37) 'input' (line 6) <== Memory access at offset 37 overflows this variable
+HINT: this may be a false positive if your program uses some custom stack unwind mechanism, swapcontext or vfork
+      (longjmp and C++ exceptions *are* supported)
+SUMMARY: AddressSanitizer: stack-buffer-overflow (/home/sakimidare/CLionProjects/c_study/test+0x1254) (BuildId: 35fabe8824d13d3c1ca4e2836107a3b16992a4a9) in main
+Shadow bytes around the buggy address:
+  0x7b4c18effd80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x7b4c18effe00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x7b4c18effe80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x7b4c18efff00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x7b4c18efff80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+=>0x7b4c18f00000: f1 f1 f1 f1[05]f3 f3 f3 00 00 00 00 00 00 00 00
+  0x7b4c18f00080: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x7b4c18f00100: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x7b4c18f00180: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x7b4c18f00200: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x7b4c18f00280: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+==16748==ABORTING
+```
 
 看得出来，加上参数确实有助于规避数组越界风险。
 

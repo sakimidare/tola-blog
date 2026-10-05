@@ -261,6 +261,13 @@ function resolveImage(src, env, imageBase) {
   return src;
 }
 
+function fenceRaw(code, lang) {
+  const runs = [...code.matchAll(/`+/g)].map((match) => match[0].length);
+  const longest = runs.length > 0 ? Math.max(...runs) : 0;
+  const fence = "`".repeat(Math.max(3, longest + 1));
+  return `${fence}${lang}\n${code}\n${fence}`;
+}
+
 function renderFence(token, env, imageBase) {
   const info = (token.info || "").trim();
   let lang = info.split(/\s+/)[0] || "";
@@ -268,6 +275,13 @@ function renderFence(token, env, imageBase) {
   const titleMatch = info.match(/title\s*=\s*"([^"]*)"/);
   const startMatch = info.match(/startLineNumber\s*=\s*(\d+)/);
   const numbers = /showLineNumbers(?!=false)/.test(info) && !/showLineNumbers\s*=\s*false/.test(info);
+
+  // Prefer Typst's native fenced code; only fall back to the helper when a
+  // title or line numbers are requested.
+  if (!titleMatch && !numbers) {
+    return fenceRaw(token.content.replace(/\n$/, ""), lang === "plain" ? "" : lang);
+  }
+
   const args = [`"${escapeString(token.content.replace(/\n$/, ""))}"`];
   if (lang) args.push(`lang: "${lang}"`);
   if (titleMatch) args.push(`title: "${escapeString(titleMatch[1])}"`);
