@@ -10,8 +10,9 @@
     "build:404": "node -e \"const fs=require('fs');const s='public/404/index.html';if(fs.existsSync(s))fs.copyFileSync(s,'public/404.html')\"",
     "build:sitemap": "node scripts/postprocess-sitemap.mjs",
     "build:pdf": "node scripts/build-pdf.mjs",
-    "build": "pnpm build:client && pnpm build:site && pnpm build:404 && pnpm build:sitemap && pnpm build:search && pnpm build:pdf",
-    "check": "pnpm typecheck && tola validate"
+    "build": "pnpm build:client && pnpm build:dino && pnpm build:site && pnpm build:404 && pnpm build:sitemap && pnpm build:search && pnpm build:pdf",
+    "check": "pnpm typecheck && tola validate",
+    "build:dino": "esbuild assets/scripts/dino/index.ts --bundle --format=esm --target=es2022 --outfile=assets/scripts/dino.js"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
