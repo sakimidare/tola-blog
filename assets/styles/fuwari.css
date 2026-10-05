@@ -487,13 +487,18 @@ html.is-animating .transition-swup-fade { opacity: 0; transform: translateY(1rem
 /* Ruby: smaller reading text, exclude annotations from text selection. */
 ruby rt, ruby rp { font-size: .5em; user-select: none; -webkit-user-select: none; }
 
-/* Literary layouts. */
+/* Literary layouts. Verse is kaishu for CJK content; scope by the post's
+   language so English poems stay serif and `ong` poems stay Old English. */
 .poem, .shi, .spellcard { text-align: center; }
 .poem_en { font-style: italic; }
 .poem_ong { font-family: "Old English Onglisch", serif; }
-.shi:lang(zh), .spellcard:lang(zh) { font-family: KaiTi, "Source Han Serif SC", "Source Han Serif JP", serif; }
+:is(#post-container[data-lang=""], #post-container[data-lang="zh_CN"], #post-container[data-lang="zh_TW"]) :is(.poem:not(.poem_ong), .ci, .spellcard) {
+  font-family: KaiTi, "Source Han Serif SC", "Source Han Serif JP", serif;
+}
+#post-container[data-lang="ja"] :is(.poem:not(.poem_ong), .ci, .spellcard) {
+  font-family: "DFKai-SB", KaiTi, "Source Han Serif JP", "Source Han Serif SC", serif;
+}
 .ci { padding-left: 1.5em; padding-right: 1.5em; }
-.ci:lang(zh) { font-family: KaiTi, "Source Han Serif SC", "Source Han Serif JP", serif; }
 .ci p { margin: .5em 0; text-indent: 2em; }
 .waka { font-family: "DFKai-SB", KaiTi, "Source Han Serif SC", "Source Han Serif JP", serif; text-align: center; }
 .graph-title { text-align: center; }
