@@ -201,26 +201,6 @@
   }
   v(.6em)
 
-  if article {
-    context {
-      let entries = query(heading).filter(entry => entry.level <= 2)
-      if entries.len() >= 3 {
-        block(above: 1em, below: .7em)[
-          #set text(size: 9pt, fill: luma(115))
-          #text(weight: "bold", fill: luma(80))[目录]
-          #v(.25em)
-          #for entry in entries {
-            linebreak()
-            link(entry.location(), {
-              if entry.level == 2 { h(1.1em) }
-              entry.body
-            })
-          }
-        ]
-      }
-    }
-  }
-
   body
 
   if article {
