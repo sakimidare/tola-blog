@@ -1,0 +1,25 @@
+{
+  "name": "tola-fuwari-theme",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build:client": "esbuild assets/scripts/fuwari.ts --bundle --format=esm --target=es2022 --outfile=assets/scripts/fuwari.js",
+    "build:site": "tola build",
+    "build:search": "pagefind --site public",
+    "build:404": "node -e \"const fs=require('fs');const s='public/404/index.html';if(fs.existsSync(s))fs.copyFileSync(s,'public/404.html')\"",
+    "build": "pnpm build:client && pnpm build:site && pnpm build:404 && pnpm build:search",
+    "check": "pnpm typecheck && tola validate"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "esbuild": "^0.25.0",
+    "markdown-it": "^15.0.2",
+    "pagefind": "^1.5.2",
+    "typescript": "^5.7.0"
+  },
+  "dependencies": {
+    "photoswipe": "^5.4.4",
+    "swup": "^4.10.0"
+  }
+}

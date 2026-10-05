@@ -1,0 +1,10 @@
+{
+  "tinymist.rootPath": "/home/sakimidare/tola-blog",
+  "tinymist.typstExtraArgs": [
+    "--features=html",
+    "--package-path=/home/sakimidare/tola-blog/.tola/packages"
+  ],
+  "tinymist.projectResolution": "singleFile",
+  "tinymist.exportTarget": "paged",
+  "tinymist.lint.enabled": false
+}
