@@ -484,7 +484,8 @@ html.is-animating .transition-swup-fade { opacity: 0; transform: translateY(1rem
 .markdown-content .ff-kai { font-family: KaiTi, "Source Han Serif SC", "Source Han Serif JP", serif; }
 .markdown-content .ff-min { font-family: "Source Han Serif JP", "MS Mincho", serif; }
 
-/* Ruby: smaller reading text, exclude annotations from text selection. */
+/* Ruby: 1-2-1 annotation distribution (W3C group-ruby: edge : between = 1 : 2). */
+ruby { ruby-position: over; ruby-align: space-around; }
 ruby rt, ruby rp { font-size: .5em; user-select: none; -webkit-user-select: none; }
 
 /* Literary layouts. Verse is kaishu for CJK content; scope by the post's

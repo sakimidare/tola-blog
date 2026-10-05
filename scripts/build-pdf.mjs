@@ -58,6 +58,8 @@ if (!existsSync(pkgPath)) {
 let ok = 0;
 const files = walk(contentDir);
 for (const file of files) {
+  // Drafts are not published, so they get no PDF either.
+  if (/draft:\s*true/.test(readFileSync(file, "utf8"))) continue;
   const rel = relative(contentDir, file).replace(/\.typ$/, "");
   const out = join(outDir, rel + ".pdf");
   mkdirSync(dirname(out), { recursive: true });

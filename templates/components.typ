@@ -26,14 +26,38 @@
   if target() == "html" { html.elem("img", attrs: (src: src, alt: alt, loading: "lazy")) } else { image(src, width: 100%) }
 }
 
+// 1-2-1 ruby (W3C group-ruby): when the annotation is narrower than its base,
+// the spacing at the start/end is half the spacing between annotation glyphs.
+#let _ruby-annotation(reading, edge, inter) = text(size: 0.5em, {
+  let chars = reading.clusters()
+  h(edge)
+  for (index, char) in chars.enumerate() {
+    char
+    if index < chars.len() - 1 { h(inter) }
+  }
+  h(edge)
+})
+
 #let ruby(base, reading) = context {
   if target() == "html" {
     html.elem("ruby", base + html.elem("rt", reading))
   } else {
+    let annotation = if type(reading) == str and reading.clusters().len() > 0 {
+      let count = reading.clusters().len()
+      let extra = measure(base).width - measure(text(size: 0.5em, reading)).width
+      if extra > 0pt {
+        let edge = extra / (2 * count)
+        _ruby-annotation(reading, edge, 2 * edge)
+      } else {
+        text(size: 0.5em, reading)
+      }
+    } else {
+      text(size: 0.5em, reading)
+    }
     box(stack(
       dir: ttb,
       spacing: 0.08em,
-      align(center, move(dy: -0.12em, text(size: 0.5em, reading))),
+      align(center, move(dy: -0.12em, annotation)),
       align(center, base),
     ))
   }
@@ -114,10 +138,20 @@
 // `/assets/images/...`, so rewrite the prefix on the HTML target.
 #let _rewrite-src(src) = if src.starts-with("/images/") { "/assets" + src } else { src }
 
-#let web-image(src: "", alt: "") = html-or(
-  if src.starts-with("/") { [] } else { image(src, alt: alt) },
-  () => html.elem("img", attrs: (class: "content-image", src: _rewrite-src(src), alt: alt, loading: "lazy")),
-)
+#let web-image(src: "", alt: "") = context {
+  if target() == "html" {
+    html.elem("img", attrs: (class: "content-image", src: _rewrite-src(src), alt: alt, loading: "lazy"))
+  } else {
+    // The paged (PDF) target loads the image from disk, mapping the site's
+    // `/images/...` URLs to the in-repo `/assets/images/...` files.
+    let path = if src.starts-with("/images/") { "/assets" + src } else { src }
+    if path == "" or path.starts-with("http") {
+      []
+    } else {
+      block(width: 100%, align(center, image(path, alt: alt, width: 100%)))
+    }
+  }
+}
 
 #let caption(body) = html-or(align(center, body), () => html.elem("div", attrs: (class: "graph-title"), body))
 #let cast-list(body) = html-or(body, () => html.elem("p", attrs: (class: "cast-list"), body))

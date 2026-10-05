@@ -317,7 +317,7 @@
 
 #let _join-strings(list) = list.fold("", (acc, item) => acc + (if acc == "" { "" } else { ", " }) + str(item))
 
-#let paged-doc(title: none, date: none, update: none, tags: (), category: none, summary: none, article: false, lang: none, body) = {
+#let paged-doc(title: none, date: none, update: none, tags: (), category: none, summary: none, cover: none, article: false, lang: none, body) = {
   let t = ui(lang)
   // Site metadata: prefer Tola's `info`, fall back to the string inputs passed
   // by scripts/build-pdf.mjs (the CLI can't inject Tola's dict input).
@@ -394,6 +394,10 @@
       #text(size: 10pt, fill: luma(95))[#summary]
     ]
   }
+  if cover != none and cover != "" and not str(cover).starts-with("http") {
+    v(.8em)
+    align(center, image(cover, width: 100%))
+  }
   v(.6em)
 
   body
@@ -430,7 +434,7 @@
       ]
     } else {
       [
-        #show: paged-doc.with(title: title, date: date, update: update, tags: tags, category: category, summary: summary, article: article, lang: lang)
+        #show: paged-doc.with(title: title, date: date, update: update, tags: tags, category: category, summary: summary, cover: image, article: article, lang: lang)
         #body
       ]
     }
